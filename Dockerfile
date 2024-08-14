@@ -4,7 +4,13 @@ WORKDIR /var/www
 
 COPY --chown=www-data:www-data . /var/www
 
-RUN composer install \
+# install extensions
+RUN set -ex; \
+    install-php-extensions \
+    redis
+
+RUN set -ex; \
+    composer install \
     --optimize-autoloader \
     --no-interaction \
     --no-plugins \
@@ -22,11 +28,13 @@ COPY \
     vite.config.js \
     ./
 
-RUN npm ci --no-audit --ignore-scripts
+RUN set -ex; \
+    npm ci --no-audit --ignore-scripts
 
 COPY --from=vendor /var/www /build
 
-RUN npm run build
+RUN set -ex; \
+    npm run build
 
 FROM vendor
 
