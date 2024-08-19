@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\Login;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
+use Filament\Tables\Columns\Column;
+use Filament\Tables\Table;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -24,6 +28,16 @@ use Jeffgreco13\FilamentBreezy\BreezyCore;
 
 class AdminPanelProvider extends PanelProvider
 {
+    public static string $defaultDateDisplayFormat = 'd.m.Y';
+
+    public static string $defaultDateTimeDisplayFormat = 'd.m.Y H:i';
+
+    public static string $defaultDateTimeWithSecondsDisplayFormat = 'd.m.Y H:i:s';
+
+    public static string $defaultTimeDisplayFormat = 'H:i';
+
+    public static string $defaultTimeWithSecondsDisplayFormat = 'H:i:s';
+
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -32,14 +46,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login(Login::class)
             ->maxContentWidth('full')
-            ->colors([
-                'primary' => Color::Yellow,
-            ])
             ->plugins([
                 BreezyCore::make()
-                    ->myProfile(
-                        slug: 'profile',
-                    ),
+                    ->myProfile(slug: 'profile')
+                    ->enableTwoFactorAuthentication(),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -64,6 +74,44 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->sidebarCollapsibleOnDesktop();
+    }
+
+    public function register(): void
+    {
+        parent::register();
+
+        $this->registerMacros();
+        $this->setDefaultDateTimeDisplayFormats();
+    }
+
+    public function boot(): void
+    {
+        TextEntry::configureUsing(function (TextEntry $entry) {
+            return $entry->default('-');
+        });
+    }
+
+    protected function registerMacros(): void
+    {
+        Column::macro('shrink', fn () => $this->extraHeaderAttributes(['class' => 'w-1']));
+    }
+
+    protected function setDefaultDateTimeDisplayFormats(): void
+    {
+        Table::$defaultDateDisplayFormat = static::$defaultDateDisplayFormat;
+        Table::$defaultDateTimeDisplayFormat = static::$defaultDateTimeDisplayFormat;
+        Table::$defaultTimeDisplayFormat = static::$defaultTimeDisplayFormat;
+
+        Infolist::$defaultDateDisplayFormat = static::$defaultDateDisplayFormat;
+        Infolist::$defaultDateTimeDisplayFormat = static::$defaultDateTimeDisplayFormat;
+        Infolist::$defaultTimeDisplayFormat = static::$defaultTimeDisplayFormat;
+
+        DateTimePicker::$defaultDateDisplayFormat = static::$defaultDateDisplayFormat;
+        DateTimePicker::$defaultDateTimeDisplayFormat = static::$defaultDateTimeDisplayFormat;
+        DateTimePicker::$defaultDateTimeWithSecondsDisplayFormat = static::$defaultDateTimeWithSecondsDisplayFormat;
+        DateTimePicker::$defaultTimeDisplayFormat = static::$defaultTimeDisplayFormat;
+        DateTimePicker::$defaultTimeWithSecondsDisplayFormat = static::$defaultTimeWithSecondsDisplayFormat;
     }
 }
