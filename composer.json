@@ -16,7 +16,7 @@
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "^3.28",
         "sentry/sentry-laravel": "^4.8",
-        "stevegrunwell/time-constants": "^1.2"
+        "stevegrunwell/time-constants": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
