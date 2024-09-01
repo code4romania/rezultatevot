@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11892da806ece7d1d17df92f76d96bb0",
+    "content-hash": "31a997360f1c444e46bd2fa40c5b04f4",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -6267,29 +6267,31 @@
         },
         {
             "name": "stevegrunwell/time-constants",
-            "version": "v1.2.0",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stevegrunwell/time-constants.git",
-                "reference": "acf6ad0ceae9e293020cd3915baae2b21a0424ac"
+                "reference": "a06344a666e4e7985a56793c6eea00533931e5de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stevegrunwell/time-constants/zipball/acf6ad0ceae9e293020cd3915baae2b21a0424ac",
-                "reference": "acf6ad0ceae9e293020cd3915baae2b21a0424ac",
+                "url": "https://api.github.com/repos/stevegrunwell/time-constants/zipball/a06344a666e4e7985a56793c6eea00533931e5de",
+                "reference": "a06344a666e4e7985a56793c6eea00533931e5de",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0 | ^8.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.5",
-                "phpunit/phpunit": "^6.5 | ^8.5 | ^9.5 | ^10.0"
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^11.3",
+                "squizlabs/php_codesniffer": "^3.10"
             },
             "type": "library",
             "autoload": {
                 "files": [
-                    "constants.php"
+                    "src/Constants.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -6308,7 +6310,7 @@
                 "issues": "https://github.com/stevegrunwell/time-constants/issues",
                 "source": "https://github.com/stevegrunwell/time-constants"
             },
-            "time": "2023-12-18T16:07:51+00:00"
+            "time": "2024-08-23T18:33:42+00:00"
         },
         {
             "name": "symfony/clock",
