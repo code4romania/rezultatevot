@@ -19,7 +19,7 @@
         "stevegrunwell/time-constants": "^1.2"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.13",
+        "barryvdh/laravel-debugbar": "^3.14",
         "barryvdh/laravel-ide-helper": "^3.1",
         "fakerphp/faker": "^1.23",
         "friendsofphp/php-cs-fixer": "^3.62",
