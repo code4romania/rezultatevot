@@ -14,7 +14,7 @@
         "jeffgreco13/filament-breezy": "^2.4",
         "laravel/framework": "^11.20",
         "laravel/tinker": "^2.9",
-        "league/flysystem-aws-s3-v3": "^3.28",
+        "league/flysystem-aws-s3-v3": "^3.29",
         "sentry/sentry-laravel": "^4.8",
         "stevegrunwell/time-constants": "^1.2"
     },
