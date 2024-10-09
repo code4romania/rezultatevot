@@ -12,24 +12,23 @@
         "filament/filament": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "jeffgreco13/filament-breezy": "^2.4",
-        "laravel/framework": "^11.20",
-        "laravel/tinker": "^2.9",
-        "league/flysystem-aws-s3-v3": "^3.28",
-        "sentry/sentry-laravel": "^4.8",
-        "stevegrunwell/time-constants": "^1.2"
+        "laravel/framework": "^11.27",
+        "laravel/tinker": "^2.10",
+        "league/flysystem-aws-s3-v3": "^3.29",
+        "sentry/sentry-laravel": "^4.9"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.13",
+        "barryvdh/laravel-debugbar": "^3.14",
         "barryvdh/laravel-ide-helper": "^3.1",
         "fakerphp/faker": "^1.23",
-        "friendsofphp/php-cs-fixer": "^3.62",
+        "friendsofphp/php-cs-fixer": "^3.64",
         "larastan/larastan": "^2.9",
-        "laravel/pint": "^1.17",
-        "laravel/sail": "^1.26",
+        "laravel/pint": "^1.18",
+        "laravel/sail": "^1.35",
         "laravel/telescope": "^5.2",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.4",
-        "phpunit/phpunit": "^11.3",
+        "phpunit/phpunit": "^11.4",
         "spatie/laravel-ignition": "^2.8"
     },
     "autoload": {
