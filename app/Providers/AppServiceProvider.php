@@ -34,5 +34,22 @@ class AppServiceProvider extends ServiceProvider
             Model::preventLazyLoading($shouldBeEnabled);
             Model::preventAccessingMissingAttributes($shouldBeEnabled);
         });
+
+        $this->setSeoDefaults();
+    }
+
+    protected function setSeoDefaults(): void
+    {
+        seo()
+            ->withUrl()
+            ->title(
+                default: config('app.name'),
+                modifier: fn (string $title) => $title . ' — ' . config('app.name')
+            )
+            // TODO: Add a default description
+            // ->description(default: '')
+            ->locale(app()->getLocale())
+            ->favicon()
+            ->twitter();
     }
 }

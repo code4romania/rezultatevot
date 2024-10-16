@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\ElectionFactory;
+use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Election extends Model
+class Election extends Model implements HasName
 {
     /** @use HasFactory<ElectionFactory> */
     use HasFactory;
@@ -18,6 +20,7 @@ class Election extends Model
     protected $fillable = [
         'title',
         'subtitle',
+        'slug',
         'year',
         'is_live',
     ];
@@ -28,5 +31,15 @@ class Election extends Model
             'year' => 'int',
             'is_live' => 'boolean',
         ];
+    }
+
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(ElectionType::class);
+    }
+
+    public function getFilamentName(): string
+    {
+        return \sprintf('%s: %s', $this->year, $this->title);
     }
 }

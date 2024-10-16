@@ -11,7 +11,7 @@ jobs:
   build:
     uses: commitglobal/.github/.github/workflows/build-push-image.yml@main
     with:
-      images: commitglobal/rezultatevot
+      images: code4romania/rezultatevot
     secrets:
       username: ${{ secrets.DOCKER_HUB_USERNAME }}
       token: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}

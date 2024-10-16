@@ -29,6 +29,8 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    protected static bool $isScopedToTenant = false;
+
     protected static ?int $navigationSort = 31;
 
     public static function getNavigationGroup(): ?string

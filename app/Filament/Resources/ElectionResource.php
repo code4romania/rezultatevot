@@ -32,13 +32,15 @@ class ElectionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?int $navigationSort = 21;
+    protected static ?int $navigationSort = 30;
 
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
-        return __('admin.navigation.elections');
+        return __('admin.navigation.admin');
     }
 
     public static function getModelLabel(): string

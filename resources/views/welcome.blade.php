@@ -1,3 +1,3 @@
-<x-layout>
+<x-layouts.app>
     Welcome
-</x-layout>
+</x-layouts.app>
