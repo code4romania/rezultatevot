@@ -14,10 +14,13 @@
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "jeffgreco13/filament-breezy": "^2.4",
         "laravel/framework": "^11.28",
+        "laravel/horizon": "^5.29",
+        "laravel/scout": "^10.11",
         "laravel/tinker": "^2.10",
         "league/flysystem-aws-s3-v3": "^3.29",
         "livewire/livewire": "^3.5",
-        "sentry/sentry-laravel": "^4.9"
+        "sentry/sentry-laravel": "^4.9",
+        "typesense/typesense-php": "^4.9"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",

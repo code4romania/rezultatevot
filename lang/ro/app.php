@@ -11,24 +11,10 @@ return [
         ],
     ],
 
-    'election_round' => [
+    'party' => [
         'label' => [
-            'singular' => 'tur',
-            'plural' => 'tururi',
-        ],
-    ],
-
-    'election_type' => [
-        'label' => [
-            'singular' => 'tip de alegeri',
-            'plural' => 'tipuri de alegeri',
-        ],
-    ],
-
-    'election_round_type' => [
-        'label' => [
-            'singular' => 'tip de tur de scrutin',
-            'plural' => 'tipuri de tururi de scrutin',
+            'singular' => 'partid',
+            'plural' => 'partide',
         ],
     ],
 

@@ -20,6 +20,16 @@ class PartyResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getModelLabel(): string
+    {
+        return __('app.party.label.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('app.party.label.plural');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -36,15 +46,15 @@ class PartyResource extends Resource
                     ->conversion('thumb')
                     ->shrink(),
 
+                ColorColumn::make('color')
+                    ->label(__('admin.field.color'))
+                    ->shrink(),
+
                 TextColumn::make('name')
                     ->label(__('admin.field.name'))
                     ->description(fn (Party $record) => $record->acronym)
                     ->searchable()
                     ->sortable(),
-
-                ColorColumn::make('color')
-                    ->label(__('admin.field.color'))
-                    ->shrink(),
             ])
             ->filters([
                 //
