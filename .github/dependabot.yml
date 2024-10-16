@@ -13,7 +13,7 @@ updates:
       interval: "monthly"
     versioning-strategy: increase
     open-pull-requests-limit: 20
-    rebase-strategy: "disabled"
+    # rebase-strategy: "disabled"
 
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
@@ -22,4 +22,4 @@ updates:
       interval: "monthly"
     versioning-strategy: increase
     open-pull-requests-limit: 20
-    rebase-strategy: "disabled"
+    # rebase-strategy: "disabled"
