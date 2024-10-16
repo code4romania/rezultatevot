@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.10",
         "league/flysystem-aws-s3-v3": "^3.29",
         "livewire/livewire": "^3.5",
+        "maatwebsite/excel": "^3.1",
         "sentry/sentry-laravel": "^4.9",
         "typesense/typesense-php": "^4.9"
     },

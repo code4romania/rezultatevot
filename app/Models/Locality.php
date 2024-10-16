@@ -9,9 +9,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Scout\Searchable;
 
-class City extends Model
+class Locality extends Model
 {
     use Searchable;
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'id',
+        'name',
+        'county_id',
+        'level',
+        'type',
+        'parent_id',
+    ];
 
     public function county(): BelongsTo
     {

@@ -15,13 +15,13 @@ class County extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'id',
         'name',
-        'siruta',
     ];
 
-    public function cities(): HasMany
+    public function localities(): HasMany
     {
-        return $this->hasMany(City::class);
+        return $this->hasMany(Locality::class);
     }
 
     /**
