@@ -20,9 +20,7 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(TelescopeServiceProvider::class);
         }
 
-        Str::macro('initials', fn (?string $value) => collect(explode(' ', (string) $value))
-            ->map(fn (string $word) => Str::upper(Str::substr($word, 0, 1)))
-            ->join(''));
+        $this->registerStrMacros();
     }
 
     /**
@@ -36,6 +34,13 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->setSeoDefaults();
+    }
+
+    protected function registerStrMacros(): void
+    {
+        Str::macro('initials', fn (?string $value) => collect(explode(' ', (string) $value))
+            ->map(fn (string $word) => Str::upper(Str::substr($word, 0, 1)))
+            ->join(''));
     }
 
     protected function setSeoDefaults(): void

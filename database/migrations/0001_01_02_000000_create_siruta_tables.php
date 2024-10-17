@@ -40,8 +40,8 @@ return new class extends Migration
             $table->string('name');
         });
 
-        // Excel::import(new CountiesImport, database_path('data/siruta_s1_2024.xlsx'));
-        // Excel::import(new LocalitiesImport, database_path('data/siruta_s1_2024.xlsx'));
+        // Excel::import(new CountiesImport, database_path('data/240708-siruta.xlsx'));
+        // Excel::import(new LocalitiesImport, database_path('data/240708-siruta.xlsx'));
 
         Schema::withoutForeignKeyConstraints(function () {
             DB::unprepared(
