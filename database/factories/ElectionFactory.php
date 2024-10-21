@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Country;
 use App\Models\Election;
 use App\Models\ElectionType;
+use App\Models\Locality;
 use App\Models\Party;
+use App\Models\Turnout;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Lottery;
 use Illuminate\Support\Str;
 
@@ -53,5 +57,38 @@ class ElectionFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'is_live' => true,
         ]);
+    }
+
+    public function withLocalTurnout(): static
+    {
+        return $this->afterCreating(function (Election $election) {
+            Locality::query()
+                ->chunkById(500, fn (Collection $localities) => Turnout::insert(
+                    $localities
+                        ->map(
+                            fn (Locality $locality) => Turnout::factory()
+                                ->for($election)
+                                ->locality($locality)
+                                ->make()
+                        )
+                        ->toArray()
+                ));
+        });
+    }
+
+    public function withAbroadTurnout(): static
+    {
+        return $this->afterCreating(function (Election $election) {
+            Turnout::insert(
+                Country::all()
+                    ->map(
+                        fn (Country $country) => Turnout::factory()
+                            ->for($election)
+                            ->country($country)
+                            ->make()
+                    )
+                    ->toArray()
+            );
+        });
     }
 }

@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Laravel\Scout\Searchable;
 
 class County extends Model
@@ -22,6 +23,11 @@ class County extends Model
     public function localities(): HasMany
     {
         return $this->hasMany(Locality::class);
+    }
+
+    public function turnouts(): HasManyThrough
+    {
+        return $this->hasManyThrough(Turnout::class, Locality::class);
     }
 
     /**

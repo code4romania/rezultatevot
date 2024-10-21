@@ -21,11 +21,13 @@
         "livewire/livewire": "^3.5",
         "maatwebsite/excel": "^3.1",
         "sentry/sentry-laravel": "^4.9",
+        "staudenmeir/belongs-to-through": "^2.16",
+        "tpetry/laravel-query-expressions": "^1.4",
         "typesense/typesense-php": "^4.9"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
-        "barryvdh/laravel-ide-helper": "^3.1",
+        "barryvdh/laravel-ide-helper": "^3.2",
         "fakerphp/faker": "^1.23",
         "friendsofphp/php-cs-fixer": "^3.64",
         "larastan/larastan": "^2.9",

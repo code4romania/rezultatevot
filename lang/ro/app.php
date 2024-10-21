@@ -18,6 +18,10 @@ return [
         ],
     ],
 
+    'turnout' => [
+        'label' => 'prezență',
+    ],
+
     'user' => [
         'label' => [
             'singular' => 'utilizator',

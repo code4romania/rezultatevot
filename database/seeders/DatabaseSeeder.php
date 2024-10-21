@@ -40,5 +40,12 @@ class DatabaseSeeder extends Seeder
             ->count(10)
             ->recycle($electionTypes)
             ->create();
+
+        Election::factory()
+            ->live()
+            ->withLocalTurnout()
+            ->withAbroadTurnout()
+            ->recycle($electionTypes)
+            ->create();
     }
 }
