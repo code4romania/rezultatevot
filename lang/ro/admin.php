@@ -17,6 +17,7 @@ return [
         'date' => 'Dată',
         'email' => 'Email',
         'id' => 'ID',
+        'siruta' => 'ID SIRUTA',
         'initial_complement' => 'Înscriși pe listele complementare',
         'initial_permanent' => 'Înscriși pe listele permanente',
         'is_live' => 'Live',

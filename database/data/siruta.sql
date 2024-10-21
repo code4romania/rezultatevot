@@ -16963,7 +16963,7 @@ INSERT INTO `localities` (`id`, `county_id`, `level`, `type`, `parent_id`, `name
 (178947, 396, 2, 3, NULL, 'Obrejița'),
 (178956, 396, 2, 3, NULL, 'Răstoaca'),
 (178965, 396, 2, 3, NULL, 'Spulber'),
-(179132, 403, 2, 9, NULL, 'Municipiul'),
+(179132, 403, 2, 9, NULL, 'Municipiul București'),
 (179141, 403, 3, 6, 179132, 'Sectorul 1'),
 (179150, 403, 3, 6, 179132, 'Sectorul 2'),
 (179169, 403, 3, 6, 179132, 'Sectorul 3'),

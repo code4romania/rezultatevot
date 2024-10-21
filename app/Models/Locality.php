@@ -29,6 +29,11 @@ class Locality extends Model
         return $this->belongsTo(County::class);
     }
 
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(static::class, 'parent_id');
+    }
+
     protected function getNameWithCountyAttribute(): string
     {
         return "{$this->name}, {$this->county->name}";

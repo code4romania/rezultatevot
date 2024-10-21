@@ -11,6 +11,13 @@ return [
         ],
     ],
 
+    'election_type' => [
+        'label' => [
+            'singular' => 'tip alegeri',
+            'plural' => 'tipuri alegeri',
+        ],
+    ],
+
     'party' => [
         'label' => [
             'singular' => 'partid',

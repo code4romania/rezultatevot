@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CountryResource\Pages;
-use App\Models\Country;
-use Filament\Forms\Components\TagsInput;
+use App\Filament\Resources\CountyResource\Pages;
+use App\Models\County;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,11 +13,11 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class CountryResource extends Resource
+class CountyResource extends Resource
 {
-    protected static ?string $model = Country::class;
+    protected static ?string $model = County::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-globe-europe-africa';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static bool $isScopedToTenant = false;
 
@@ -27,17 +26,13 @@ class CountryResource extends Resource
         return $form
             ->schema([
                 TextInput::make('id')
-                    ->label(__('admin.field.id'))
+                    ->label(__('admin.field.siruta'))
                     ->unique(ignoreRecord: true)
                     ->required(),
 
                 TextInput::make('name')
                     ->label(__('admin.field.name'))
                     ->required(),
-
-                TagsInput::make('aliases')
-                    ->label(__('admin.field.aliases'))
-                    ->columnSpanFull(),
             ]);
     }
 
@@ -46,8 +41,7 @@ class CountryResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label(__('admin.field.id'))
-                    ->searchable()
+                    ->label(__('admin.field.siruta'))
                     ->sortable()
                     ->shrink(),
 
@@ -55,21 +49,17 @@ class CountryResource extends Resource
                     ->label(__('admin.field.name'))
                     ->searchable()
                     ->sortable(),
-
-                TextColumn::make('aliases')
-                    ->label(__('admin.field.aliases'))
-                    ->searchable()
-                    ->sortable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageCountries::route('/'),
+            'index' => Pages\ManageCounties::route('/'),
         ];
     }
 }
