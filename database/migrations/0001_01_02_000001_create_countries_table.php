@@ -18,6 +18,6 @@ return new class extends Migration
             $table->json('aliases');
         });
 
-        Excel::import(new CountriesImport, database_path('data/countries.csv'));
+        Excel::import(new CountriesImport, 'countries.csv', 'seed-data');
     }
 };

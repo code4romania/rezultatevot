@@ -38,6 +38,12 @@ return [
             'throw' => false,
         ],
 
+        'seed-data' => [
+            'driver' => 'local',
+            'root' => database_path('data'),
+            'read-only' => true,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
