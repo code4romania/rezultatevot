@@ -36,6 +36,13 @@ return [
         'voters_supplement' => 'Votanți pe liste suplimentare',
         'voters_total' => 'Total votanți',
         'year' => 'An',
+        'job' => 'Job',
+        'cron' => 'Interval',
+        'source_url' => 'URL sursă',
+        'source_part' => 'Parte',
+        'source_username' => 'Utilizator',
+        'source_password' => 'Parolă',
+        'is_enabled' => 'Activ',
     ],
 
 ];

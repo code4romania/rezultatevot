@@ -20,12 +20,14 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, HasMedia, HasTenants
 {
+    use HasApiTokens;
     use HasRole;
     /** @use HasFactory<UserFactory> */
     use HasFactory;

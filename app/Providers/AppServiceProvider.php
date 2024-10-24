@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\ScheduledJob;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -33,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
             Model::preventAccessingMissingAttributes($shouldBeEnabled);
         });
 
+        $this->resolveSchedule();
+
         $this->setSeoDefaults();
     }
 
@@ -56,5 +60,21 @@ class AppServiceProvider extends ServiceProvider
             ->locale(app()->getLocale())
             ->favicon()
             ->twitter();
+    }
+
+    protected function resolveSchedule(): void
+    {
+        $this->app->resolving(Schedule::class, function (Schedule $schedule) {
+            ScheduledJob::query()
+                ->with('election')
+                ->where('is_enabled', true)
+                ->each(
+                    fn (ScheduledJob $job) => $schedule
+                        ->job(new $job->job($job))
+                        ->cron($job->cron->value)
+                        ->withoutOverlapping()
+                        ->onOneServer()
+                );
+        });
     }
 }

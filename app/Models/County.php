@@ -17,6 +17,7 @@ class County extends Model
 
     protected $fillable = [
         'id',
+        'code',
         'name',
     ];
 
@@ -39,6 +40,7 @@ class County extends Model
     {
         return [
             'id' => (string) $this->id,
+            'code' => $this->code,
             'name' => $this->name,
         ];
     }
@@ -53,13 +55,17 @@ class County extends Model
                         'type' => 'string',
                     ],
                     [
+                        'name' => 'code',
+                        'type' => 'string',
+                    ],
+                    [
                         'name' => 'name',
                         'type' => 'string',
                     ],
                 ],
             ],
             'search-parameters' => [
-                'query_by' => 'name',
+                'query_by' => 'name,code,id',
             ],
         ];
     }

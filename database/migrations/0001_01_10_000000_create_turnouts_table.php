@@ -29,6 +29,14 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
+            $table->smallInteger('county_id')
+                ->unsigned()
+                ->nullable();
+
+            $table->foreign('county_id')
+                ->references('id')
+                ->on('counties');
+
             $table->mediumInteger('locality_id')
                 ->unsigned()
                 ->nullable();
@@ -36,6 +44,8 @@ return new class extends Migration
             $table->foreign('locality_id')
                 ->references('id')
                 ->on('localities');
+
+            $table->string('section');
 
             $table->mediumInteger('initial_permanent')->unsigned();
             $table->mediumInteger('initial_complement')->unsigned();
@@ -62,8 +72,27 @@ return new class extends Migration
                     ROUND(total  / initial_total * 100, 2)
                 SQL);
 
-            $table->unique(['election_id', 'locality_id']);
-            $table->unique(['election_id', 'country_id']);
+            // $table->unique(['election_id', 'locality_id']);
+            $table->unique(['election_id', 'county_id', 'section']);
+            // $table->unique(['election_id', 'country_id']);
+
+            // $table->integer('eligible_voters')->unsigned();
+            // $table->mediumInteger('total_votes')->unsigned();
+            // $table->mediumInteger('null_votes')->unsigned();
+            // $table->mediumInteger('votes_by_mail')->unsigned();
+            // $table->mediumInteger('valid_votes')->unsigned();
+            // $table->mediumInteger('total_seats')->unsigned(); // TODO: check if we need it. it's currently empty in the old database
+            // $table->mediumInteger('coefficient')->unsigned();
+            // $table->mediumInteger('threshold')->unsigned();
+            // $table->mediumInteger('circumscription')->unsigned();
+            // $table->mediumInteger('min_votes')->unsigned();
+
+            // $table->mediumInteger('division')->unsigned();
+            // $table->mediumInteger('mandates')->unsigned();
+            // $table->mediumInteger('correspondence_votes')->unsigned();
+            // $table->mediumInteger('permanent_lists_votes')->unsigned();
+            // $table->mediumInteger('special_lists_votes')->unsigned();
+            // $table->mediumInteger('supplementary_votes')->unsigned();
         });
     }
 };

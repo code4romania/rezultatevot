@@ -7,9 +7,11 @@ namespace App\Models;
 use Database\Factories\ElectionFactory;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Election extends Model implements HasName, HasAvatar
 {
@@ -37,6 +39,16 @@ class Election extends Model implements HasName, HasAvatar
     public function type(): BelongsTo
     {
         return $this->belongsTo(ElectionType::class);
+    }
+
+    public function scheduledJobs(): HasMany
+    {
+        return $this->hasMany(ScheduledJob::class);
+    }
+
+    public function scopeWhereLive(Builder $query): Builder
+    {
+        return $query->where('is_live', true);
     }
 
     public function getFilamentName(): string

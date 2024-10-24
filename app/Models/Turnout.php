@@ -8,12 +8,9 @@ use Database\Factories\TurnoutFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Znck\Eloquent\Relations\BelongsToThrough;
-use Znck\Eloquent\Traits\BelongsToThrough as BelongsToThroughTrait;
 
 class Turnout extends Model
 {
-    use BelongsToThroughTrait;
     /** @use HasFactory<TurnoutFactory> */
     use HasFactory;
 
@@ -34,6 +31,11 @@ class Turnout extends Model
         'supplement',
         'mobile',
         'has_issues',
+        'country_id',
+        'county_id',
+        'locality_id',
+        'election_id',
+        'section',
     ];
 
     /**
@@ -64,9 +66,9 @@ class Turnout extends Model
         return $this->belongsTo(Country::class);
     }
 
-    public function county(): BelongsToThrough
+    public function county(): BelongsTo
     {
-        return $this->belongsToThrough(County::class, Locality::class);
+        return $this->belongsTo(County::class);
     }
 
     public function locality(): BelongsTo

@@ -7,7 +7,6 @@ use App\Imports\Siruta\LocalitiesImport;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -17,6 +16,7 @@ return new class extends Migration
     {
         Schema::create('counties', function (Blueprint $table) {
             $table->smallInteger('id')->unsigned()->primary();
+            $table->string('code', 2)->unique();
             $table->string('name');
         });
 
@@ -45,7 +45,7 @@ return new class extends Migration
 
         Schema::withoutForeignKeyConstraints(function () {
             DB::unprepared(
-                File::get(database_path('data/siruta.sql'))
+                Storage::disk('seed-data')->get('siruta.sql')
             );
         });
     }

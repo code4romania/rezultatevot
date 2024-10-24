@@ -9,6 +9,7 @@ use App\Models\Election;
 use App\Models\ElectionType;
 use App\Models\Locality;
 use App\Models\Party;
+use App\Models\ScheduledJob;
 use App\Models\Turnout;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
@@ -48,6 +49,12 @@ class ElectionFactory extends Factory
             Party::factory()
                 ->for($election)
                 ->count(rand(25, 50))
+                ->create();
+
+            ScheduledJob::factory()
+                ->for($election)
+                ->enabled($election->is_live)
+                ->count(2)
                 ->create();
         });
     }

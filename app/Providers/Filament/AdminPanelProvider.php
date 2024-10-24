@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Filament\Admin\Pages\Auth\Login;
+use App\Filament\Admin\Resources\ElectionResource;
 use App\Models\Election;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -78,6 +81,11 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->sidebarCollapsibleOnDesktop()
+            ->navigationItems([
+                NavigationItem::make('Settings')
+                    ->icon('heroicon-o-cog')
+                    ->url(fn () => ElectionResource::getUrl('view', ['record' => Filament::getTenant()])),
+            ])
             ->collapsibleNavigationGroups(false);
     }
 
