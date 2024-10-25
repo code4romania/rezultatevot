@@ -68,4 +68,9 @@ return [
         'every_10_8_minutes' => '10+8 minute',
         'every_10_9_minutes' => '10+9 minute',
     ],
+
+    'area' => [
+        'urban' => 'Urban',
+        'rural' => 'Rural',
+    ],
 ];

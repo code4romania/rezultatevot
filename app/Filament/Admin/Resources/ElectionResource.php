@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\ElectionResource\Pages;
+use App\Filament\Admin\Resources\ElectionResource\RelationManagers\ScheduledJobRelationManager;
 use App\Models\Election;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -16,9 +17,8 @@ use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Pages\SubNavigationPosition;
-use Filament\Resources\Pages\EditRecord;
-use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -58,6 +58,8 @@ class ElectionResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make()
+                    ->maxWidth(MaxWidth::ThreeExtraLarge)
+                    ->columns(2)
                     ->schema([
                         Select::make('type')
                             ->label(__('admin.field.type'))
@@ -172,27 +174,18 @@ class ElectionResource extends Resource
             ->defaultSort('id', 'desc');
     }
 
-    public static function getRecordSubNavigation(Page $page): array
+    public static function getRelations(): array
     {
-        return [];
-        if ($page instanceof EditRecord) {
-            return [];
-        }
-
-        return $page->generateNavigationItems([
-            Pages\ViewElection::class,
-            Pages\EditElection::class,
-            // Pages\ElectionRounds\ManageElectionRounds::class,
-        ]);
+        return [
+            ScheduledJobRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListElections::route('/'),
-            'create' => Pages\CreateElection::route('/create'),
             'view' => Pages\ViewElection::route('/{record}'),
-            'edit' => Pages\EditElection::route('/{record}/edit'),
         ];
     }
 }

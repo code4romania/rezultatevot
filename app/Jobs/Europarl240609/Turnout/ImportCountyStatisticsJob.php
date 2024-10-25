@@ -7,7 +7,7 @@ namespace App\Jobs\Europarl240609\Turnout;
 use App\Exceptions\MissingSourceFileException;
 use App\Models\County;
 use App\Models\ScheduledJob;
-use App\Models\Turnout;
+use App\Models\Statistic;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,9 +15,10 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\Middleware\SkipIfBatchCancelled;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 use League\Csv\Reader;
 
-class ImportCountyTurnoutJob implements ShouldQueue
+class ImportCountyStatisticsJob implements ShouldQueue
 {
     use Batchable;
     use Dispatchable;
@@ -47,6 +48,11 @@ class ImportCountyTurnoutJob implements ShouldQueue
         $reader = Reader::createFromStream($disk->readStream($path));
         $reader->setHeaderOffset(0);
 
+        logger()->info('ImportCountyStatisticsJob', [
+            'county' => $this->county->code,
+            'first' => $reader->count(),
+        ]);
+
         $values = collect();
 
         $records = $reader->getRecords();
@@ -55,22 +61,28 @@ class ImportCountyTurnoutJob implements ShouldQueue
                 'election_id' => $this->scheduledJob->election_id,
                 'county_id' => $this->county->id,
                 'locality_id' => $record['Siruta'],
+                'area' => $record['Mediu'],
                 'section' => $record['Nr sectie de votare'],
+                ...Statistic::segments()
+                    ->mapWithKeys(function (array $segment) use ($record) {
+                        $gender = match ($segment[0]) {
+                            'men' => 'Barbati',
+                            'women' => 'Femei',
+                        };
 
-                'initial_permanent' => $record['Înscriși pe liste permanente'],
-                'initial_complement' => 0,
-                'permanent' => $record['LP'],
-                'complement' => $record['LC'],
-                'supplement' => $record['LS'],
-                'mobile' => $record['UM'],
+                        return [
+                            "{$segment[0]}_{$segment[1]}" => data_get($record, "{$gender} {$segment[1]}", 0),
+                        ];
+                    })
+                    ->all(),
             ]);
         }
 
-        Turnout::upsert(
-            $values->all(),
-            ['election_id', 'county_id', 'section'],
-            ['initial_permanent', 'initial_complement', 'permanent', 'complement', 'supplement', 'mobile']
-        );
+        $values->chunk(200)
+            ->each(fn (Collection $chunk) => Statistic::upsert(
+                $chunk->all(),
+                ['election_id', 'county_id', 'section'],
+            ));
     }
 
     public function middleware(): array
@@ -87,7 +99,7 @@ class ImportCountyTurnoutJob implements ShouldQueue
     {
         return [
             'import',
-            'turnout',
+            'statistics',
             'scheduled_job:' . $this->scheduledJob->id,
             'election:' . $this->scheduledJob->election_id,
             'county:' . $this->county->code,

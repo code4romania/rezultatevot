@@ -13,8 +13,6 @@ use Spatie\TemporaryDirectory\TemporaryDirectory;
 
 class FetchTurnoutDataJob extends SchedulableJob
 {
-    public int $chunk = 500;
-
     public static function name(): string
     {
         return 'Europarlamentare 09.06.2024 / Prezență';
@@ -45,11 +43,6 @@ class FetchTurnoutDataJob extends SchedulableJob
 
         $tmpDisk->delete('turnout.csv');
 
-        logger()->info('DispatchTurnoutJob', [
-            'path' => $cwd,
-            'files' => $tmpDisk->allFiles(),
-        ]);
-
         collect($tmpDisk->allFiles())
             ->each(function (string $file) use ($tmpDisk) {
                 $this->scheduledJob->disk()
@@ -59,10 +52,23 @@ class FetchTurnoutDataJob extends SchedulableJob
                     );
             });
 
-        Bus::batch(
-            County::all()
-                ->map(fn (County $county) => new ImportCountyTurnoutJob($this->scheduledJob, $county))
-        )->dispatch();
+        $counties = County::all();
+
+        $electionName = $this->scheduledJob->election->getFilamentName();
+
+        $time = now()->toDateTimeString();
+
+        Bus::chain([
+            Bus::batch(
+                $counties
+                    ->map(fn (County $county) => new ImportCountyTurnoutJob($this->scheduledJob, $county))
+            )->name("$electionName / Prezență / $time"),
+
+            Bus::batch(
+                $counties
+                    ->map(fn (County $county) => new ImportCountyStatisticsJob($this->scheduledJob, $county))
+            )->name("$electionName / Statistici / $time"),
+        ])->onQueue('sequential')->dispatch();
     }
 
     /**

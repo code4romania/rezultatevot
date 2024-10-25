@@ -8,5 +8,8 @@ use Exception;
 
 class InvalidSourceUrlException extends Exception
 {
-//
+    public function __construct(string $url)
+    {
+        parent::__construct("Invalid source url: {$url}");
+    }
 }

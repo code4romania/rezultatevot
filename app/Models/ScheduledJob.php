@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Storage;
 
 class ScheduledJob extends Model
 {
@@ -87,7 +87,7 @@ class ScheduledJob extends Model
     public function getPreparedSourceUrl(array $map = []): string
     {
         if (blank($this->source_url)) {
-            throw new MissingSourceUrlException();
+            throw new MissingSourceUrlException;
         }
 
         $map = array_merge($map, [
@@ -103,7 +103,7 @@ class ScheduledJob extends Model
         );
 
         if (filter_var($url, \FILTER_VALIDATE_URL) === false) {
-            throw new InvalidSourceUrlException();
+            throw new InvalidSourceUrlException($url);
         }
 
         return $url;

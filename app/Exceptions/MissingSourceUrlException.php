@@ -8,5 +8,8 @@ use Exception;
 
 class MissingSourceUrlException extends Exception
 {
-    //
+    public function __construct()
+    {
+        parent::__construct('Missing source url');
+    }
 }

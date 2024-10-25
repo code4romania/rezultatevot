@@ -74,7 +74,7 @@ return new class extends Migration
 
             // $table->unique(['election_id', 'locality_id']);
             $table->unique(['election_id', 'county_id', 'section']);
-            // $table->unique(['election_id', 'country_id']);
+            $table->unique(['election_id', 'country_id', 'section']);
 
             // $table->integer('eligible_voters')->unsigned();
             // $table->mediumInteger('total_votes')->unsigned();
