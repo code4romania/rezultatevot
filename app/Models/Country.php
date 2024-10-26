@@ -69,7 +69,7 @@ class Country extends Model
                 ],
             ],
             'search-parameters' => [
-                'query_by' => 'name',
+                'query_by' => 'name,aliases',
             ],
         ];
     }

@@ -13,7 +13,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\Middleware\SkipIfBatchCancelled;
 use Illuminate\Queue\SerializesModels;
 use League\Csv\Reader;
 
@@ -49,6 +48,8 @@ class ImportCountyTurnoutJob implements ShouldQueue
 
         $values = collect();
 
+        $segments = Turnout::segmentsMap();
+
         $records = $reader->getRecords();
         foreach ($records as $record) {
             $values->push([
@@ -63,19 +64,14 @@ class ImportCountyTurnoutJob implements ShouldQueue
                 'complement' => $record['LC'],
                 'supplement' => $record['LS'],
                 'mobile' => $record['UM'],
+
+                'area' => $record['Mediu'],
+
+                ...$segments->map(fn (string $segment) => $record[$segment]),
             ]);
         }
 
-        Turnout::upsert(
-            $values->all(),
-            ['election_id', 'county_id', 'section'],
-            ['initial_permanent', 'initial_complement', 'permanent', 'complement', 'supplement', 'mobile']
-        );
-    }
-
-    public function middleware(): array
-    {
-        return [new SkipIfBatchCancelled];
+        Turnout::saveToTemporaryTable($values->all());
     }
 
     /**

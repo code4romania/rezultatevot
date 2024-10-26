@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Jobs\Europarl240609\Turnout;
 
+use App\Jobs\DeleteTemporaryTableData;
+use App\Jobs\PersistTemporaryTableData;
 use App\Jobs\SchedulableJob;
 use App\Models\County;
+use App\Models\Turnout;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
@@ -55,20 +58,25 @@ class FetchTurnoutDataJob extends SchedulableJob
         $counties = County::all();
 
         $electionName = $this->scheduledJob->election->getFilamentName();
+        $electionId = $this->scheduledJob->election_id;
 
         $time = now()->toDateTimeString();
 
-        Bus::chain([
-            Bus::batch(
-                $counties
-                    ->map(fn (County $county) => new ImportCountyTurnoutJob($this->scheduledJob, $county))
-            )->name("$electionName / Prezență / $time"),
+        $jobs = $counties
+            ->map(fn (County $county) => new ImportCountyTurnoutJob($this->scheduledJob, $county))
+            ->push(new ImportAbroadTurnoutJob($this->scheduledJob));
 
-            Bus::batch(
-                $counties
-                    ->map(fn (County $county) => new ImportCountyStatisticsJob($this->scheduledJob, $county))
-            )->name("$electionName / Statistici / $time"),
-        ])->onQueue('sequential')->dispatch();
+        $persistAndClean = fn () => Bus::chain([
+            new PersistTemporaryTableData(Turnout::class, $electionId),
+            new DeleteTemporaryTableData(Turnout::class, $electionId),
+        ])->dispatch();
+
+        Bus::batch($jobs)
+            ->catch($persistAndClean)
+            ->then($persistAndClean)
+            ->name("$electionName / Prezență / $time")
+            ->allowFailures()
+            ->dispatch();
     }
 
     /**

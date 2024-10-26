@@ -25,6 +25,7 @@ class TurnoutFactory extends Factory
         $initial_complement = fake()->randomNumber(7);
 
         return [
+            'section' => fake()->unique()->lexify('?????????'),
             'election_id' => Election::factory(),
             'initial_permanent' => $initial_permanent,
             'initial_complement' => $initial_complement,

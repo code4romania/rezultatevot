@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\HasTemporaryTable;
+use App\Contracts\TemporaryTable;
+use App\Enums\Area;
 use Database\Factories\TurnoutFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 
-class Turnout extends Model
+class Turnout extends Model implements TemporaryTable
 {
     /** @use HasFactory<TurnoutFactory> */
     use HasFactory;
+    use HasTemporaryTable;
 
     public $timestamps = false;
 
@@ -36,6 +41,17 @@ class Turnout extends Model
         'locality_id',
         'election_id',
         'section',
+        'area',
+        'men_18-24',
+        'men_25-34',
+        'men_35-44',
+        'men_45-64',
+        'men_65',
+        'women_18-24',
+        'women_25-34',
+        'women_35-44',
+        'women_45-64',
+        'women_65',
     ];
 
     /**
@@ -53,6 +69,18 @@ class Turnout extends Model
             'supplement' => 'integer',
             'mobile' => 'integer',
             'has_issues' => 'boolean',
+
+            'area' => Area::class,
+            'men_18-24' => 'integer',
+            'men_25-34' => 'integer',
+            'men_35-44' => 'integer',
+            'men_45-64' => 'integer',
+            'men_65' => 'integer',
+            'women_18-24' => 'integer',
+            'women_25-34' => 'integer',
+            'women_35-44' => 'integer',
+            'women_45-64' => 'integer',
+            'women_65' => 'integer',
         ];
     }
 
@@ -74,5 +102,34 @@ class Turnout extends Model
     public function locality(): BelongsTo
     {
         return $this->belongsTo(Locality::class);
+    }
+
+    public static function segments(): Collection
+    {
+        return collect(['men', 'women'])
+            ->crossJoin(['18-24', '25-34', '35-44', '45-64', '65']);
+    }
+
+    public static function segmentsMap(): Collection
+    {
+        return static::segments()
+            ->mapWithKeys(fn (array $segment) => [
+                "{$segment[0]}_{$segment[1]}" => \sprintf(
+                    '%s %s',
+                    match ($segment[0]) {
+                        'men' => 'Barbati',
+                        'women' => 'Femei',
+                    },
+                    match ($segment[1]) {
+                        default => $segment[1],
+                        '65' => '65+'
+                    }
+                ),
+            ]);
+    }
+
+    public function getTemporaryTableUniqueColumns(): array
+    {
+        return ['election_id', 'county_id', 'country_id', 'section'];
     }
 }

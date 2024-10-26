@@ -56,19 +56,19 @@ return new class extends Migration
 
             $table->integer('initial_total')
                 ->unsigned()
-                ->virtualAs(<<<'SQL'
+                ->storedAs(<<<'SQL'
                     initial_permanent + initial_complement
                 SQL);
 
             $table->integer('total')
                 ->unsigned()
-                ->virtualAs(<<<'SQL'
+                ->storedAs(<<<'SQL'
                     permanent + complement + supplement + mobile
                 SQL);
 
             $table->float('percent', 2)
                 ->unsigned()
-                ->virtualAs(<<<'SQL'
+                ->storedAs(<<<'SQL'
                     ROUND(total  / initial_total * 100, 2)
                 SQL);
 
@@ -76,23 +76,59 @@ return new class extends Migration
             $table->unique(['election_id', 'county_id', 'section']);
             $table->unique(['election_id', 'country_id', 'section']);
 
-            // $table->integer('eligible_voters')->unsigned();
-            // $table->mediumInteger('total_votes')->unsigned();
-            // $table->mediumInteger('null_votes')->unsigned();
-            // $table->mediumInteger('votes_by_mail')->unsigned();
-            // $table->mediumInteger('valid_votes')->unsigned();
-            // $table->mediumInteger('total_seats')->unsigned(); // TODO: check if we need it. it's currently empty in the old database
-            // $table->mediumInteger('coefficient')->unsigned();
-            // $table->mediumInteger('threshold')->unsigned();
-            // $table->mediumInteger('circumscription')->unsigned();
-            // $table->mediumInteger('min_votes')->unsigned();
+            $table->string('area', 1)->nullable();
 
-            // $table->mediumInteger('division')->unsigned();
-            // $table->mediumInteger('mandates')->unsigned();
-            // $table->mediumInteger('correspondence_votes')->unsigned();
-            // $table->mediumInteger('permanent_lists_votes')->unsigned();
-            // $table->mediumInteger('special_lists_votes')->unsigned();
-            // $table->mediumInteger('supplementary_votes')->unsigned();
+            $table->mediumInteger('men_18-24')->unsigned()->default(0);
+            $table->mediumInteger('men_25-34')->unsigned()->default(0);
+            $table->mediumInteger('men_35-44')->unsigned()->default(0);
+            $table->mediumInteger('men_45-64')->unsigned()->default(0);
+            $table->mediumInteger('men_65')->unsigned()->default(0);
+            $table->mediumInteger('women_18-24')->unsigned()->default(0);
+            $table->mediumInteger('women_25-34')->unsigned()->default(0);
+            $table->mediumInteger('women_35-44')->unsigned()->default(0);
+            $table->mediumInteger('women_45-64')->unsigned()->default(0);
+            $table->mediumInteger('women_65')->unsigned()->default(0);
+        });
+
+        Schema::create('_temp_turnouts', function (Blueprint $table) {
+            $table->boolean('has_issues')->default(false);
+
+            $table->bigInteger('election_id')
+                ->unsigned()
+                ->nullable();
+
+            $table->string('country_id', 2)
+                ->nullable();
+
+            $table->smallInteger('county_id')
+                ->unsigned()
+                ->nullable();
+
+            $table->mediumInteger('locality_id')
+                ->unsigned()
+                ->nullable();
+
+            $table->string('section');
+
+            $table->mediumInteger('initial_permanent')->unsigned();
+            $table->mediumInteger('initial_complement')->unsigned();
+            $table->mediumInteger('permanent')->unsigned();
+            $table->mediumInteger('complement')->unsigned();
+            $table->mediumInteger('supplement')->unsigned();
+            $table->mediumInteger('mobile')->unsigned();
+
+            $table->string('area', 1)->nullable();
+
+            $table->mediumInteger('men_18-24')->unsigned();
+            $table->mediumInteger('men_25-34')->unsigned();
+            $table->mediumInteger('men_35-44')->unsigned();
+            $table->mediumInteger('men_45-64')->unsigned();
+            $table->mediumInteger('men_65')->unsigned();
+            $table->mediumInteger('women_18-24')->unsigned();
+            $table->mediumInteger('women_25-34')->unsigned();
+            $table->mediumInteger('women_35-44')->unsigned();
+            $table->mediumInteger('women_45-64')->unsigned();
+            $table->mediumInteger('women_65')->unsigned();
         });
     }
 };
