@@ -9,6 +9,7 @@ use App\Models\ElectionType;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -47,5 +48,7 @@ class DatabaseSeeder extends Seeder
             // ->withAbroadTurnout()
             ->recycle($electionTypes)
             ->create();
+
+        Artisan::call('scout:rebuild');
     }
 }

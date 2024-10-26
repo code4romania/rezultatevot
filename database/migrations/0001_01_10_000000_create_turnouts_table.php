@@ -69,10 +69,9 @@ return new class extends Migration
             $table->float('percent', 2)
                 ->unsigned()
                 ->storedAs(<<<'SQL'
-                    ROUND(total  / initial_total * 100, 2)
+                    IF(initial_total > 0, ROUND(total  / initial_total * 100, 2), 0)
                 SQL);
 
-            // $table->unique(['election_id', 'locality_id']);
             $table->unique(['election_id', 'county_id', 'section']);
             $table->unique(['election_id', 'country_id', 'section']);
 
