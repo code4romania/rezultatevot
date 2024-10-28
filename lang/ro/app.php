@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 return [
 
+    'banner' => 'O soluție Commit Global.',
+    'skip' => 'Sari la conținut',
+
     'election' => [
         'label' => [
             'singular' => 'alegere',

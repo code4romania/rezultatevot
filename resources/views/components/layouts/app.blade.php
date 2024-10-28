@@ -16,9 +16,16 @@
             display: none !important;
         }
     </style>
+
+    <x-site.analytics />
 </head>
 
-<body class="flex flex-col min-h-screen antialiased">
+<body class="flex flex-col min-h-screen font-sans antialiased">
+    <x-site.skip-to-content />
+    <x-site.banner />
+
+    <x-site.header />
+
     <main id="content" class="flex-1 mb-12 lg:mb-16">
         {{ $slot }}
     </main>

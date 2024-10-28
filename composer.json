@@ -9,7 +9,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "andreiio/blade-remix-icon": "^3.4",
         "archtechx/laravel-seo": "^0.10.1",
+        "blade-ui-kit/blade-icons": "^1.7",
         "filament/filament": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "haydenpierce/class-finder": "^0.5.3",
@@ -78,7 +80,9 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "test": [
-            "@php artisan test",
+            "@php artisan test"
+        ],
+        "analyse": [
             "./vendor/bin/phpstan analyse"
         ]
     },

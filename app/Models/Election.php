@@ -36,6 +36,15 @@ class Election extends Model implements HasName, HasAvatar
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('latest', function (Builder $query) {
+            return $query
+                ->orderByDesc('year')
+                ->orderByDesc('is_live');
+        });
+    }
+
     public function type(): BelongsTo
     {
         return $this->belongsTo(ElectionType::class);

@@ -13,8 +13,11 @@ trait HasTemporaryTable
         return '_temp_' . $this->getTable();
     }
 
+    /**
+     * @param array<string|int> $values
+     */
     public static function saveToTemporaryTable(array $values): void
     {
-        DB::table((new static())->getTemporaryTable())->insert($values);
+        DB::table(app(static::class)->getTemporaryTable())->insert($values);
     }
 }
