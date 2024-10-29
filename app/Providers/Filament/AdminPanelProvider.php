@@ -86,7 +86,8 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-cog')
                     ->url(fn () => ElectionResource::getUrl('view', ['record' => Filament::getTenant()])),
             ])
-            ->collapsibleNavigationGroups(false);
+            ->collapsibleNavigationGroups(false)
+            ->databaseNotifications();
     }
 
     public function register(): void

@@ -66,12 +66,26 @@ class ImportCountyTurnoutJob implements ShouldQueue
                 'mobile' => $record['UM'],
 
                 'area' => $record['Mediu'],
+                'has_issues' => $this->determineIfHasIssues($record),
 
                 ...$segments->map(fn (string $segment) => $record[$segment]),
             ]);
         }
 
         Turnout::saveToTemporaryTable($values->all());
+    }
+
+    protected function determineIfHasIssues(array $record): bool
+    {
+        $computedTotal = collect(['LP', 'LC', 'LS', 'UM'])
+            ->map(fn (string $key) => $record[$key])
+            ->sum();
+
+        if ($computedTotal !== $record['LT']) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\Europarl240609\Turnout;
 
+use App\Events\CountryCodeNotFound;
 use App\Exceptions\CountryCodeNotFoundException;
 use App\Exceptions\MissingSourceFileException;
 use App\Models\Country;
@@ -16,7 +17,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use League\Csv\Reader;
-use Throwable;
 
 class ImportAbroadTurnoutJob implements ShouldQueue
 {
@@ -65,17 +65,29 @@ class ImportAbroadTurnoutJob implements ShouldQueue
                     'mobile' => $record['UM'],
 
                     'area' => $record['Mediu'],
+                    'has_issues' => $this->determineIfHasIssues($record),
 
                     ...$segments->map(fn (string $segment) => $record[$segment]),
                 ]);
             } catch (CountryCodeNotFoundException $th) {
-                logger()->info($th->getMessage());
-            } catch (Throwable $th) {
-                // TODO: filament notification
+                CountryCodeNotFound::dispatch($record['UAT'], $this->scheduledJob->election);
             }
         }
 
         Turnout::saveToTemporaryTable($values->all());
+    }
+
+    protected function determineIfHasIssues(array $record): bool
+    {
+        $computedTotal = collect(['LP', 'LC', 'LS', 'UM'])
+            ->map(fn (string $key) => $record[$key])
+            ->sum();
+
+        if ($computedTotal !== $record['LT']) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function getCountryId(string $name): string
