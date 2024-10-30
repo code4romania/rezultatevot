@@ -40,7 +40,7 @@ class ElectionResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('admin.navigation.admin');
+        return __('app.navigation.admin');
     }
 
     public static function getModelLabel(): string
@@ -62,23 +62,23 @@ class ElectionResource extends Resource
                     ->columns(2)
                     ->schema([
                         Select::make('type')
-                            ->label(__('admin.field.type'))
+                            ->label(__('app.field.type'))
                             ->relationship('type', 'name')
                             ->required(),
 
                         TextInput::make('title')
-                            ->label(__('admin.field.title'))
+                            ->label(__('app.field.title'))
                             ->required(),
 
                         TextInput::make('subtitle')
-                            ->label(__('admin.field.subtitle'))
+                            ->label(__('app.field.subtitle'))
                             ->nullable(),
 
                         /*
                          * @see https://dev.mysql.com/doc/refman/8.4/en/year.html Documentation for the YEAR data type
                          */
                         TextInput::make('year')
-                            ->label(__('admin.field.year'))
+                            ->label(__('app.field.year'))
                             ->minValue(1901)
                             ->maxValue(2155)
                             ->numeric()
@@ -86,7 +86,7 @@ class ElectionResource extends Resource
                             ->required(),
 
                         Toggle::make('is_live')
-                            ->label(__('admin.field.is_live'))
+                            ->label(__('app.field.is_live'))
                             ->default(false),
 
                     ]),
@@ -103,16 +103,16 @@ class ElectionResource extends Resource
                     ->columns(2)
                     ->schema([
                         TextEntry::make('title')
-                            ->label(__('admin.field.title')),
+                            ->label(__('app.field.title')),
 
                         TextEntry::make('subtitle')
-                            ->label(__('admin.field.subtitle')),
+                            ->label(__('app.field.subtitle')),
 
                         TextEntry::make('year')
-                            ->label(__('admin.field.year')),
+                            ->label(__('app.field.year')),
 
                         IconEntry::make('is_live')
-                            ->label(__('admin.field.is_live'))
+                            ->label(__('app.field.is_live'))
                             ->boolean(),
                     ]),
 
@@ -120,11 +120,11 @@ class ElectionResource extends Resource
                     ->columnSpan(1)
                     ->schema([
                         TextEntry::make('created_at')
-                            ->label(__('admin.field.created_at'))
+                            ->label(__('app.field.created_at'))
                             ->dateTime(),
 
                         TextEntry::make('updated_at')
-                            ->label(__('admin.field.updated_at'))
+                            ->label(__('app.field.updated_at'))
                             ->dateTime(),
                     ]),
 
@@ -136,31 +136,31 @@ class ElectionResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label(__('admin.field.id'))
+                    ->label(__('app.field.id'))
                     ->sortable()
                     ->shrink(),
 
                 TextColumn::make('type.name')
-                    ->label(__('admin.field.type'))
+                    ->label(__('app.field.type'))
                     ->sortable(),
 
                 TextColumn::make('title')
-                    ->label(__('admin.field.title'))
+                    ->label(__('app.field.title'))
                     ->searchable()
                     ->sortable()
                     ->description(fn (Election $record) => $record->subtitle),
 
                 TextColumn::make('year')
-                    ->label(__('admin.field.year'))
+                    ->label(__('app.field.year'))
                     ->sortable(),
 
                 IconColumn::make('is_live')
-                    ->label(__('admin.field.is_live'))
+                    ->label(__('app.field.is_live'))
                     ->boolean(),
             ])
             ->filters([
                 SelectFilter::make('type')
-                    ->label(__('admin.field.type'))
+                    ->label(__('app.field.type'))
                     ->relationship('type', 'name'),
             ])
             ->filtersLayout(FiltersLayout::AboveContent)

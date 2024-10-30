@@ -9,6 +9,7 @@ use App\Models\Election;
 use App\Models\ElectionType;
 use App\Models\Locality;
 use App\Models\Party;
+use App\Models\Result;
 use App\Models\ScheduledJob;
 use App\Models\Turnout;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -90,6 +91,39 @@ class ElectionFactory extends Factory
                 Country::all()
                     ->map(
                         fn (Country $country) => Turnout::factory()
+                            ->for($election)
+                            ->country($country)
+                            ->make()
+                    )
+                    ->toArray()
+            );
+        });
+    }
+
+    public function withLocalResults(): static
+    {
+        return $this->afterCreating(function (Election $election) {
+            Locality::query()
+                ->chunkById(500, fn (Collection $localities) => Result::insert(
+                    $localities
+                        ->map(
+                            fn (Locality $locality) => Result::factory()
+                                ->for($election)
+                                ->locality($locality)
+                                ->make()
+                        )
+                        ->toArray()
+                ));
+        });
+    }
+
+    public function withAbroadResults(): static
+    {
+        return $this->afterCreating(function (Election $election) {
+            Result::insert(
+                Country::all()
+                    ->map(
+                        fn (Country $country) => Result::factory()
                             ->for($election)
                             ->country($country)
                             ->make()

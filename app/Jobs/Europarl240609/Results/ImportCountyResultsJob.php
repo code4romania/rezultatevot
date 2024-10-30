@@ -2,21 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Europarl240609\Turnout;
+namespace App\Jobs\Europarl240609\Results;
 
 use App\Exceptions\MissingSourceFileException;
 use App\Models\County;
+use App\Models\Result;
 use App\Models\ScheduledJob;
-use App\Models\Turnout;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Str;
 use League\Csv\Reader;
 
-class ImportCountyTurnoutJob implements ShouldQueue
+class ImportCountyResultsJob implements ShouldQueue
 {
     use Batchable;
     use Dispatchable;
@@ -27,6 +28,16 @@ class ImportCountyTurnoutJob implements ShouldQueue
     public ScheduledJob $scheduledJob;
 
     public County $county;
+
+    public function tries(): int
+    {
+        return 5;
+    }
+
+    public function backoff(): array
+    {
+        return [1, 5, 10, 20, 30];
+    }
 
     public function __construct(ScheduledJob $scheduledJob, County $county)
     {
@@ -39,6 +50,13 @@ class ImportCountyTurnoutJob implements ShouldQueue
         $disk = $this->scheduledJob->disk();
         $path = $this->scheduledJob->getSourcePath("{$this->county->code}.csv");
 
+        $disk->put(
+            $path,
+            $this->scheduledJob
+                ->fetchSource(['{{county}}' => Str::lower($this->county->code)])
+                ->resource()
+        );
+
         if (! $disk->exists($path)) {
             throw new MissingSourceFileException($path);
         }
@@ -48,40 +66,52 @@ class ImportCountyTurnoutJob implements ShouldQueue
 
         $values = collect();
 
-        $segments = Turnout::segmentsMap();
-
         $records = $reader->getRecords();
         foreach ($records as $record) {
             $values->push([
                 'election_id' => $this->scheduledJob->election_id,
                 'county_id' => $this->county->id,
-                'locality_id' => $record['Siruta'],
-                'section' => $record['Nr sectie de votare'],
+                'locality_id' => $record['uat_siruta'],
+                'section' => $record['precinct_nr'],
 
-                'initial_permanent' => $record['Înscriși pe liste permanente'],
-                'initial_complement' => 0,
-                'permanent' => $record['LP'],
-                'complement' => $record['LC'],
-                'supplement' => $record['LS'],
-                'mobile' => $record['UM'],
+                'eligible_voters_permanent' => $record['a1'],
+                'eligible_voters_special' => $record['a2'],
 
-                'area' => $record['Mediu'],
+                'present_voters_permanent' => $record['b1'],
+                'present_voters_special' => $record['b2'],
+                'present_voters_supliment' => $record['b3'],
+
+                'papers_received' => $record['c'],
+                'papers_unused' => $record['d'],
+                'votes_valid' => $record['e'],
+                'votes_null' => $record['f'],
+
                 'has_issues' => $this->determineIfHasIssues($record),
-
-                ...$segments->map(fn (string $segment) => $record[$segment]),
             ]);
         }
 
-        Turnout::saveToTemporaryTable($values->all());
+        Result::saveToTemporaryTable($values->all());
     }
 
     protected function determineIfHasIssues(array $record): bool
     {
-        $computedTotal = collect(['LP', 'LC', 'LS', 'UM'])
-            ->map(fn (string $key) => $record[$key])
-            ->sum();
+        if ($record['a'] != $record['a1'] + $record['a2']) {
+            return true;
+        }
 
-        if ($computedTotal !== $record['LT']) {
+        if ($record['a1'] < $record['b1']) {
+            return true;
+        }
+
+        if ($record['a2'] < $record['b2']) {
+            return true;
+        }
+
+        if ($record['b'] != $record['b1'] + $record['b2'] + $record['b3']) {
+            return true;
+        }
+
+        if ($record['c'] < $record['d'] + $record['e'] + $record['f']) {
             return true;
         }
 
@@ -97,7 +127,7 @@ class ImportCountyTurnoutJob implements ShouldQueue
     {
         return [
             'import',
-            'turnout',
+            'results',
             'scheduled_job:' . $this->scheduledJob->id,
             'election:' . $this->scheduledJob->election_id,
             'county:' . $this->county->code,

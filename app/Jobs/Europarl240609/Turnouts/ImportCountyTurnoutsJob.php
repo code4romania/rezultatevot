@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Europarl240609\Turnout;
+namespace App\Jobs\Europarl240609\Turnouts;
 
-use App\Events\CountryCodeNotFound;
-use App\Exceptions\CountryCodeNotFoundException;
 use App\Exceptions\MissingSourceFileException;
-use App\Models\Country;
+use App\Models\County;
 use App\Models\ScheduledJob;
 use App\Models\Turnout;
 use Illuminate\Bus\Batchable;
@@ -18,7 +16,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use League\Csv\Reader;
 
-class ImportAbroadTurnoutJob implements ShouldQueue
+class ImportCountyTurnoutsJob implements ShouldQueue
 {
     use Batchable;
     use Dispatchable;
@@ -28,15 +26,18 @@ class ImportAbroadTurnoutJob implements ShouldQueue
 
     public ScheduledJob $scheduledJob;
 
-    public function __construct(ScheduledJob $scheduledJob)
+    public County $county;
+
+    public function __construct(ScheduledJob $scheduledJob, County $county)
     {
         $this->scheduledJob = $scheduledJob;
+        $this->county = $county;
     }
 
     public function handle(): void
     {
         $disk = $this->scheduledJob->disk();
-        $path = $this->scheduledJob->getSourcePath('SR.csv');
+        $path = $this->scheduledJob->getSourcePath("{$this->county->code}.csv");
 
         if (! $disk->exists($path)) {
             throw new MissingSourceFileException($path);
@@ -51,27 +52,24 @@ class ImportAbroadTurnoutJob implements ShouldQueue
 
         $records = $reader->getRecords();
         foreach ($records as $record) {
-            try {
-                $values->push([
-                    'election_id' => $this->scheduledJob->election_id,
-                    'country_id' => $this->getCountryId($record['UAT']),
-                    'section' => $record['Nr sectie de votare'],
+            $values->push([
+                'election_id' => $this->scheduledJob->election_id,
+                'county_id' => $this->county->id,
+                'locality_id' => $record['Siruta'],
+                'section' => $record['Nr sectie de votare'],
 
-                    'initial_permanent' => $record['Înscriși pe liste permanente'],
-                    'initial_complement' => 0,
-                    'permanent' => $record['LP'],
-                    'complement' => $record['LC'],
-                    'supplement' => $record['LS'],
-                    'mobile' => $record['UM'],
+                'initial_permanent' => $record['Înscriși pe liste permanente'],
+                'initial_complement' => 0,
+                'permanent' => $record['LP'],
+                'complement' => $record['LC'],
+                'supplement' => $record['LS'],
+                'mobile' => $record['UM'],
 
-                    'area' => $record['Mediu'],
-                    'has_issues' => $this->determineIfHasIssues($record),
+                'area' => $record['Mediu'],
+                'has_issues' => $this->determineIfHasIssues($record),
 
-                    ...$segments->map(fn (string $segment) => $record[$segment]),
-                ]);
-            } catch (CountryCodeNotFoundException $th) {
-                CountryCodeNotFound::dispatch($record['UAT'], $this->scheduledJob->election);
-            }
+                ...$segments->map(fn (string $segment) => $record[$segment]),
+            ]);
         }
 
         Turnout::saveToTemporaryTable($values->all());
@@ -90,17 +88,6 @@ class ImportAbroadTurnoutJob implements ShouldQueue
         return false;
     }
 
-    protected function getCountryId(string $name): string
-    {
-        $country = Country::search($name)->first();
-
-        if (! $country) {
-            throw new CountryCodeNotFoundException($name);
-        }
-
-        return $country->id;
-    }
-
     /**
      * Get the tags that should be assigned to the job.
      *
@@ -113,7 +100,7 @@ class ImportAbroadTurnoutJob implements ShouldQueue
             'turnout',
             'scheduled_job:' . $this->scheduledJob->id,
             'election:' . $this->scheduledJob->election_id,
-            'abroad',
+            'county:' . $this->county->code,
         ];
     }
 }

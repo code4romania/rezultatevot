@@ -27,16 +27,16 @@ class CountryResource extends Resource
         return $form
             ->schema([
                 TextInput::make('id')
-                    ->label(__('admin.field.id'))
+                    ->label(__('app.field.id'))
                     ->unique(ignoreRecord: true)
                     ->required(),
 
                 TextInput::make('name')
-                    ->label(__('admin.field.name'))
+                    ->label(__('app.field.name'))
                     ->required(),
 
                 TagsInput::make('aliases')
-                    ->label(__('admin.field.aliases'))
+                    ->label(__('app.field.aliases'))
                     ->columnSpanFull(),
             ]);
     }
@@ -46,18 +46,18 @@ class CountryResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label(__('admin.field.id'))
+                    ->label(__('app.field.id'))
                     ->searchable()
                     ->sortable()
                     ->shrink(),
 
                 TextColumn::make('name')
-                    ->label(__('admin.field.name'))
+                    ->label(__('app.field.name'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('aliases')
-                    ->label(__('admin.field.aliases'))
+                    ->label(__('app.field.aliases'))
                     ->searchable()
                     ->sortable(),
             ])

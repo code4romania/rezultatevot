@@ -35,7 +35,7 @@ class UserResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('admin.navigation.admin');
+        return __('app.navigation.admin');
     }
 
     public static function getModelLabel(): string
@@ -62,16 +62,16 @@ class UserResource extends Resource
                     Group::make()
                         ->schema([
                             TextInput::make('name')
-                                ->label(__('admin.field.name'))
+                                ->label(__('app.field.name'))
                                 ->required(),
 
                             TextInput::make('email')
-                                ->label(__('admin.field.email'))
+                                ->label(__('app.field.email'))
                                 ->required()
                                 ->unique(ignoreRecord: true),
 
                             Select::make('role')
-                                ->label(__('admin.field.role'))
+                                ->label(__('app.field.role'))
                                 ->options(Role::options())
                                 ->enum(Role::class)
                                 ->reactive()
@@ -95,13 +95,13 @@ class UserResource extends Resource
                     Infolists\Components\Group::make()
                         ->schema([
                             TextEntry::make('name')
-                                ->label(__('admin.field.name')),
+                                ->label(__('app.field.name')),
 
                             TextEntry::make('email')
-                                ->label(__('admin.field.email')),
+                                ->label(__('app.field.email')),
 
                             TextEntry::make('role')
-                                ->label(__('admin.field.role')),
+                                ->label(__('app.field.role')),
                         ]),
                 ]),
             ]);
@@ -117,15 +117,15 @@ class UserResource extends Resource
                     ->shrink(),
 
                 TextColumn::make('name')
-                    ->label(__('admin.field.name'))
+                    ->label(__('app.field.name'))
                     ->searchable(),
 
                 TextColumn::make('email')
-                    ->label(__('admin.field.email'))
+                    ->label(__('app.field.email'))
                     ->searchable(),
 
                 TextColumn::make('role')
-                    ->label(__('admin.field.role')),
+                    ->label(__('app.field.role')),
             ])
             ->filters([
                 //

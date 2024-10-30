@@ -26,12 +26,12 @@ class CountyResource extends Resource
         return $form
             ->schema([
                 TextInput::make('id')
-                    ->label(__('admin.field.siruta'))
+                    ->label(__('app.field.siruta'))
                     ->unique(ignoreRecord: true)
                     ->required(),
 
                 TextInput::make('name')
-                    ->label(__('admin.field.name'))
+                    ->label(__('app.field.name'))
                     ->required(),
             ]);
     }
@@ -41,12 +41,12 @@ class CountyResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label(__('admin.field.siruta'))
+                    ->label(__('app.field.siruta'))
                     ->sortable()
                     ->shrink(),
 
                 TextColumn::make('name')
-                    ->label(__('admin.field.name'))
+                    ->label(__('app.field.name'))
                     ->searchable()
                     ->sortable(),
             ])

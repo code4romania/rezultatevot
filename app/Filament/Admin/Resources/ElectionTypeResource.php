@@ -25,7 +25,7 @@ class ElectionTypeResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('admin.navigation.admin');
+        return __('app.navigation.admin');
     }
 
     public static function getModelLabel(): string
@@ -43,7 +43,7 @@ class ElectionTypeResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label(__('admin.field.name'))
+                    ->label(__('app.field.name'))
                     ->unique(ignoreRecord: true)
                     ->required(),
             ]);
@@ -54,7 +54,7 @@ class ElectionTypeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label(__('admin.field.name')),
+                    ->label(__('app.field.name')),
 
                 TextColumn::make('elections_count')
                     ->counts('elections')

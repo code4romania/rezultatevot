@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Europarl240609\Turnout;
+namespace App\Jobs\Europarl240609\Turnouts;
 
 use App\Jobs\DeleteTemporaryTableData;
 use App\Jobs\PersistTemporaryTableData;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
 
-class FetchTurnoutDataJob extends SchedulableJob
+class FetchTurnoutsJob extends SchedulableJob
 {
     public static function name(): string
     {
@@ -63,8 +63,8 @@ class FetchTurnoutDataJob extends SchedulableJob
         $time = now()->toDateTimeString();
 
         $jobs = $counties
-            ->map(fn (County $county) => new ImportCountyTurnoutJob($this->scheduledJob, $county))
-            ->push(new ImportAbroadTurnoutJob($this->scheduledJob));
+            ->map(fn (County $county) => new ImportCountyTurnoutsJob($this->scheduledJob, $county))
+            ->push(new ImportAbroadTurnoutsJob($this->scheduledJob));
 
         $persistAndClean = fn () => Bus::chain([
             new PersistTemporaryTableData(Turnout::class, $electionId),

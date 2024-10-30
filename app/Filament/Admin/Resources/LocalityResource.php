@@ -53,11 +53,11 @@ class LocalityResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label(__('admin.field.siruta'))
+                    ->label(__('app.field.siruta'))
                     ->sortable(),
 
                 TextColumn::make('name')
-                    ->label(__('admin.field.name'))
+                    ->label(__('app.field.name'))
                     ->searchable()
                     ->sortable(),
 
@@ -73,7 +73,7 @@ class LocalityResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('county.name')
-                    ->label(__('admin.field.county'))
+                    ->label(__('app.field.county'))
                     ->searchable()
                     ->sortable(),
 
@@ -81,7 +81,7 @@ class LocalityResource extends Resource
             ->filters([
                 SelectFilter::make('county')
                     ->relationship('county', 'name')
-                    ->label(__('admin.field.county')),
+                    ->label(__('app.field.county')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

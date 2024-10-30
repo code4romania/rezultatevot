@@ -44,8 +44,10 @@ class DatabaseSeeder extends Seeder
 
         Election::factory()
             ->live()
-            // ->withLocalTurnout()
-            // ->withAbroadTurnout()
+            ->withLocalTurnout()
+            ->withAbroadTurnout()
+            ->withLocalResults()
+            ->withAbroadResults()
             ->recycle($electionTypes)
             ->create();
 

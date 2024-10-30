@@ -26,7 +26,7 @@ class ScheduledJobRelationManager extends RelationManager
         return $form
             ->schema([
                 Select::make('job')
-                    ->label(__('admin.field.job'))
+                    ->label(__('app.field.job'))
                     ->options(function () {
                         ClassFinder::disablePSR4Vendors();
 
@@ -40,27 +40,30 @@ class ScheduledJobRelationManager extends RelationManager
                     }),
 
                 Select::make('cron')
-                    ->label(__('admin.field.cron'))
+                    ->label(__('app.field.cron'))
                     ->options(Cron::options())
                     ->enum(Cron::class)
                     ->required(),
 
                 Fieldset::make('source')
                     ->label('Source')
+                    ->columns(4)
                     ->schema([
                         TextInput::make('source_url')
-                            ->label(__('admin.field.source_url'))
-                            ->columnSpanFull(),
+                            ->label(__('app.field.source_url'))
+                            ->columnSpan(3),
 
                         TextInput::make('source_part')
-                            ->label(__('admin.field.source_part')),
+                            ->label(__('app.field.source_part')),
 
                         TextInput::make('source_username')
-                            ->label(__('admin.field.source_username')),
+                            ->label(__('app.field.source_username'))
+                            ->columnSpan(2),
 
                         TextInput::make('source_password')
-                            ->label(__('admin.field.source_password'))
-                            ->password(),
+                            ->label(__('app.field.source_password'))
+                            ->password()
+                            ->columnSpan(2),
                     ]),
             ]);
     }
@@ -71,19 +74,19 @@ class ScheduledJobRelationManager extends RelationManager
             ->recordTitleAttribute('job')
             ->columns([
                 ToggleColumn::make('is_enabled')
-                    ->label(__('admin.field.is_enabled'))
+                    ->label(__('app.field.is_enabled'))
                     ->shrink(),
 
                 TextColumn::make('job')
-                    ->label(__('admin.field.job'))
+                    ->label(__('app.field.job'))
                     ->description(fn (string $state) => $state, 'above')
                     ->formatStateUsing(fn (string $state) => $state::name()),
 
                 TextColumn::make('cron')
-                    ->label(__('admin.field.cron')),
+                    ->label(__('app.field.cron')),
 
                 TextColumn::make('last_run_at')
-                    ->label(__('admin.field.last_run_at'))
+                    ->label(__('app.field.last_run_at'))
                     ->since(),
             ])
             ->filters([

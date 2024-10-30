@@ -47,11 +47,11 @@ class PartyResource extends Resource
                     ->shrink(),
 
                 ColorColumn::make('color')
-                    ->label(__('admin.field.color'))
+                    ->label(__('app.field.color'))
                     ->shrink(),
 
                 TextColumn::make('name')
-                    ->label(__('admin.field.name'))
+                    ->label(__('app.field.name'))
                     ->description(fn (Party $record) => $record->acronym)
                     ->searchable()
                     ->sortable(),

@@ -40,6 +40,7 @@ class TurnoutFactory extends Factory
     {
         return $this->state(fn () => [
             'locality_id' => $locality->id,
+            'county_id' => $locality->county_id,
         ]);
     }
 
