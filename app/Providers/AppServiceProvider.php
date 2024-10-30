@@ -7,6 +7,7 @@ namespace App\Providers;
 use App\Models\ScheduledJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
@@ -65,16 +66,20 @@ class AppServiceProvider extends ServiceProvider
     protected function resolveSchedule(): void
     {
         $this->app->resolving(Schedule::class, function (Schedule $schedule) {
-            ScheduledJob::query()
-                ->with('election')
-                ->where('is_enabled', true)
-                ->each(
-                    fn (ScheduledJob $job) => $schedule
-                        ->job(new $job->job($job))
-                        ->cron($job->cron->value)
-                        ->withoutOverlapping()
-                        ->onOneServer()
-                );
+            try {
+                ScheduledJob::query()
+                    ->with('election')
+                    ->where('is_enabled', true)
+                    ->each(
+                        fn (ScheduledJob $job) => $schedule
+                            ->job(new $job->job($job))
+                            ->cron($job->cron->value)
+                            ->withoutOverlapping()
+                            ->onOneServer()
+                    );
+            } catch (QueryException $th) {
+                // fix for composer install
+            }
         });
     }
 }
