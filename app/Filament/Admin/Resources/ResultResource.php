@@ -106,7 +106,7 @@ class ResultResource extends Resource
             ])
             ->paginated([10, 25, 50, 100])
             ->deferLoading()
-            ->recordClasses(fn (Result $result) => $result->has_issues ? 'bg-warning-50' : null);
+            ->recordClasses(fn (Result $result) => $result->has_issues ? 'bg-warning-50 dark:bg-warning-400/10' : null);
     }
 
     public static function getRelations(): array
