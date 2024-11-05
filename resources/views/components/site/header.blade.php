@@ -1,4 +1,4 @@
-<header x-data="{ menuOpen: false }" class="relative z-40">
+<header x-data="{ menuOpen: false }" class="relative z-40 border-b border-gray-200 shadow-sm">
     <nav class="flex justify-between gap-4 px-4 py-4 ">
         <a href="{{ route('front.index') }}" class="flex items-center gap-2" wire:navigate>
             <div class="sr-only">{{ config('app.name') }}</div>

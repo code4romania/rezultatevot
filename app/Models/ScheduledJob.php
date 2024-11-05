@@ -126,6 +126,6 @@ class ScheduledJob extends Model
 
     public function getSourcePath(string $filename): string
     {
-        return \sprintf('source/%s/%s', $this->election_id, $filename);
+        return \sprintf('source/%s/%s/%s', $this->election_id, $this->id, $filename);
     }
 }

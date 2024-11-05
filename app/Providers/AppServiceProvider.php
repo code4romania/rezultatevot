@@ -8,6 +8,7 @@ use App\Models\ScheduledJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
@@ -35,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
             Model::preventLazyLoading($shouldBeEnabled);
             Model::preventAccessingMissingAttributes($shouldBeEnabled);
         });
+
+        Number::useLocale($this->app->getLocale());
 
         $this->resolveSchedule();
 

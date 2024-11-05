@@ -20,7 +20,7 @@ export default {
         }),
         extend: {
             colors: {
-                //
+                custom: 'rgb(var(--color-custom))',
             },
         },
     },

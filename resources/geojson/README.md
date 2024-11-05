@@ -19,7 +19,7 @@ data source: [Limite UAT poligon - geo-spatial.org](https://geo-spatial.org/vech
 
 ```
 npx mapshaper ro_uat_poligon.geojson \
-    -split countyMn \
+    -split countyCode \
     -each 'natcode = parseInt(natcode)' \
     -filter-fields natcode,name \
     -rename-fields id=natcode \
