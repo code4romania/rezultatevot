@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Election;
-use App\Models\ElectionType;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,20 +25,8 @@ class DatabaseSeeder extends Seeder
             ->count(10)
             ->create();
 
-        $electionTypes = ElectionType::factory()
-            ->count(5)
-            ->sequence(
-                ['name' => 'Alegeri prezidențiale'],
-                ['name' => 'Alegeri parlamentare'],
-                ['name' => 'Alegeri europarlamentare'],
-                ['name' => 'Alegeri locale'],
-                ['name' => 'Referendum'],
-            )
-            ->create();
-
         Election::factory()
             ->count(10)
-            ->recycle($electionTypes)
             ->create();
 
         Election::factory()
@@ -48,7 +35,6 @@ class DatabaseSeeder extends Seeder
             ->withAbroadTurnout()
             ->withLocalResults()
             ->withAbroadResults()
-            ->recycle($electionTypes)
             ->create();
 
         Artisan::call('scout:rebuild');

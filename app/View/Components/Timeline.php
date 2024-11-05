@@ -21,9 +21,11 @@ class Timeline extends Component
     public function __construct()
     {
         $this->years = Election::query()
-            ->with('type')
             ->get()
-            ->groupBy(['year', 'type.name']);
+            ->groupBy([
+                'year',
+                fn (Election $election) => $election->type->getLabel(),
+            ]);
 
         $this->election = request()->election;
     }

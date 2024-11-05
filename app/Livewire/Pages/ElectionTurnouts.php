@@ -16,7 +16,7 @@ use Tpetry\QueryExpressions\Language\Alias;
 
 class ElectionTurnouts extends ElectionPage
 {
-    #[Layout('components.layouts.timeline')]
+    #[Layout('components.layouts.election')]
     public function render(): View
     {
         return view('livewire.pages.election-turnouts');

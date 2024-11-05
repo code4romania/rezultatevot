@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\ElectionType;
 use App\Models\Country;
 use App\Models\Election;
-use App\Models\ElectionType;
 use App\Models\Locality;
 use App\Models\Party;
 use App\Models\Result;
@@ -30,10 +30,10 @@ class ElectionFactory extends Factory
     public function definition(): array
     {
         $title = fake()->words(3, true);
-        $year = fake()->year();
+        $year = fake()->numberBetween(1991, date('Y'));
 
         return [
-            'type_id' => ElectionType::factory(),
+            'type' => fake()->randomElement(ElectionType::values()),
             'title' => $title,
             'slug' => Str::slug("$title-$year"),
             'subtitle' => Lottery::odds(1, 5)
@@ -64,6 +64,7 @@ class ElectionFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_live' => true,
+            'year' => now()->year,
         ]);
     }
 

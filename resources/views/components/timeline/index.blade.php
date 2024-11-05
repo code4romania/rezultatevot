@@ -1,4 +1,4 @@
-<nav class="flex flex-col px-6 pb-4  bg-white border-r border-gray-200 sm:py-10 gap-y-5 w-80">
+<nav class="flex flex-col px-6 pb-4 bg-white border-r border-gray-200 sm:py-10 gap-y-5 w-80">
     <ul class="flex flex-col flex-1">
         @foreach ($years as $year => $electionTypes)
             <li class="relative pb-8 pl-8 group">

@@ -8,7 +8,7 @@ use Livewire\Attributes\Layout;
 
 class ElectionResults extends ElectionPage
 {
-    #[Layout('components.layouts.timeline')]
+    #[Layout('components.layouts.election')]
     public function render()
     {
         return view('livewire.pages.election-results');

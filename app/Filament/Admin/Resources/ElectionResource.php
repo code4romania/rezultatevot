@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\ElectionType;
 use App\Filament\Admin\Resources\ElectionResource\Pages;
 use App\Filament\Admin\Resources\ElectionResource\RelationManagers\ScheduledJobRelationManager;
 use App\Models\Election;
@@ -63,7 +64,8 @@ class ElectionResource extends Resource
                     ->schema([
                         Select::make('type')
                             ->label(__('app.field.type'))
-                            ->relationship('type', 'name')
+                            ->options(ElectionType::options())
+                            ->enum(ElectionType::class)
                             ->required(),
 
                         TextInput::make('title')
@@ -140,7 +142,7 @@ class ElectionResource extends Resource
                     ->sortable()
                     ->shrink(),
 
-                TextColumn::make('type.name')
+                TextColumn::make('type')
                     ->label(__('app.field.type'))
                     ->sortable(),
 
@@ -160,8 +162,7 @@ class ElectionResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('type')
-                    ->label(__('app.field.type'))
-                    ->relationship('type', 'name'),
+                    ->label(__('app.field.type')),
             ])
             ->filtersLayout(FiltersLayout::AboveContent)
             ->actions([

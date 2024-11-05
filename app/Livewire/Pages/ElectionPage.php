@@ -24,13 +24,13 @@ abstract class ElectionPage extends Component implements HasForms
 
     public Election $election;
 
-    #[Url(as: 'tara')]
+    #[Url(as: 'tara', history: true)]
     public ?string $country = null;
 
-    #[Url(as: 'judet')]
+    #[Url(as: 'judet', history: true)]
     public ?int $county = null;
 
-    #[Url(as: 'localitate')]
+    #[Url(as: 'localitate', history: true)]
     public ?int $locality = null;
 
     public function form(Form $form): Form

@@ -59,10 +59,11 @@ return [
     ],
 
     'election_type' => [
-        'label' => [
-            'singular' => 'tip alegeri',
-            'plural' => 'tipuri alegeri',
-        ],
+        'presidential' => 'Alegeri prezidențiale',
+        'parliamentary' => 'Alegeri parlamentare',
+        'euro' => 'Alegeri europarlamentare',
+        'local' => 'Alegeri locale',
+        'referendum' => 'Referendum',
     ],
 
     'party' => [

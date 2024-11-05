@@ -1,4 +1,6 @@
 <div class="grid gap-8">
+    <x-election.header :election="$election" />
+
     {{ $this->form }}
 
     @if (filled($this->aggregate))

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ElectionType;
 use Database\Factories\ElectionFactory;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Election extends Model implements HasName, HasAvatar
@@ -22,17 +22,21 @@ class Election extends Model implements HasName, HasAvatar
 
     protected $fillable = [
         'title',
+        'type',
         'subtitle',
         'slug',
         'year',
         'is_live',
+        'properties',
     ];
 
     protected function casts(): array
     {
         return [
+            'type' => ElectionType::class,
             'year' => 'int',
             'is_live' => 'boolean',
+            'properties' => 'collection',
         ];
     }
 
@@ -43,11 +47,6 @@ class Election extends Model implements HasName, HasAvatar
                 ->orderByDesc('year')
                 ->orderByDesc('is_live');
         });
-    }
-
-    public function type(): BelongsTo
-    {
-        return $this->belongsTo(ElectionType::class);
     }
 
     public function scheduledJobs(): HasMany

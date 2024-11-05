@@ -1,4 +1,6 @@
-<div>
+<div class="grid gap-8">
+    <x-election.header :election="$election" />
+
     {{ $this->form }}
 
     <div class="relative h-[576px] overflow-hidden rounded-xl border border-dashed border-gray-400 opacity-75">
@@ -14,8 +16,12 @@
         </svg>
     </div>
 
+
+
+    <livewire:map
+        :key="$this->mapKey()"
+        :country="$country"
+        :county="$county" />
+
     {{ $election }}
-
-    {{ $data }}
-
 </div>
