@@ -1,5 +1,5 @@
 @props([
-    'fixedHeight' => false,
+    'timeline' => false,
 ])
 
 <!doctype html>
@@ -27,14 +27,15 @@
 
 <body @class([
     'flex flex-col  font-sans antialiased',
-    $fixedHeight ? 'h-screen' : 'min-h-screen',
-])>
+    $timeline ? 'h-screen' : 'min-h-screen',
+])
+    @if ($timeline) x-data="{ sidebarOpen: false }" @endif>
     <x-site.skip-to-content />
     <x-site.banner />
 
-    <x-site.header />
+    <x-site.header :$timeline />
 
-    <div @class(['flex flex-1', 'overflow-hidden' => $fixedHeight])>
+    <div @class(['flex flex-1', 'overflow-hidden' => $timeline])>
         {{ $slot }}
     </div>
 
