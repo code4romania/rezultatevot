@@ -12,8 +12,12 @@ class Header extends Component
 {
     public Collection $menuItems;
 
-    public function __construct()
+    public bool $timeline;
+
+    public function __construct(bool $timeline = false)
     {
+        $this->timeline = $timeline;
+
         $this->menuItems = collect([
             'front.index' => __('app.navigation.home'),
         ]);
