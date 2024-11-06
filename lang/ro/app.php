@@ -47,6 +47,8 @@ return [
     'navigation' => [
         'admin' => 'Administrare',
         'elections' => 'Alegeri',
+        'turnout' => 'Prezența la vot',
+        'results' => 'Rezultate vot',
     ],
 
     'election' => [
@@ -125,5 +127,11 @@ return [
     'area' => [
         'urban' => 'Urban',
         'rural' => 'Rural',
+    ],
+
+    'data_level' => [
+        'total' => 'Total',
+        'national' => 'România',
+        'diaspora' => 'Diaspora',
     ],
 ];

@@ -53,17 +53,12 @@ abstract class Base extends Component
         };
     }
 
-    public function label(): string
+    public function label(): ?string
     {
         if ($this->percent) {
-            return Number::percentage($this->percent(), 2);
+            return percent($this->value, $this->max, formatted: true);
         }
 
         return Number::format($this->value);
-    }
-
-    public function percent(): float
-    {
-        return min(100, max(0, $this->value / $this->max * 100));
     }
 }

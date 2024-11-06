@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -20,6 +21,14 @@ class County extends Model
         'code',
         'name',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('alphabetical', function (Builder $query) {
+            return $query
+                ->orderBy('name');
+        });
+    }
 
     public function localities(): HasMany
     {

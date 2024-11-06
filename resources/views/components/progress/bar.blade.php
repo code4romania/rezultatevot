@@ -15,7 +15,7 @@
     ]) }}>
 
     @if ($percent < 25)
-        <div class="h-full bg-indigo-600 bg-custom" style="{{ $width }}"></div>
+        <div class="h-full bg-custom" style="{{ $width }}"></div>
         <span class="text-2xl font-bold text-custom">{{ $label() }}</span>
     @else
         <div

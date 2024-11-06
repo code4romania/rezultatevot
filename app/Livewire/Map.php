@@ -4,28 +4,30 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use Illuminate\Support\Facades\Vite;
+use App\Enums\DataLevel;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class Map extends Component
 {
+    public DataLevel $level;
+
     public ?string $country = null;
 
     public ?string $county = null;
 
+    public ?string $actionUrl = null;
+
+    public array $data = [];
+
     #[Computed]
-    public function url(): string
+    public function file(): string
     {
-        if ($this->country) {
-            return Vite::asset('resources/geojson/countries.geojson');
-        }
-
-        if ($this->county) {
-            return Vite::asset("resources/geojson/localities/{$this->county}.geojson");
-        }
-
-        return Vite::asset('resources/geojson/counties.geojson');
+        return match ($this->level) {
+            DataLevel::DIASPORA => 'countries',
+            DataLevel::TOTAL => 'counties',
+            DataLevel::NATIONAL => $this->county ? "localities/{$this->county}" : 'counties',
+        };
     }
 
     public function render()

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\View\Components\Progress;
 
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Number;
 
 class Bar extends Base
 {
@@ -14,17 +13,8 @@ class Bar extends Base
         return view('components.progress.bar');
     }
 
-    public function label(): string
+    public function percent(): ?float
     {
-        if ($this->percent) {
-            return Number::percentage($this->percent(), 2);
-        }
-
-        return Number::format($this->value);
-    }
-
-    public function percent(): float
-    {
-        return min(100, max(0, $this->value / $this->max * 100));
+        return percent($this->value, $this->max);
     }
 }

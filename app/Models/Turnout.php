@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\CanGroupByPlace;
 use App\Concerns\HasTemporaryTable;
 use App\Contracts\TemporaryTable;
 use App\Enums\Area;
+use App\Enums\DataLevel;
 use Database\Factories\TurnoutFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
+use Tpetry\QueryExpressions\Function\Aggregate\Sum;
+use Tpetry\QueryExpressions\Language\Alias;
 
 class Turnout extends Model implements TemporaryTable
 {
+    use CanGroupByPlace;
     /** @use HasFactory<TurnoutFactory> */
     use HasFactory;
     use HasTemporaryTable;
@@ -102,6 +108,59 @@ class Turnout extends Model implements TemporaryTable
     public function locality(): BelongsTo
     {
         return $this->belongsTo(Locality::class);
+    }
+
+    public function scopeForLevel(Builder $query, DataLevel $level, ?string $country = null, ?int $county = null, ?int $locality = null, bool $aggregate = false): Builder
+    {
+        $query->select([
+            new Alias(new Sum('initial_total'), 'initial_total'),
+            new Alias(new Sum('total'), 'total'),
+        ]);
+
+        if ($level->is(DataLevel::TOTAL)) {
+            $query->groupByTotal();
+        }
+
+        if ($level->is(DataLevel::DIASPORA)) {
+            $query
+                ->when(
+                    $country,
+                    fn (Builder $query) => $query->where('country_id', $country),
+                    fn (Builder $query) => $query->whereNotNull('country_id')
+                );
+
+            if (! $aggregate) {
+                $query->groupByCountry();
+            }
+        }
+
+        if ($level->is(DataLevel::NATIONAL)) {
+            $query->whereNull('country_id');
+
+            if (filled($locality)) {
+                $query->where('locality_id', $locality)
+                    ->groupByLocality();
+            } elseif (filled($county)) {
+                $query->where('county_id', $county);
+
+                if ($aggregate) {
+                    $query->groupByCounty();
+                } else {
+                    $query->groupByLocality();
+                }
+            } else {
+                $query->whereNotNull('locality_id')
+                    ->whereNotNull('county_id');
+
+                if ($aggregate) {
+                    $query->groupByTotal();
+                } else {
+                    $query->groupByCounty();
+                }
+            }
+        }
+
+        return $query;
     }
 
     public static function segments(): Collection

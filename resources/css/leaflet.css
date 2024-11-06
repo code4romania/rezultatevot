@@ -1,0 +1,9 @@
+@import 'leaflet/dist/leaflet.css';
+
+.leaflet-container {
+    @apply bg-gray-50;
+}
+
+.leaflet-interactive {
+    @apply outline-none focus:stroke-blue-500 focus:z-50 focus:relative;
+}
