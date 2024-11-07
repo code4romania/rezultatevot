@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Models\Country;
+use App\Models\County;
+use App\Models\Locality;
+
 return [
 
     /*
@@ -176,30 +180,15 @@ return [
             'retry_interval_seconds' => env('TYPESENSE_RETRY_INTERVAL_SECONDS', 1),
         ],
         // 'max_total_results' => env('TYPESENSE_MAX_TOTAL_RESULTS', 1000),
-        'model-settings' => [
-            // User::class => [
-            //     'collection-schema' => [
-            //         'fields' => [
-            //             [
-            //                 'name' => 'id',
-            //                 'type' => 'string',
-            //             ],
-            //             [
-            //                 'name' => 'name',
-            //                 'type' => 'string',
-            //             ],
-            //             [
-            //                 'name' => 'created_at',
-            //                 'type' => 'int64',
-            //             ],
-            //         ],
-            //         'default_sorting_field' => 'created_at',
-            //     ],
-            //     'search-parameters' => [
-            //         'query_by' => 'name'
-            //     ],
-            // ],
-        ],
+        'model-settings' => collect([
+            Locality::class,
+            County::class,
+            Country::class,
+        ])
+            ->mapWithKeys(fn (string $model) => [
+                $model => $model::getTypesenseModelSettings(),
+            ])
+            ->all(),
     ],
 
 ];

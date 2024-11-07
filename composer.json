@@ -9,28 +9,37 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "andreiio/blade-remix-icon": "^3.5",
         "archtechx/laravel-seo": "^0.10.1",
+        "blade-ui-kit/blade-icons": "^1.7",
         "filament/filament": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "^3.2",
+        "haydenpierce/class-finder": "^0.5.3",
         "jeffgreco13/filament-breezy": "^2.4",
-        "laravel/framework": "^11.28",
+        "laravel/framework": "^11.30",
         "laravel/horizon": "^5.29",
         "laravel/sanctum": "^4.0",
         "laravel/scout": "^10.11",
         "laravel/tinker": "^2.10",
+        "league/csv": "^9.18",
         "league/flysystem-aws-s3-v3": "^3.29",
+        "league/flysystem-read-only": "^3.28",
         "livewire/livewire": "^3.5",
+        "maatwebsite/excel": "^3.1",
         "sentry/sentry-laravel": "^4.9",
+        "spatie/temporary-directory": "^2.2",
+        "staudenmeir/belongs-to-through": "^2.16",
+        "tpetry/laravel-query-expressions": "^1.4",
         "typesense/typesense-php": "^4.9"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
-        "barryvdh/laravel-ide-helper": "^3.1",
+        "barryvdh/laravel-ide-helper": "^3.2",
         "fakerphp/faker": "^1.23",
         "friendsofphp/php-cs-fixer": "^3.64",
         "larastan/larastan": "^2.9",
         "laravel/pint": "^1.18",
-        "laravel/sail": "^1.36",
+        "laravel/sail": "^1.37",
         "laravel/telescope": "^5.2",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.5",
@@ -38,6 +47,9 @@
         "spatie/laravel-ignition": "^2.8"
     },
     "autoload": {
+        "files": [
+            "app/helpers.php"
+        ],
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
@@ -71,7 +83,9 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "test": [
-            "@php artisan test",
+            "@php artisan test"
+        ],
+        "analyse": [
             "./vendor/bin/phpstan analyse"
         ]
     },

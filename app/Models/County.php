@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Laravel\Scout\Searchable;
 
 class County extends Model
@@ -15,13 +17,27 @@ class County extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'id',
+        'code',
         'name',
-        'siruta',
     ];
 
-    public function cities(): HasMany
+    protected static function booted(): void
     {
-        return $this->hasMany(City::class);
+        static::addGlobalScope('alphabetical', function (Builder $query) {
+            return $query
+                ->orderBy('name');
+        });
+    }
+
+    public function localities(): HasMany
+    {
+        return $this->hasMany(Locality::class);
+    }
+
+    public function turnouts(): HasManyThrough
+    {
+        return $this->hasManyThrough(Turnout::class, Locality::class);
     }
 
     /**
@@ -33,6 +49,7 @@ class County extends Model
     {
         return [
             'id' => (string) $this->id,
+            'code' => $this->code,
             'name' => $this->name,
         ];
     }
@@ -47,13 +64,17 @@ class County extends Model
                         'type' => 'string',
                     ],
                     [
+                        'name' => 'code',
+                        'type' => 'string',
+                    ],
+                    [
                         'name' => 'name',
                         'type' => 'string',
                     ],
                 ],
             ],
             'search-parameters' => [
-                'query_by' => 'name',
+                'query_by' => 'name,code,id',
             ],
         ];
     }

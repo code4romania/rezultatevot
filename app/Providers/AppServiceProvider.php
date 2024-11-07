@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\ScheduledJob;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
@@ -20,9 +24,7 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(TelescopeServiceProvider::class);
         }
 
-        Str::macro('initials', fn (?string $value) => collect(explode(' ', (string) $value))
-            ->map(fn (string $word) => Str::upper(Str::substr($word, 0, 1)))
-            ->join(''));
+        $this->registerStrMacros();
     }
 
     /**
@@ -35,7 +37,18 @@ class AppServiceProvider extends ServiceProvider
             Model::preventAccessingMissingAttributes($shouldBeEnabled);
         });
 
+        Number::useLocale($this->app->getLocale());
+
+        $this->resolveSchedule();
+
         $this->setSeoDefaults();
+    }
+
+    protected function registerStrMacros(): void
+    {
+        Str::macro('initials', fn (?string $value) => collect(explode(' ', (string) $value))
+            ->map(fn (string $word) => Str::upper(Str::substr($word, 0, 1)))
+            ->join(''));
     }
 
     protected function setSeoDefaults(): void
@@ -51,5 +64,25 @@ class AppServiceProvider extends ServiceProvider
             ->locale(app()->getLocale())
             ->favicon()
             ->twitter();
+    }
+
+    protected function resolveSchedule(): void
+    {
+        $this->app->resolving(Schedule::class, function (Schedule $schedule) {
+            try {
+                ScheduledJob::query()
+                    ->with('election')
+                    ->where('is_enabled', true)
+                    ->each(
+                        fn (ScheduledJob $job) => $schedule
+                            ->job(new $job->job($job))
+                            ->cron($job->cron->value)
+                            ->withoutOverlapping()
+                            ->onOneServer()
+                    );
+            } catch (QueryException $th) {
+                // fix for composer install
+            }
+        });
     }
 }

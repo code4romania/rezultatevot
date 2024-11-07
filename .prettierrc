@@ -1,0 +1,23 @@
+{
+    "trailingComma": "es5",
+    "printWidth": 120,
+    "tabWidth": 4,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "vueIndentScriptAndStyle": true,
+    "overrides": [
+        {
+            "files": ["*.yml", "*.yaml"],
+            "options": {
+                "tabWidth": 2
+            }
+        },
+        {
+            "files": ["*.php"],
+            "options": {
+                "printWidth": 120
+            }
+        }
+    ]
+}

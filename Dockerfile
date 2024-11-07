@@ -38,6 +38,11 @@ RUN set -ex; \
 
 FROM vendor
 
+# Needed for splitting CSVs
+RUN set -ex; \
+    apk add --no-cache \
+    gawk;
+
 COPY docker/s6-rc.d /etc/s6-overlay/s6-rc.d
 COPY --from=assets --chown=www-data:www-data /build/public/build /var/www/public/build
 
