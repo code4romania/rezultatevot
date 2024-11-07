@@ -41,6 +41,7 @@ class ElectionFactory extends Factory
                 ->loser(fn () => null),
             'year' => $year,
             'is_live' => false,
+            'properties' => [],
         ];
     }
 
