@@ -12,6 +12,7 @@
         "andreiio/blade-remix-icon": "^3.5",
         "archtechx/laravel-seo": "^0.10.1",
         "blade-ui-kit/blade-icons": "^1.7",
+        "dedoc/scramble": "^0.11.25",
         "filament/filament": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "haydenpierce/class-finder": "^0.5.3",
