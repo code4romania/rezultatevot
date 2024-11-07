@@ -43,6 +43,11 @@
             return originalFetch(url, options);
         };
     </script>
+        <style>
+          h4{
+                display: none;
+            }
+        </style>
     @endprepend
 <elements-api
     id="docs"
