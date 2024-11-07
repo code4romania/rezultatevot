@@ -43,9 +43,22 @@ export default () => ({
                 opacity: 0.75,
                 fillOpacity: 1,
                 color: 'white',
-                fillColor: this.$wire.data[feature.properties.id]?.color || '#DDD',
+                fillColor: this.$wire.data[feature.properties?.id]?.color || '#DDD',
             }),
             onEachFeature: (feature, layer) => {
+                if (!feature.properties?.id) {
+                    return;
+                }
+
+                layer.bindTooltip(
+                    `<strong>${feature.properties.name}</strong><br/>
+                        ${this.$wire.data[feature.properties.id]?.value || '&mdash;'}`,
+                    {
+                        sticky: true,
+                        direction: 'top',
+                    }
+                );
+
                 layer.on({
                     mouseover: ({ target }) => {
                         target.setStyle({
@@ -67,18 +80,7 @@ export default () => ({
                     },
                 });
             },
-        })
-            .bindTooltip(
-                ({ feature }) => `
-                    <strong>${feature.properties.name}</strong><br/>
-                    ${this.$wire.data[feature.properties.id]?.value || '&mdash;'}
-                `,
-                {
-                    sticky: true,
-                    direction: 'top',
-                }
-            )
-            .addTo(this.map);
+        }).addTo(this.map);
 
         if (this.isWorldMap) {
             this.map.setView([45.9432, 24.9668], 3);

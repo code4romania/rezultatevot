@@ -9,9 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class CountriesImport implements ToModel, WithBatchInserts, WithHeadingRow
+class CountriesImport implements ToModel, WithBatchInserts
 {
     /**
      * @param array $row
@@ -20,12 +19,13 @@ class CountriesImport implements ToModel, WithBatchInserts, WithHeadingRow
      */
     public function model(array $row): ?Model
     {
+        $row = collect($row)
+            ->filter();
+
         return new Country([
-            'id' => $row['id'],
-            'name' => Str::trim($row['name']),
-            'aliases' => Str::of($row['aliases'])
-                ->explode('|')
-                ->filter(),
+            'id' => $row->shift(),
+            'name' => Str::trim($row->shift()),
+            'aliases' => $row,
         ]);
     }
 

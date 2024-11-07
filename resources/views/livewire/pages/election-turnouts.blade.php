@@ -16,7 +16,7 @@
                 'max' => $this->aggregate->max,
                 'text' => 'Au votat',
                 'color' => 'yellow',
-                'percent' => true,
+                'percent' => false,
             ],
         ]" />
     @endif

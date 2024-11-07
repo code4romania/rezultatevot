@@ -12,7 +12,7 @@
 
 <div
     @keydown.window.escape="sidebarOpen = false"
-    class="fixed inset-y-0 mr-16 flex flex-row-reverse w-full flex-1 z-50 items-stretch md:translate-x-0 md:relative transition ease-in-out duration-300 transform"
+    class="fixed inset-y-0 mr-16 flex flex-row-reverse w-full z-50 md:w-80 items-stretch md:translate-x-0 md:relative transition ease-in-out duration-300 transform"
     x-bind:class="{
         '-translate-x-full': !sidebarOpen,
         'translate-x-0': sidebarOpen
@@ -35,7 +35,7 @@
     </div>
 
     <nav
-        class="flex flex-col px-6 py-8 bg-white border-r border-gray-200 sm:py-10 gap-y-5 grow flex-1 md:w-80 overflow-y-auto">
+        class="px-6 py-8 bg-white border-r border-gray-200 sm:py-10 gap-y-5 grow flex-1 overflow-y-auto" wire:scroll>
         <ul class="flex flex-col flex-1">
             @foreach ($years as $year => $electionTypes)
                 <li class="relative pb-8 pl-8 group">
