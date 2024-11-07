@@ -23,6 +23,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('counties/{county:code}', [NomenclatureController::class, 'county'])
             ->name('county');
     })->name('nomenclatures.');
+
     Route::group(['prefix' => '{election:slug}'], function () {
         Route::group(['prefix' => 'turnout'], function () {
             Route::get('/', [TurnoutController::class, 'general'])
@@ -37,5 +38,5 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('localities/{locality:code}', [TurnoutController::class, 'locality'])
                 ->name('by_locality');
         })->name('turnout.');
-    })->name('elections.')->middleware('auth:sanctum');
+    })->name('elections.');
 });
