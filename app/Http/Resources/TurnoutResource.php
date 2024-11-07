@@ -17,7 +17,16 @@ class TurnoutResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            /**
+             * Total number of voters subscribed to the election permanent list .
+             * @var integer
+             */
             'initial_total' => $this->initial_total,
+
+            /**
+             * Total number of people who voted in the election.
+             * @var integer
+             */
             'total' => $this->total,
         ];
     }
