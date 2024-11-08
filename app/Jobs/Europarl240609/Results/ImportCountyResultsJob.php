@@ -6,7 +6,7 @@ namespace App\Jobs\Europarl240609\Results;
 
 use App\Exceptions\MissingSourceFileException;
 use App\Models\County;
-use App\Models\Result;
+use App\Models\Record;
 use App\Models\ScheduledJob;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
@@ -90,7 +90,7 @@ class ImportCountyResultsJob implements ShouldQueue
             ]);
         }
 
-        Result::saveToTemporaryTable($values->all());
+        Record::saveToTemporaryTable($values->all());
     }
 
     protected function determineIfHasIssues(array $record): bool

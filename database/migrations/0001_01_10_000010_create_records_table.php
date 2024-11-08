@@ -15,7 +15,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('results', function (Blueprint $table) {
+        Schema::create('records', function (Blueprint $table) {
             $table->id();
 
             $table->boolean('has_issues')->default(false);
@@ -75,7 +75,7 @@ return new class extends Migration
             $table->unique(['election_id', 'country_id', 'section']);
         });
 
-        Schema::create('_temp_results', function (Blueprint $table) {
+        Schema::create('_temp_records', function (Blueprint $table) {
             $table->boolean('has_issues')->default(false);
 
             $table->bigInteger('election_id')

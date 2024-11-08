@@ -8,7 +8,7 @@ use App\Events\CountryCodeNotFound;
 use App\Exceptions\CountryCodeNotFoundException;
 use App\Exceptions\MissingSourceFileException;
 use App\Models\Country;
-use App\Models\Result;
+use App\Models\Record;
 use App\Models\ScheduledJob;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
@@ -91,7 +91,7 @@ class ImportAbroadResultsJob implements ShouldQueue
             }
         }
 
-        Result::saveToTemporaryTable($values->all());
+        Record::saveToTemporaryTable($values->all());
     }
 
     protected function determineIfHasIssues(array $record): bool

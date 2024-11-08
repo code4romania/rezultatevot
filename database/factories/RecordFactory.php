@@ -10,9 +10,9 @@ use App\Models\Locality;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Result>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Record>
  */
-class ResultFactory extends Factory
+class RecordFactory extends Factory
 {
     /**
      * Define the model's default state.

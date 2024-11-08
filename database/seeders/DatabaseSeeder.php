@@ -33,8 +33,8 @@ class DatabaseSeeder extends Seeder
             ->live()
             ->withLocalTurnout()
             ->withAbroadTurnout()
-            ->withLocalResults()
-            ->withAbroadResults()
+            ->withNationalRecords()
+            ->withDiasporaRecords()
             ->create();
 
         Artisan::call('scout:rebuild');

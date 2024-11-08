@@ -10,7 +10,7 @@ use App\Models\Country;
 use App\Models\Election;
 use App\Models\Locality;
 use App\Models\Party;
-use App\Models\Result;
+use App\Models\Record;
 use App\Models\ScheduledJob;
 use App\Models\Turnout;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -55,6 +55,7 @@ class ElectionFactory extends Factory
                 ->count(2)
                 ->create();
 
+            return;
             $parties = Party::factory()
                 ->for($election)
                 ->count(rand(10, 25))
@@ -115,14 +116,14 @@ class ElectionFactory extends Factory
         });
     }
 
-    public function withLocalResults(): static
+    public function withNationalRecords(): static
     {
         return $this->afterCreating(function (Election $election) {
             Locality::query()
-                ->chunkById(500, fn (Collection $localities) => Result::insert(
+                ->chunkById(500, fn (Collection $localities) => Record::insert(
                     $localities
                         ->map(
-                            fn (Locality $locality) => Result::factory()
+                            fn (Locality $locality) => Record::factory()
                                 ->for($election)
                                 ->locality($locality)
                                 ->make()
@@ -132,13 +133,13 @@ class ElectionFactory extends Factory
         });
     }
 
-    public function withAbroadResults(): static
+    public function withDiasporaRecords(): static
     {
         return $this->afterCreating(function (Election $election) {
-            Result::insert(
+            Record::insert(
                 Country::all()
                     ->map(
-                        fn (Country $country) => Result::factory()
+                        fn (Country $country) => Record::factory()
                             ->for($election)
                             ->country($country)
                             ->make()

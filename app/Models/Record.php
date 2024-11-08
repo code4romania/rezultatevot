@@ -7,21 +7,21 @@ namespace App\Models;
 use App\Concerns\BelongsToElection;
 use App\Concerns\HasTemporaryTable;
 use App\Contracts\TemporaryTable;
-use Database\Factories\ResultFactory;
+use Database\Factories\RecordFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Result extends Model implements TemporaryTable
+class Record extends Model implements TemporaryTable
 {
     use BelongsToElection;
-    /** @use HasFactory<\Database\Factories\ResultFactory> */
+    /** @use HasFactory<\Database\Factories\RecordFactory> */
     use HasFactory;
     use HasTemporaryTable;
 
     public $timestamps = false;
 
-    protected static string $factory = ResultFactory::class;
+    protected static string $factory = RecordFactory::class;
 
     /**
      * The attributes that are mass assignable.

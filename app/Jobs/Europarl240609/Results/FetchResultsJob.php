@@ -8,7 +8,7 @@ use App\Jobs\DeleteTemporaryTableData;
 use App\Jobs\PersistTemporaryTableData;
 use App\Jobs\SchedulableJob;
 use App\Models\County;
-use App\Models\Result;
+use App\Models\Record;
 use Illuminate\Support\Facades\Bus;
 
 class FetchResultsJob extends SchedulableJob
@@ -32,8 +32,8 @@ class FetchResultsJob extends SchedulableJob
             ->push(new ImportAbroadResultsJob($this->scheduledJob));
 
         $persistAndClean = fn () => Bus::chain([
-            new PersistTemporaryTableData(Result::class, $electionId),
-            new DeleteTemporaryTableData(Result::class, $electionId),
+            new PersistTemporaryTableData(Record::class, $electionId),
+            new DeleteTemporaryTableData(Record::class, $electionId),
         ])->dispatch();
 
         Bus::batch($jobs)

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\ResultResource\Pages;
+use App\Filament\Admin\Resources\RecordResource\Pages;
+use App\Models\Record;
 use App\Models\Result;
 use App\Tables\Columns\LocationColumn;
 use Filament\Resources\Resource;
@@ -12,9 +13,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class ResultResource extends Resource
+class RecordResource extends Resource
 {
-    protected static ?string $model = Result::class;
+    protected static ?string $model = Record::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -119,7 +120,7 @@ class ResultResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageResults::route('/'),
+            'index' => Pages\ManageRecords::route('/'),
         ];
     }
 }
