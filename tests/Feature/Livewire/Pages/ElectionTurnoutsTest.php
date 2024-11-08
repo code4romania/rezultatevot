@@ -16,9 +16,12 @@ class ElectionTurnoutsTest extends TestCase
     public function renders_successfully()
     {
         $election = Election::factory()
+            ->withLocalTurnout()
             ->create();
 
-        Livewire::test(ElectionTurnouts::class)
+        Livewire::test(ElectionTurnouts::class, [
+            'election' => $election,
+        ])
             ->assertOk();
     }
 }
