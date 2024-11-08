@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Europarl240609\Results;
+namespace App\Jobs\Europarl240609\Records;
 
+use App\Actions\CheckRecordHasIssues;
+use App\Actions\GenerateMappedVotablesList;
 use App\Exceptions\MissingSourceFileException;
 use App\Models\County;
 use App\Models\Record;
 use App\Models\ScheduledJob;
+use App\Models\Vote;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,7 +20,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Str;
 use League\Csv\Reader;
 
-class ImportCountyResultsJob implements ShouldQueue
+class ImportCountyRecordsJob implements ShouldQueue
 {
     use Batchable;
     use Dispatchable;
@@ -45,7 +48,7 @@ class ImportCountyResultsJob implements ShouldQueue
         $this->county = $county;
     }
 
-    public function handle(): void
+    public function handle(CheckRecordHasIssues $checker, GenerateMappedVotablesList $generator): void
     {
         $disk = $this->scheduledJob->disk();
         $path = $this->scheduledJob->getSourcePath("{$this->county->code}.csv");
@@ -64,58 +67,52 @@ class ImportCountyResultsJob implements ShouldQueue
         $reader = Reader::createFromStream($disk->readStream($path));
         $reader->setHeaderOffset(0);
 
-        $values = collect();
+        $records = collect();
 
-        $records = $reader->getRecords();
-        foreach ($records as $record) {
-            $values->push([
+        $votables = $generator->votables($reader->getHeader());
+
+        foreach ($reader->getRecords() as $row) {
+            $records->push([
                 'election_id' => $this->scheduledJob->election_id,
                 'county_id' => $this->county->id,
-                'locality_id' => $record['uat_siruta'],
-                'section' => $record['precinct_nr'],
+                'locality_id' => $row['uat_siruta'],
+                'section' => $row['precinct_nr'],
 
-                'eligible_voters_permanent' => $record['a1'],
-                'eligible_voters_special' => $record['a2'],
+                'eligible_voters_permanent' => $row['a1'],
+                'eligible_voters_special' => $row['a2'],
 
-                'present_voters_permanent' => $record['b1'],
-                'present_voters_special' => $record['b2'],
-                'present_voters_supliment' => $record['b3'],
+                'present_voters_permanent' => $row['b1'],
+                'present_voters_special' => $row['b2'],
+                'present_voters_supliment' => $row['b3'],
 
-                'papers_received' => $record['c'],
-                'papers_unused' => $record['d'],
-                'votes_valid' => $record['e'],
-                'votes_null' => $record['f'],
+                'papers_received' => $row['c'],
+                'papers_unused' => $row['d'],
+                'votes_valid' => $row['e'],
+                'votes_null' => $row['f'],
 
-                'has_issues' => $this->determineIfHasIssues($record),
+                'has_issues' => $checker->checkRecord($row),
             ]);
+
+            $votes = collect();
+
+            foreach ($votables as $column => $votable) {
+                $votes->push([
+                    'election_id' => $this->scheduledJob->election_id,
+                    'county_id' => $this->county->id,
+                    'locality_id' => $row['uat_siruta'],
+                    'section' => $row['precinct_nr'],
+
+                    'votable_type' => $votable['votable_type'],
+                    'votable_id' => $votable['votable_id'],
+
+                    'votes' => $row[$column],
+                ]);
+            }
+
+            Vote::saveToTemporaryTable($votes->all());
         }
 
-        Record::saveToTemporaryTable($values->all());
-    }
-
-    protected function determineIfHasIssues(array $record): bool
-    {
-        if ($record['a'] != $record['a1'] + $record['a2']) {
-            return true;
-        }
-
-        if ($record['a1'] < $record['b1']) {
-            return true;
-        }
-
-        if ($record['a2'] < $record['b2']) {
-            return true;
-        }
-
-        if ($record['b'] != $record['b1'] + $record['b2'] + $record['b3']) {
-            return true;
-        }
-
-        if ($record['c'] < $record['d'] + $record['e'] + $record['f']) {
-            return true;
-        }
-
-        return false;
+        Record::saveToTemporaryTable($records->all());
     }
 
     /**
@@ -127,7 +124,7 @@ class ImportCountyResultsJob implements ShouldQueue
     {
         return [
             'import',
-            'results',
+            'records',
             'scheduled_job:' . $this->scheduledJob->id,
             'election:' . $this->scheduledJob->election_id,
             'county:' . $this->county->code,

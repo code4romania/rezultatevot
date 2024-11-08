@@ -9,5 +9,6 @@ return [
     'disk' => env('IMPORT_DISK', 'local'),
 
     'independent_candidate_prefix' => env('IMPORT_INDEPENDENT_CANDIDATE_PREFIX', 'CANDIDAT INDEPENDENT - '),
+    'candidate_votes_suffix' => env('IMPORT_CANDIDATE_VOTES_SUFFIX', '-voturi'),
 
 ];

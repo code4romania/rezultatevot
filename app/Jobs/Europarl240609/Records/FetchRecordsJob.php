@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Europarl240609\Results;
+namespace App\Jobs\Europarl240609\Records;
 
 use App\Jobs\DeleteTemporaryTableData;
 use App\Jobs\PersistTemporaryTableData;
 use App\Jobs\SchedulableJob;
 use App\Models\County;
 use App\Models\Record;
+use App\Models\Vote;
 use Illuminate\Support\Facades\Bus;
 
-class FetchResultsJob extends SchedulableJob
+class FetchRecordsJob extends SchedulableJob
 {
     public static function name(): string
     {
-        return 'Europarlamentare 09.06.2024 / Rezultate';
+        return 'Europarlamentare 09.06.2024 / Procese Verbale';
     }
 
     public function execute(): void
@@ -28,12 +29,15 @@ class FetchResultsJob extends SchedulableJob
         $time = now()->toDateTimeString();
 
         $jobs = $counties
-            ->map(fn (County $county) => new ImportCountyResultsJob($this->scheduledJob, $county))
-            ->push(new ImportAbroadResultsJob($this->scheduledJob));
+            ->map(fn (County $county) => new ImportCountyRecordsJob($this->scheduledJob, $county))
+            ->push(new ImportAbroadRecordsJob($this->scheduledJob));
 
         $persistAndClean = fn () => Bus::chain([
             new PersistTemporaryTableData(Record::class, $electionId),
             new DeleteTemporaryTableData(Record::class, $electionId),
+
+            new PersistTemporaryTableData(Vote::class, $electionId),
+            new DeleteTemporaryTableData(Vote::class, $electionId),
         ])->dispatch();
 
         Bus::batch($jobs)
@@ -53,7 +57,7 @@ class FetchResultsJob extends SchedulableJob
     {
         return [
             'import',
-            'results',
+            'records',
             'scheduled_job:' . $this->scheduledJob->id,
             'election:' . $this->scheduledJob->election_id,
             static::name(),

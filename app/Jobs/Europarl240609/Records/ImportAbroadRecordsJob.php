@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Europarl240609\Results;
+namespace App\Jobs\Europarl240609\Records;
 
+use App\Actions\CheckRecordHasIssues;
 use App\Events\CountryCodeNotFound;
 use App\Exceptions\CountryCodeNotFoundException;
 use App\Exceptions\MissingSourceFileException;
@@ -18,7 +19,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use League\Csv\Reader;
 
-class ImportAbroadResultsJob implements ShouldQueue
+class ImportAbroadRecordsJob implements ShouldQueue
 {
     use Batchable;
     use Dispatchable;
@@ -43,7 +44,7 @@ class ImportAbroadResultsJob implements ShouldQueue
         $this->scheduledJob = $scheduledJob;
     }
 
-    public function handle(): void
+    public function handle(CheckRecordHasIssues $checker): void
     {
         $disk = $this->scheduledJob->disk();
         $path = $this->scheduledJob->getSourcePath('sr.csv');
@@ -84,7 +85,7 @@ class ImportAbroadResultsJob implements ShouldQueue
                     'votes_valid' => $record['e'],
                     'votes_null' => $record['f'],
 
-                    'has_issues' => $this->determineIfHasIssues($record),
+                    'has_issues' => $checker->checkRecord($record),
                 ]);
             } catch (CountryCodeNotFoundException $th) {
                 CountryCodeNotFound::dispatch($record['uat_name'], $this->scheduledJob->election);
@@ -92,31 +93,6 @@ class ImportAbroadResultsJob implements ShouldQueue
         }
 
         Record::saveToTemporaryTable($values->all());
-    }
-
-    protected function determineIfHasIssues(array $record): bool
-    {
-        if ($record['a'] != $record['a1'] + $record['a2']) {
-            return true;
-        }
-
-        if ($record['a1'] < $record['b1']) {
-            return true;
-        }
-
-        if ($record['a2'] < $record['b2']) {
-            return true;
-        }
-
-        if ($record['b'] != $record['b1'] + $record['b2'] + $record['b3']) {
-            return true;
-        }
-
-        if ($record['c'] < $record['d'] + $record['e'] + $record['f']) {
-            return true;
-        }
-
-        return false;
     }
 
     protected function getCountryId(string $name): string
@@ -139,7 +115,7 @@ class ImportAbroadResultsJob implements ShouldQueue
     {
         return [
             'import',
-            'results',
+            'records',
             'scheduled_job:' . $this->scheduledJob->id,
             'election:' . $this->scheduledJob->election_id,
             'abroad',

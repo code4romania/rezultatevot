@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Imports;
 
+use App\Actions\CheckVotable;
 use App\Models\Candidate;
 use App\Models\Party;
 use Carbon\CarbonInterface;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
-use Illuminate\Support\Str;
 
 class SimpleCandidateImporter extends Importer
 {
@@ -33,7 +33,7 @@ class SimpleCandidateImporter extends Importer
 
     public function resolveRecord(): Candidate|Party
     {
-        static::$model = $this->isIndependentCandidate()
+        static::$model = app(CheckVotable::class)->isIndependentCandidate($this->data['name'])
             ? Candidate::class
             : Party::class;
 
@@ -43,26 +43,9 @@ class SimpleCandidateImporter extends Importer
         ]);
     }
 
-    private function getIndependentCandidatePrefix(): string
-    {
-        return config('import.independent_candidate_prefix');
-    }
-
-    private function getIndependentCandidateName(): string
-    {
-        return Str::after($this->data['name'], $this->getIndependentCandidatePrefix());
-    }
-
-    private function isIndependentCandidate(): bool
-    {
-        return Str::startsWith($this->data['name'], $this->getIndependentCandidatePrefix());
-    }
-
     protected function afterValidate(): void
     {
-        if ($this->isIndependentCandidate()) {
-            $this->data['name'] = $this->getIndependentCandidateName();
-        }
+        $this->data['name'] = app(CheckVotable::class)->getName($this->data['name']);
     }
 
     public static function getCompletedNotificationBody(Import $import): string

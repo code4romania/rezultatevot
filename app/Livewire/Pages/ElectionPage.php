@@ -112,6 +112,6 @@ abstract class ElectionPage extends Component implements HasForms
     #[Computed]
     public function mapKey(): string
     {
-        return md5("map-{$this->level->value}-{$this->county}");
+        return hash('xxh128', "map-{$this->level->value}-{$this->county}");
     }
 }

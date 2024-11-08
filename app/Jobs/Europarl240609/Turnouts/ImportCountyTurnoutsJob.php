@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\Europarl240609\Turnouts;
 
+use App\Actions\CheckRecordHasIssues;
 use App\Exceptions\MissingSourceFileException;
 use App\Models\County;
 use App\Models\ScheduledJob;
@@ -34,7 +35,7 @@ class ImportCountyTurnoutsJob implements ShouldQueue
         $this->county = $county;
     }
 
-    public function handle(): void
+    public function handle(CheckRecordHasIssues $checker): void
     {
         $disk = $this->scheduledJob->disk();
         $path = $this->scheduledJob->getSourcePath("{$this->county->code}.csv");
@@ -66,7 +67,7 @@ class ImportCountyTurnoutsJob implements ShouldQueue
                 'mobile' => $record['UM'],
 
                 'area' => $record['Mediu'],
-                'has_issues' => $this->determineIfHasIssues($record),
+                'has_issues' => $checker->checkTurnout($record),
 
                 ...$segments->map(fn (string $segment) => $record[$segment]),
             ]);

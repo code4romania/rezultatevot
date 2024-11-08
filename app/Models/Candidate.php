@@ -17,7 +17,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Candidate extends Model implements HasMedia
 {
     use BelongsToElection;
-    /** @use HasFactory<\Database\Factories\CandidateFactory> */
+    /** @use HasFactory<CandidateFactory> */
     use HasFactory;
     use InteractsWithMedia;
 

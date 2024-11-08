@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Record extends Model implements TemporaryTable
 {
     use BelongsToElection;
-    /** @use HasFactory<\Database\Factories\RecordFactory> */
+    /** @use HasFactory<RecordFactory> */
     use HasFactory;
     use HasTemporaryTable;
 
