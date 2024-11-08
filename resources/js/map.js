@@ -11,6 +11,14 @@ import.meta.glob(
     }
 );
 
+const hasValue = (value) => {
+    if (typeof value === 'undefined') {
+        return false;
+    }
+
+    return value !== '' && value != 0 && value !== null;
+};
+
 export default () => ({
     map: null,
     tooltip: L.tooltip(),
@@ -43,16 +51,17 @@ export default () => ({
                 opacity: 0.75,
                 fillOpacity: 1,
                 color: 'white',
-                fillColor: this.$wire.data[feature.properties?.id]?.color || '#DDD',
+                fillColor: hasValue(this.$wire.data[feature.properties?.id]?.value)
+                    ? this.$wire.data[feature.properties?.id]?.color || '#DDD'
+                    : '#DDD',
             }),
             onEachFeature: (feature, layer) => {
-                if (!feature.properties?.id) {
+                if (!feature.properties?.id || !hasValue(this.$wire.data[feature.properties.id]?.value)) {
                     return;
                 }
 
                 layer.bindTooltip(
-                    `<strong>${feature.properties.name}</strong><br/>
-                        ${this.$wire.data[feature.properties.id]?.value || '&mdash;'}`,
+                    `<strong>${feature.properties.name}</strong><br/>${this.$wire.data[feature.properties.id].value}`,
                     {
                         sticky: true,
                         direction: 'top',
