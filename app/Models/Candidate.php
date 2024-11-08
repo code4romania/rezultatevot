@@ -5,39 +5,30 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\BelongsToElection;
-use Database\Factories\PartyFactory;
+use Database\Factories\CandidateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Party extends Model implements HasMedia
+class Candidate extends Model implements HasMedia
 {
     use BelongsToElection;
-    /** @use HasFactory<PartyFactory> */
+    /** @use HasFactory<\Database\Factories\CandidateFactory> */
     use HasFactory;
     use InteractsWithMedia;
 
-    protected static string $factory = PartyFactory::class;
+    protected static string $factory = CandidateFactory::class;
 
     protected $fillable = [
         'name',
-        'acronym',
         'color',
         'election_id',
+        'party_id',
     ];
-
-    public static function booted(): void
-    {
-        static::creating(function (Party $party) {
-            if (blank($party->acronym)) {
-                $party->acronym = Str::initials($party->name);
-            }
-        });
-    }
 
     public function registerMediaCollections(): void
     {
@@ -46,7 +37,7 @@ class Party extends Model implements HasMedia
                 \sprintf(
                     'https://ui-avatars.com/api/?%s',
                     Arr::query([
-                        'name' => $this->acronym,
+                        'name' => $this->name,
                         'color' => 'FFFFFF',
                         'background' => '09090B',
                     ])
@@ -64,5 +55,10 @@ class Party extends Model implements HasMedia
                     ->keepOriginalImageFormat()
                     ->optimize();
             });
+    }
+
+    public function party(): BelongsTo
+    {
+        return $this->belongsTo(Party::class);
     }
 }

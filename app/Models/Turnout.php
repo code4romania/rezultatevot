@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\BelongsToElection;
 use App\Concerns\CanGroupByPlace;
 use App\Concerns\HasTemporaryTable;
 use App\Contracts\TemporaryTable;
@@ -20,6 +21,7 @@ use Tpetry\QueryExpressions\Language\Alias;
 
 class Turnout extends Model implements TemporaryTable
 {
+    use BelongsToElection;
     use CanGroupByPlace;
     /** @use HasFactory<TurnoutFactory> */
     use HasFactory;
@@ -90,11 +92,6 @@ class Turnout extends Model implements TemporaryTable
         ];
     }
 
-    public function election(): BelongsTo
-    {
-        return $this->belongsTo(Election::class);
-    }
-
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
@@ -123,10 +120,10 @@ class Turnout extends Model implements TemporaryTable
 
         if ($level->is(DataLevel::DIASPORA)) {
             $query
+                ->whereNotNull('country_id')
                 ->when(
                     $country,
                     fn (Builder $query) => $query->where('country_id', $country),
-                    fn (Builder $query) => $query->whereNotNull('country_id')
                 );
 
             if (! $aggregate) {

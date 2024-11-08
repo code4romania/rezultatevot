@@ -4,40 +4,39 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\PartyResource\Pages;
-use App\Filament\Imports\SimpleCandidateImporter;
-use App\Models\Party;
-use Filament\Facades\Filament;
+use App\Filament\Admin\Resources\CandidateResource\Pages;
+use App\Models\Candidate;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class PartyResource extends Resource
+class CandidateResource extends Resource
 {
-    protected static ?string $model = Party::class;
+    protected static ?string $model = Candidate::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    public static function getModelLabel(): string
-    {
-        return __('app.party.label.singular');
-    }
-
-    public static function getPluralModelLabel(): string
-    {
-        return __('app.party.label.plural');
-    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                TextInput::make('name')
+                    ->label(__('app.field.name'))
+                    ->required()
+                    ->maxLength(255),
+
+                ColorPicker::make('color')
+                    ->label(__('app.field.color')),
+
+                Select::make('party_id')
+                    ->relationship('party', 'name'),
             ]);
     }
 
@@ -45,7 +44,7 @@ class PartyResource extends Resource
     {
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('logo')
+                SpatieMediaLibraryImageColumn::make('image')
                     ->conversion('thumb')
                     ->shrink(),
 
@@ -55,23 +54,18 @@ class PartyResource extends Resource
 
                 TextColumn::make('name')
                     ->label(__('app.field.name'))
-                    ->description(fn (Party $record) => $record->acronym)
                     ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('party.name')
+                    ->label(__('app.field.party'))
                     ->sortable(),
             ])
             ->filters([
                 //
             ])
-            ->headerActions([
-                ImportAction::make()
-                    ->importer(SimpleCandidateImporter::class)
-                    ->options([
-                        'election_id' => Filament::getTenant()->id,
-                    ]),
-            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -80,17 +74,10 @@ class PartyResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageParties::route('/'),
+            'index' => Pages\ManageCandidates::route('/'),
         ];
     }
 }

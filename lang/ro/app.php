@@ -68,6 +68,13 @@ return [
         'referendum' => 'Referendum',
     ],
 
+    'candidate' => [
+        'label' => [
+            'singular' => 'candidat',
+            'plural' => 'candidați',
+        ],
+    ],
+
     'party' => [
         'label' => [
             'singular' => 'partid',

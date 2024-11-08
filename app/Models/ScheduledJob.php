@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\BelongsToElection;
 use App\Enums\Cron;
 use App\Exceptions\InvalidSourceUrlException;
 use App\Exceptions\MissingSourceUrlException;
@@ -11,7 +12,6 @@ use Database\Factories\ScheduledJobFactory;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
 
 class ScheduledJob extends Model
 {
+    use BelongsToElection;
     /** @use HasFactory<ScheduledJobFactory> */
     use HasFactory;
 
@@ -66,11 +67,6 @@ class ScheduledJob extends Model
             'source_password' => 'encrypted',
             'last_run_at' => 'datetime',
         ];
-    }
-
-    public function election(): BelongsTo
-    {
-        return $this->belongsTo(Election::class);
     }
 
     public function requiresAuthentication(): bool

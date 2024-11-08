@@ -8,4 +8,6 @@ return [
 
     'disk' => env('IMPORT_DISK', 'local'),
 
+    'independent_candidate_prefix' => env('IMPORT_INDEPENDENT_CANDIDATE_PREFIX', 'CANDIDAT INDEPENDENT - '),
+
 ];

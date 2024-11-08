@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\BelongsToElection;
 use App\Concerns\HasTemporaryTable;
 use App\Contracts\TemporaryTable;
 use Database\Factories\ResultFactory;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Result extends Model implements TemporaryTable
 {
+    use BelongsToElection;
     /** @use HasFactory<\Database\Factories\ResultFactory> */
     use HasFactory;
     use HasTemporaryTable;
@@ -66,11 +68,6 @@ class Result extends Model implements TemporaryTable
             'votes_valid' => 'integer',
             'votes_null' => 'integer',
         ];
-    }
-
-    public function election(): BelongsTo
-    {
-        return $this->belongsTo(Election::class);
     }
 
     public function country(): BelongsTo

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\ElectionType;
+use App\Models\Candidate;
 use App\Models\Country;
 use App\Models\Election;
 use App\Models\Locality;
@@ -48,15 +49,27 @@ class ElectionFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (Election $election) {
-            Party::factory()
-                ->for($election)
-                ->count(rand(25, 50))
-                ->create();
-
             ScheduledJob::factory()
                 ->for($election)
                 ->enabled($election->is_live)
                 ->count(2)
+                ->create();
+
+            $parties = Party::factory()
+                ->for($election)
+                ->count(rand(10, 25))
+                ->create();
+
+            $parties->each(function (Party $party) use ($election) {
+                Candidate::factory()
+                    ->for($election)
+                    ->party($party)
+                    ->create();
+            });
+
+            Candidate::factory()
+                ->for($election)
+                ->count(rand(3, 10))
                 ->create();
         });
     }

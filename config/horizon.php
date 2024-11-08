@@ -217,7 +217,7 @@ return [
         '*' => [
             'supervisor-1' => [
                 'minProcesses' => 1,
-                'maxProcesses' => 3,
+                'maxProcesses' => 50,
             ],
         ],
     ],

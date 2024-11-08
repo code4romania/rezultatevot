@@ -20,6 +20,8 @@ class Header extends Component
 
         $this->menuItems = collect([
             'front.index' => __('app.navigation.home'),
+            // 'about' => __('app.navigation.about'),
+            // 'partners' => __('app.navigation.partners'),
         ]);
     }
 
