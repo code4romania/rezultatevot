@@ -32,7 +32,7 @@ class Vote extends Model implements TemporaryTable
         'county_id',
         'locality_id',
         'section',
-        // 'part',
+        'part',
         'votable_type',
         'votable_id',
         'votes',

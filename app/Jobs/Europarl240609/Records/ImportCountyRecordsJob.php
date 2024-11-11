@@ -6,6 +6,7 @@ namespace App\Jobs\Europarl240609\Records;
 
 use App\Actions\CheckRecordHasIssues;
 use App\Actions\GenerateMappedVotablesList;
+use App\Enums\Part;
 use App\Exceptions\MissingSourceFileException;
 use App\Models\County;
 use App\Models\Record;
@@ -101,6 +102,11 @@ class ImportCountyRecordsJob implements ShouldQueue
                     'county_id' => $this->county->id,
                     'locality_id' => $row['uat_siruta'],
                     'section' => $row['precinct_nr'],
+                    'part' => match ($row['report_stage_code']) {
+                        'FINAL' => Part::FINAL,
+                        'PART' => Part::PART,
+                        'PROV' => Part::PROV,
+                    },
 
                     'votable_type' => $votable['votable_type'],
                     'votable_id' => $votable['votable_id'],

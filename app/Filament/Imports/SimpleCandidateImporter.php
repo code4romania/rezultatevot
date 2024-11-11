@@ -50,10 +50,18 @@ class SimpleCandidateImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'Your candidate import has completed and ' . number_format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' imported.';
+        $body = \sprintf(
+            'Your candidate import has completed and %d %s imported.',
+            number_format($import->successful_rows),
+            str('row')->plural($import->successful_rows)
+        );
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to import.';
+            $body .= \sprintf(
+                ' %d %s failed to import.',
+                number_format($failedRowsCount),
+                str('row')->plural($failedRowsCount)
+            );
         }
 
         return $body;

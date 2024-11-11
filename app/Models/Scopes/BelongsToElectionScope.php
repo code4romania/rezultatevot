@@ -16,14 +16,13 @@ class BelongsToElectionScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (! Filament::auth()->check()) {
+        if (! Filament::auth()->check() || ! Filament::hasTenancy()) {
             return;
         }
 
-        if (! Filament::hasTenancy()) {
-            return;
+        // There's no tenant outside of Filament.
+        if (filled($election = Filament::getTenant())) {
+            $builder->whereBelongsTo($election);
         }
-
-        $builder->whereBelongsTo(Filament::getTenant());
     }
 }
