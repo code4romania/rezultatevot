@@ -6,7 +6,10 @@
     <livewire:map
         :key="$this->mapKey()"
         :country="$country"
-        :county="$county" />
+        :county="$county"
+        :level="$level"
+        :actionUrl="route('front.elections.results', $election)"
+        :data="$this->data->toArray()" />
 
     {{ $election }}
 </div>

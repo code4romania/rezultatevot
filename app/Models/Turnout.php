@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\BelongsToElection;
-use App\Concerns\CanGroupByPlace;
+use App\Concerns\CanGroupByDataLevel;
 use App\Concerns\HasTemporaryTable;
 use App\Contracts\TemporaryTable;
 use App\Enums\Area;
@@ -22,7 +22,7 @@ use Tpetry\QueryExpressions\Language\Alias;
 class Turnout extends Model implements TemporaryTable
 {
     use BelongsToElection;
-    use CanGroupByPlace;
+    use CanGroupByDataLevel;
     /** @use HasFactory<TurnoutFactory> */
     use HasFactory;
     use HasTemporaryTable;
@@ -109,55 +109,12 @@ class Turnout extends Model implements TemporaryTable
 
     public function scopeForLevel(Builder $query, DataLevel $level, ?string $country = null, ?int $county = null, ?int $locality = null, bool $aggregate = false): Builder
     {
-        $query->select([
-            new Alias(new Sum('initial_total'), 'initial_total'),
-            new Alias(new Sum('total'), 'total'),
-        ]);
-
-        if ($level->is(DataLevel::TOTAL)) {
-            $query->groupByTotal();
-        }
-
-        if ($level->is(DataLevel::DIASPORA)) {
-            $query
-                ->whereNotNull('country_id')
-                ->when(
-                    $country,
-                    fn (Builder $query) => $query->where('country_id', $country),
-                );
-
-            if (! $aggregate) {
-                $query->groupByCountry();
-            }
-        }
-
-        if ($level->is(DataLevel::NATIONAL)) {
-            $query->whereNull('country_id');
-
-            if (filled($locality)) {
-                $query->where('locality_id', $locality)
-                    ->groupByLocality();
-            } elseif (filled($county)) {
-                $query->where('county_id', $county);
-
-                if ($aggregate) {
-                    $query->groupByCounty();
-                } else {
-                    $query->groupByLocality();
-                }
-            } else {
-                $query->whereNotNull('locality_id')
-                    ->whereNotNull('county_id');
-
-                if ($aggregate) {
-                    $query->groupByTotal();
-                } else {
-                    $query->groupByCounty();
-                }
-            }
-        }
-
-        return $query;
+        return $query
+            ->select([
+                new Alias(new Sum('initial_total'), 'initial_total'),
+                new Alias(new Sum('total'), 'total'),
+            ])
+            ->forDataLevel($level, $country, $county, $locality, $aggregate);
     }
 
     public static function segments(): Collection

@@ -5,17 +5,23 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\BelongsToElection;
+use App\Concerns\CanGroupByDataLevel;
 use App\Concerns\HasTemporaryTable;
 use App\Contracts\TemporaryTable;
+use App\Enums\DataLevel;
 use App\Enums\Part;
 use Database\Factories\VoteFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Tpetry\QueryExpressions\Function\Aggregate\Sum;
+use Tpetry\QueryExpressions\Language\Alias;
 
 class Vote extends Model implements TemporaryTable
 {
     use BelongsToElection;
+    use CanGroupByDataLevel;
     /** @use HasFactory<VoteFactory> */
     use HasFactory;
     use HasTemporaryTable;
@@ -29,6 +35,7 @@ class Vote extends Model implements TemporaryTable
      */
     protected $fillable = [
         'election_id',
+        'country_id',
         'county_id',
         'locality_id',
         'section',
@@ -46,7 +53,7 @@ class Vote extends Model implements TemporaryTable
     protected function casts(): array
     {
         return [
-            // 'part' => Part::class,
+            'part' => Part::class,
             'votes' => 'integer',
         ];
     }
@@ -54,6 +61,18 @@ class Vote extends Model implements TemporaryTable
     public function votable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function scopeForLevel(Builder $query, DataLevel $level, ?string $country = null, ?int $county = null, ?int $locality = null, bool $aggregate = false): Builder
+    {
+        return $query
+            ->select([
+                'votable_type',
+                'votable_id',
+                new Alias(new Sum('votes'), 'votes'),
+            ])
+            ->groupBy('votable_type', 'votable_id')
+            ->forDataLevel($level, $country, $county, $locality, $aggregate);
     }
 
     public function getTemporaryTableUniqueColumns(): array
