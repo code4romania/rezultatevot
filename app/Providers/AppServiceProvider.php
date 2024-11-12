@@ -9,6 +9,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\QueryException;
+use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -99,7 +100,7 @@ class AppServiceProvider extends ServiceProvider
                             ->withoutOverlapping()
                             ->onOneServer()
                     );
-            } catch (QueryException $th) {
+            } catch (QueryException|MissingAppKeyException $th) {
                 // fix for composer install
             }
         });
