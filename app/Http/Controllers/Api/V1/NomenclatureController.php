@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CountryResource;
-use App\Http\Resources\CountyResource;
+use App\Http\Resources\Nomenclature\CountryResource;
+use App\Http\Resources\Nomenclature\CountyResource;
 use App\Http\Resources\Nomenclature\ElectionResource;
 use App\Models\Country;
 use App\Models\County;

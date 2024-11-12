@@ -123,10 +123,10 @@ class Turnout extends Model implements TemporaryTable
 
         if ($level->is(DataLevel::DIASPORA)) {
             $query
+                ->whereNotNull('country_id')
                 ->when(
                     $country,
                     fn (Builder $query) => $query->where('country_id', $country),
-                    fn (Builder $query) => $query->whereNotNull('country_id')
                 );
 
             if (! $aggregate) {

@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Nomenclature;
 
+use App\Models\County;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LocationResource extends JsonResource
+class CountyResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +17,12 @@ class LocationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /* @var County $this */
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'code' => $this->code,
+            'localities' => LocationResource::collection(($this->whenLoaded('localities'))),
         ];
     }
 }

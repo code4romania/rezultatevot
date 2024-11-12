@@ -20,23 +20,31 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('counties', [NomenclatureController::class, 'counties'])
             ->name('counties');
 
-        Route::get('counties/{county:code}', [NomenclatureController::class, 'county'])
+        Route::get('counties/{county}', [NomenclatureController::class, 'county'])
             ->name('county');
     })->name('nomenclatures.');
 
-    Route::group(['prefix' => '{election:slug}'], function () {
+    Route::group(['prefix' => '{election}'], function () {
         Route::group(['prefix' => 'turnout'], function () {
-            Route::get('/', [TurnoutController::class, 'general'])
-                ->name('general');
+            Route::get('/', [TurnoutController::class, 'total'])
+                ->name('total');
 
-            Route::get('counties', [TurnoutController::class, 'counties'])
-                ->name('by_counties');
+            /*
+             * Diaspora turnout
+             */
+            Route::group(['prefix' => 'diaspora'], function () {
+                Route::get('/', [TurnoutController::class, 'diaspora'])
+                    ->name('diaspora');
+                Route::get('{country}', [TurnoutController::class, 'country'])
+                    ->name('country');
+            })->name('diaspora');
 
-            Route::get('counties/{county:code}', [TurnoutController::class, 'county'])
-                ->name('by_county');
-
-            Route::get('localities/{locality:code}', [TurnoutController::class, 'locality'])
-                ->name('by_locality');
+            Route::group(['prefix' => 'national'], function () {
+                Route::get('/', [TurnoutController::class, 'national'])
+                    ->name('national');
+                Route::get('{county}', [TurnoutController::class, 'county'])
+                    ->name('county');
+            })->name('national');
         })->name('turnout.');
     })->name('elections.');
 });
