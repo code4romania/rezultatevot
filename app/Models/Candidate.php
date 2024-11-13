@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\BelongsToElection;
+use App\Contracts\HasDisplayName;
 use Database\Factories\CandidateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Candidate extends Model implements HasMedia
+class Candidate extends Model implements HasMedia, HasDisplayName
 {
     use BelongsToElection;
     /** @use HasFactory<CandidateFactory> */
@@ -60,5 +61,10 @@ class Candidate extends Model implements HasMedia
     public function party(): BelongsTo
     {
         return $this->belongsTo(Party::class);
+    }
+
+    public function getDisplayName(): string
+    {
+        return $this->name;
     }
 }

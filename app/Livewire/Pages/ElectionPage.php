@@ -18,6 +18,7 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Support\Enums\MaxWidth;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -113,5 +114,21 @@ abstract class ElectionPage extends Component implements HasForms
     public function mapKey(): string
     {
         return hash('xxh128', "map-{$this->level->value}-{$this->county}");
+    }
+
+    #[On('map:click')]
+    public function refreshData(?string $country = null, ?int $county = null, ?int $locality = null): void
+    {
+        if (filled($country)) {
+            $this->country = $country;
+        }
+
+        if (filled($county)) {
+            $this->county = $county;
+        }
+
+        if (filled($locality)) {
+            $this->locality = $locality;
+        }
     }
 }

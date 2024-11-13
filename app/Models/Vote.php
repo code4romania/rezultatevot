@@ -72,7 +72,20 @@ class Vote extends Model implements TemporaryTable
                 new Alias(new Sum('votes'), 'votes'),
             ])
             ->groupBy('votable_type', 'votable_id')
-            ->forDataLevel($level, $country, $county, $locality, $aggregate);
+            ->forDataLevel($level, $country, $county, $locality, $aggregate)
+            ->orderByDesc('votes');
+    }
+
+    public function scopeWithVotable(Builder $query, bool $withMedia = false): Builder
+    {
+        return $query->with([
+            'votable' => function (MorphTo $morphTo) use ($withMedia) {
+                $morphTo->morphWith([
+                    Candidate::class => $withMedia ? ['party.media'] : ['party'],
+                    Party::class => $withMedia ? ['media'] : [],
+                ]);
+            },
+        ]);
     }
 
     public function getTemporaryTableUniqueColumns(): array

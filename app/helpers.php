@@ -40,3 +40,26 @@ if (! function_exists('percent')) {
         return $percent;
     }
 }
+
+if (! function_exists('hex2rgb')) {
+    /**
+     * Convert a valid hex color to RGB.
+     *
+     * @param  null|string $hex
+     * @return null|string
+     */
+    function hex2rgb(?string $hex): ?string
+    {
+        $hex = ltrim((string) $hex, '#');
+
+        $rgb = match (strlen($hex)) {
+            3 => str_split($hex, 1),
+            6 => str_split($hex, 2),
+            default => null,
+        };
+
+        return collect($rgb)
+            ->map(fn (string $c) => hexdec(str_pad($c, 2, $c)))
+            ->implode(',');
+    }
+}

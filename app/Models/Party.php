@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\BelongsToElection;
+use App\Contracts\HasDisplayName;
 use Database\Factories\PartyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Party extends Model implements HasMedia
+class Party extends Model implements HasMedia, HasDisplayName
 {
     use BelongsToElection;
     /** @use HasFactory<PartyFactory> */
@@ -64,5 +65,10 @@ class Party extends Model implements HasMedia
                     ->keepOriginalImageFormat()
                     ->optimize();
             });
+    }
+
+    public function getDisplayName(): string
+    {
+        return $this->acronym;
     }
 }

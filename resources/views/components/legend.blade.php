@@ -7,5 +7,6 @@
     'style' => "--color-custom: {$color};",
 ]) }}>
     <span class="block w-4 h-4 bg-custom"></span>
-    <span>{{ $text }}</span>
+    <span>{{ $label }}</span>
+    <span>{{ $description }}</span>
 </li>

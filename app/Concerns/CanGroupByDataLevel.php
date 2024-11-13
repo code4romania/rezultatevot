@@ -18,8 +18,11 @@ trait CanGroupByDataLevel
         }
 
         if ($level->is(DataLevel::DIASPORA)) {
-            $query->whereNotNull('country_id')
-                ->when($country, fn (Builder $query) => $query->where('country_id', $country));
+            $query->whereNotNull('country_id');
+
+            if (filled($country)) {
+                $query->where('country_id', $country);
+            }
 
             if (! $aggregate) {
                 $query->groupByCountry();
@@ -75,6 +78,6 @@ trait CanGroupByDataLevel
 
     public function scopeGroupByTotal(Builder $query): Builder
     {
-        return $query->addSelect(new Alias(new Value(0), 'place'));
+        return $query->addSelect(new Alias(new Value(1), 'place'));
     }
 }

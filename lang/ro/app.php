@@ -141,4 +141,6 @@ return [
         'national' => 'România',
         'diaspora' => 'Diaspora',
     ],
+
+    'others' => 'Alții',
 ];
