@@ -9,7 +9,6 @@ use App\Models\Party;
 use App\Models\Vote;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Number;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use stdClass;
@@ -58,7 +57,7 @@ class ElectionResults extends ElectionPage
                 locality: $this->locality,
                 aggregate: true,
             )
-            ->withVotable()
+            ->withVotable(true)
             ->get();
 
         $total = $result->sum('votes');
@@ -66,7 +65,8 @@ class ElectionResults extends ElectionPage
         return $result
             ->map(fn (Vote $vote) => [
                 'name' => $vote->votable->acronym ?? $vote->votable->name,
-                'votes' => Number::format(ensureNumeric($vote->votes)),
+                'image' => $vote->votable->getFirstMediaUrl(),
+                'votes' => ensureNumeric($vote->votes),
                 'percent' => percent($vote->votes, $total),
                 'color' => hex2rgb($vote->votable->color ?? $this->fallbackColor),
             ]);
@@ -106,8 +106,7 @@ class ElectionResults extends ElectionPage
 
                 return [
                     $vote->place => [
-                        'value' => Number::format(ensureNumeric($vote->votes)),
-                        'percent' => percent($vote->votes, $vote->total_votes, formatted: true),
+                        'value' => percent($vote->votes, $vote->total_votes, formatted: true),
                         'color' => $votable->color,
                         'label' => $votable->getDisplayName(),
                     ],

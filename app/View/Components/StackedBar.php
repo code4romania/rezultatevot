@@ -32,12 +32,15 @@ class StackedBar extends Component
             return $items;
         }
 
+        $totalVotes = $items->sum('votes');
+
         $items = $items->take($this->maxItems);
 
         $items->push([
-            'name' => 'Other',
+            'name' => __('app.others'),
             'percent' => 100 - $items->sum('percent'),
-            'color' => $this->fallbackColor,
+            'votes' => $totalVotes - $items->sum('votes'),
+            'color' => hex2rgb($this->fallbackColor),
         ]);
 
         return $items;
