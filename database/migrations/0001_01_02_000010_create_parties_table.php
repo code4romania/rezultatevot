@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('parties', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('acronym');
-            $table->string('color');
+            $table->string('acronym')->nullable();
+            $table->string('color')->nullable();
 
             $table->foreignIdFor(Election::class)
                 ->constrained()

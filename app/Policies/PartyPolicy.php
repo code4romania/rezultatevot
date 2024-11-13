@@ -54,7 +54,7 @@ class PartyPolicy
      */
     public function restore(User $user, Party $party): bool
     {
-        return true;
+        return $this->delete($user, $party);
     }
 
     /**
@@ -62,6 +62,6 @@ class PartyPolicy
      */
     public function forceDelete(User $user, Party $party): bool
     {
-        return true;
+        return $this->delete($user, $party);
     }
 }

@@ -68,6 +68,13 @@ return [
         'referendum' => 'Referendum',
     ],
 
+    'candidate' => [
+        'label' => [
+            'singular' => 'candidat',
+            'plural' => 'candidați',
+        ],
+    ],
+
     'party' => [
         'label' => [
             'singular' => 'partid',
@@ -134,4 +141,6 @@ return [
         'national' => 'România',
         'diaspora' => 'Diaspora',
     ],
+
+    'others' => 'Alții',
 ];

@@ -11,6 +11,14 @@ import.meta.glob(
     }
 );
 
+const hasValue = (value) => {
+    if (typeof value === 'undefined') {
+        return false;
+    }
+
+    return value !== '' && value != 0 && value !== null;
+};
+
 export default () => ({
     map: null,
     tooltip: L.tooltip(),
@@ -24,6 +32,7 @@ export default () => ({
             dragging: this.isWorldMap,
             touchZoom: this.isWorldMap,
             scrollWheelZoom: this.isWorldMap,
+            doubleClickZoom: this.isWorldMap,
             zoomSnap: this.isWorldMap ? 1.0 : 0.1,
             minZoom: 3,
             maxBoundsViscosity: 1.0,
@@ -31,6 +40,7 @@ export default () => ({
                 [-90, -180],
                 [90, 180],
             ],
+            keyboard: false,
         });
 
         this.geoJSON();
@@ -40,32 +50,40 @@ export default () => ({
         const geojson = L.geoJSON(await (await fetch(this.$el.dataset.url)).json(), {
             style: (feature) => ({
                 weight: 1,
-                opacity: 0.75,
+                opacity: 1,
                 fillOpacity: 1,
                 color: 'white',
-                fillColor: this.$wire.data[feature.properties?.id]?.color || '#DDD',
+                fillColor: hasValue(this.$wire.data[feature.properties?.id]?.value)
+                    ? this.$wire.data[feature.properties?.id]?.color || '#DDD'
+                    : '#DDD',
             }),
             onEachFeature: (feature, layer) => {
-                if (!feature.properties?.id) {
+                if (
+                    !feature.properties?.id ||
+                    feature.properties?.interactive === false ||
+                    !hasValue(this.$wire.data[feature.properties.id]?.value)
+                ) {
                     return;
                 }
 
-                layer.bindTooltip(
-                    `<strong>${feature.properties.name}</strong><br/>
-                        ${this.$wire.data[feature.properties.id]?.value || '&mdash;'}`,
-                    {
-                        sticky: true,
-                        direction: 'top',
-                    }
-                );
+                let content = hasValue(this.$wire.data[feature.properties.id]?.percent)
+                    ? this.$wire.data[feature.properties.id].percent
+                    : this.$wire.data[feature.properties.id].value;
+
+                if (hasValue(this.$wire.data[feature.properties.id]?.label)) {
+                    content = `${this.$wire.data[feature.properties.id].label}: ${content}`;
+                }
+
+                layer.bindTooltip(`<strong>${feature.properties.name}</strong><br/>${content}`, {
+                    sticky: true,
+                    direction: 'top',
+                });
 
                 layer.on({
                     mouseover: ({ target }) => {
                         target.setStyle({
                             weight: 2,
-                            opacity: 1,
-
-                            fillOpacity: 0.8,
+                            fillOpacity: 0.75,
                         });
 
                         target.bringToFront();
@@ -74,9 +92,17 @@ export default () => ({
                         geojson.resetStyle(target);
                     },
                     click: ({ target }) => {
-                        console.log(target.feature.properties);
+                        if (this.$wire.level === 'D') {
+                            this.$dispatch('map:click', { country: target.feature.properties.id });
+                        }
 
-                        // Livewire.navigate(this.$wire.actionUrl);
+                        if (this.$wire.level === 'N') {
+                            if (this.$wire.county) {
+                                this.$dispatch('map:click', { locality: target.feature.properties.id });
+                            } else {
+                                this.$dispatch('map:click', { county: target.feature.properties.id });
+                            }
+                        }
                     },
                 });
             },

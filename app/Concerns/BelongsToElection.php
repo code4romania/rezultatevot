@@ -19,15 +19,18 @@ trait BelongsToElection
     protected static function bootBelongsToElection(): void
     {
         static::creating(function (self $model) {
-            if (! Filament::auth()->check()) {
+            // No need to change the election id if it's already set.
+            if (filled($model->election_id)) {
                 return;
             }
 
-            if (! Filament::hasTenancy()) {
+            if (! Filament::auth()->check() || ! Filament::hasTenancy()) {
                 return;
             }
-
-            $model->election()->associate(Filament::getTenant());
+            // There's no tenant outside of Filament.
+            if (filled($election = Filament::getTenant())) {
+                $model->election()->associate($election);
+            }
         });
 
         static::addGlobalScope(new BelongsToElectionScope);

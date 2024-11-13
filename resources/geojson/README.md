@@ -1,5 +1,16 @@
 # Processing map data
 
+## Romania
+
+data source: [Limite județe poligon - geo-spatial.org](https://geo-spatial.org/vechi/download/romania-seturi-vectoriale#frontiera)
+
+```
+npx mapshaper ro_frontiera_poligon.geojson \
+    -filter-fields id,name \
+    -simplify dp interval=500 \
+    -o precision=0.01 ./romania.geojson
+```
+
 ## Counties
 
 data source: [Limite județe poligon - geo-spatial.org](https://geo-spatial.org/vechi/download/romania-seturi-vectoriale#judete)

@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\PartyResource\Pages;
+use App\Filament\Imports\SimpleCandidateImporter;
 use App\Models\Party;
+use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -59,8 +62,16 @@ class PartyResource extends Resource
             ->filters([
                 //
             ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(SimpleCandidateImporter::class)
+                    ->options([
+                        'election_id' => Filament::getTenant()->id,
+                    ]),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

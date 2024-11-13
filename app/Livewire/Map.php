@@ -16,8 +16,6 @@ class Map extends Component
 
     public ?string $county = null;
 
-    public ?string $actionUrl = null;
-
     public array $data = [];
 
     #[Computed]
@@ -25,7 +23,7 @@ class Map extends Component
     {
         return match ($this->level) {
             DataLevel::DIASPORA => 'countries',
-            DataLevel::TOTAL => 'counties',
+            DataLevel::TOTAL => 'romania',
             DataLevel::NATIONAL => $this->county ? "localities/{$this->county}" : 'counties',
         };
     }

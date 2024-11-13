@@ -8,8 +8,10 @@ use App\Models\ScheduledJob;
 use Dedoc\Scramble\Scramble;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\QueryException;
 use Illuminate\Routing\Route;
+use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -41,6 +43,8 @@ class AppServiceProvider extends ServiceProvider
 
         Number::useLocale($this->app->getLocale());
 
+        $this->enforceMorphMap();
+
         $this->resolveSchedule();
 
         $this->setSeoDefaults();
@@ -55,6 +59,22 @@ class AppServiceProvider extends ServiceProvider
         Str::macro('initials', fn (?string $value) => collect(explode(' ', (string) $value))
             ->map(fn (string $word) => Str::upper(Str::substr($word, 0, 1)))
             ->join(''));
+    }
+
+    protected function enforceMorphMap(): void
+    {
+        Relation::enforceMorphMap([
+            'candidate' => \App\Models\Candidate::class,
+            'country' => \App\Models\Country::class,
+            'county' => \App\Models\County::class,
+            'election' => \App\Models\Election::class,
+            'locality' => \App\Models\Locality::class,
+            'party' => \App\Models\Party::class,
+            'record' => \App\Models\Record::class,
+            'turnout' => \App\Models\Turnout::class,
+            'user' => \App\Models\User::class,
+            'vote' => \App\Models\Vote::class,
+        ]);
     }
 
     protected function setSeoDefaults(): void
@@ -86,7 +106,7 @@ class AppServiceProvider extends ServiceProvider
                             ->withoutOverlapping()
                             ->onOneServer()
                     );
-            } catch (QueryException $th) {
+            } catch (QueryException|MissingAppKeyException $th) {
                 // fix for composer install
             }
         });
