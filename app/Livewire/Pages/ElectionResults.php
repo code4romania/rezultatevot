@@ -15,6 +15,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use stdClass;
 use Tpetry\QueryExpressions\Function\Aggregate\Max;
+use Tpetry\QueryExpressions\Function\Aggregate\Min;
 use Tpetry\QueryExpressions\Function\Aggregate\Sum;
 use Tpetry\QueryExpressions\Language\Alias;
 
@@ -82,6 +83,7 @@ class ElectionResults extends ElectionPage
                 new Alias(DB::raw('ANY_VALUE(votable_type)'), 'votable_type'),
                 new Alias(new Max('votes'), 'votes'),
                 new Alias(new Sum('votes'), 'total_votes'),
+                new Alias(new Min('part'), 'part'),
                 'place',
             ])
             ->groupBy('place')
