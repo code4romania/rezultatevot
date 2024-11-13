@@ -17,8 +17,7 @@
     <x-table>
         <x-slot:header>
             <x-table.row>
-                <x-table.th></x-table.th>
-                <x-table.th align="left">
+                <x-table.th align="left" colspan="2">
                     Partid / Alianță / Candidat independent
                 </x-table.th>
 
