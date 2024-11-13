@@ -23,6 +23,7 @@ export default () => ({
     map: null,
     tooltip: L.tooltip(),
     isWorldMap: false,
+    layer: null,
 
     init() {
         this.isWorldMap = this.$wire.level === 'D';
@@ -47,7 +48,8 @@ export default () => ({
     },
 
     async geoJSON() {
-        const geojson = L.geoJSON(await (await fetch(this.$el.dataset.url)).json(), {
+        this.layer = L.geoJSON(await (await fetch(this.$el.dataset.url)).json(), {
+            attribution: `Sursă date: <a href="https://www.roaep.ro/" rel="noopener">Autoritatea Electorală Permanentă</a> | GeoJSON: <a href="https://geo-spatial.org/vechi/download/romania-seturi-vectoriale" rel="noopener">geo-spatial.org</a>`,
             style: (feature) => ({
                 weight: 1,
                 opacity: 1,
@@ -89,7 +91,7 @@ export default () => ({
                         target.bringToFront();
                     },
                     mouseout: ({ target }) => {
-                        geojson.resetStyle(target);
+                        this.layer.resetStyle(target);
                     },
                     click: ({ target }) => {
                         if (this.$wire.level === 'D') {
@@ -108,12 +110,23 @@ export default () => ({
             },
         }).addTo(this.map);
 
+        this.fitBounds();
+    },
+
+    fitBounds() {
         if (this.isWorldMap) {
             this.map.setView([45.9432, 24.9668], 3);
-        } else {
-            this.map.fitBounds(geojson.getBounds(), {
+        } else if (this.layer) {
+            this.map.fitBounds(this.layer.getBounds(), {
                 padding: [20, 20],
             });
         }
+    },
+    resize() {
+        this.$nextTick(() => {
+            if (!this.isWorldMap) {
+                this.fitBounds();
+            }
+        });
     },
 });

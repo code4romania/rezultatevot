@@ -12,14 +12,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\On;
 use stdClass;
 use Tpetry\QueryExpressions\Function\Aggregate\Max;
 use Tpetry\QueryExpressions\Function\Aggregate\Min;
 use Tpetry\QueryExpressions\Function\Aggregate\Sum;
 use Tpetry\QueryExpressions\Language\Alias;
 
-#[On('map:update')]
 class ElectionResults extends ElectionPage
 {
     protected string $fallbackColor = '#DDD';

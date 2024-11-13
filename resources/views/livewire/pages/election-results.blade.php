@@ -63,7 +63,10 @@
             @if ($this->aggregate->count() > 5)
                 <x-table.row>
                     <x-table.td align="right" colspan="3">
-                        <button type="button" @@click="expanded = ! expanded">button</button>
+                        <button type="button"
+                            @@click="expanded = ! expanded"
+                            x-text="expanded ? @js(__('app.candidate.action.hide')) : @js(__('app.candidate.action.show'))">
+                        </button>
                     </x-table.td>
                 </x-table.row>
             @endif

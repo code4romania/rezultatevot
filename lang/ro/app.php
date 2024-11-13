@@ -73,6 +73,11 @@ return [
             'singular' => 'candidat',
             'plural' => 'candidați',
         ],
+
+        'action' => [
+            'show' => 'Afișează toți candidații',
+            'hide' => 'Ascunde candidații',
+        ],
     ],
 
     'party' => [
