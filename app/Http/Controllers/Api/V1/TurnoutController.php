@@ -16,6 +16,7 @@ use App\Models\County;
 use App\Models\Election;
 use App\Models\Turnout;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class TurnoutController extends Controller
 {
@@ -26,7 +27,6 @@ class TurnoutController extends Controller
             ->forLevel(
                 level: DataLevel::TOTAL,
             )
-            ->toBase()
             ->first();
 
         return response()->json(TurnoutResource::make($result));
@@ -40,7 +40,6 @@ class TurnoutController extends Controller
                 level: DataLevel::DIASPORA,
                 aggregate: true,
             )
-            ->toBase()
             ->first();
 
         $general->uats = Turnout::query()
@@ -55,19 +54,16 @@ class TurnoutController extends Controller
         return response()->json(TurnoutDiasporaAggregatedResource::make($general));
     }
 
-    public function country(Election $election, Country $country): JsonResponse
+    public function country(Election $election, Country $country): JsonResource
     {
-        return response()->json(
-            TurnoutDiasporaResource::make(
-                Turnout::query()
-                    ->whereBelongsTo($election)
-                    ->forLevel(
-                        level: DataLevel::DIASPORA,
-                        country: $country->id,
-                    )
-                    ->toBase()
-                    ->first()
-            )
+        return TurnoutDiasporaResource::make(
+            Turnout::query()
+                ->whereBelongsTo($election)
+                ->forLevel(
+                    level: DataLevel::DIASPORA,
+                    country: $country->id,
+                )
+                ->first()
         );
     }
 

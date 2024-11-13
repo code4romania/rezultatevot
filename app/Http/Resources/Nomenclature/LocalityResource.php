@@ -7,7 +7,7 @@ namespace App\Http\Resources\Nomenclature;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LocationResource extends JsonResource
+class LocalityResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

@@ -25,7 +25,6 @@ class ElectionResource extends JsonResource
             'type' => $this->type->getLabel(),
             'is_live' => $this->is_live,
             'slug' => $this->slug,
-            'created_at' => $this->created_at,
         ];
     }
 }

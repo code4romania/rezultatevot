@@ -10,8 +10,8 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\QueryException;
-use Illuminate\Routing\Route;
 use Illuminate\Encryption\MissingAppKeyException;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -29,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->registerStrMacros();
+
+        JsonResource::withoutWrapping();
     }
 
     /**
@@ -49,9 +51,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->setSeoDefaults();
 
-        Scramble::routes(function (Route $route) {
-            return Str::startsWith($route->uri, 'api/');
-        });
+        Scramble::registerApi('v1', [
+            'api_path' => 'api/v1',
+        ]);
     }
 
     protected function registerStrMacros(): void

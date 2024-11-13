@@ -11,47 +11,33 @@ use App\Http\Resources\Nomenclature\ElectionResource;
 use App\Models\Country;
 use App\Models\County;
 use App\Models\Election;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class NomenclatureController extends Controller
 {
-    public function elections(): JsonResponse
+    public function elections(): JsonResource
     {
-        return response()->json(
-            ElectionResource::collection(
-                Election::query()
-                    ->orderBy('is_live', 'desc')
-                    ->get()
-            )
+        return ElectionResource::collection(
+            Election::query()
+                ->orderBy('is_live', 'desc')
+                ->get()
         );
     }
 
-    public function counties(): JsonResponse
+    public function countries(): JsonResource
     {
-        return response()->json(
-            CountyResource::collection(
-                County::with(['localities' => function ($query) {
-                    $query->whereNull('parent_id');
-                }])->get()
-            )
-        );
+        return CountryResource::collection(Country::all());
     }
 
-    public function county(County $county): JsonResponse
+    public function counties(): JsonResource
     {
-        return response()->json(
-            new CountyResource(
-                $county->load('localities')
-            )
-        );
+        return CountyResource::collection(County::all());
     }
 
-    public function countries(): JsonResponse
+    public function county(County $county): JsonResource
     {
-        return response()->json(
-            CountryResource::collection(
-                Country::all()
-            )
+        return CountyResource::make(
+            $county->loadMissing('localities')
         );
     }
 }

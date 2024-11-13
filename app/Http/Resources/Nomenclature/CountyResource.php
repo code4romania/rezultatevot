@@ -21,8 +21,7 @@ class CountyResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'code' => $this->code,
-            'localities' => LocationResource::collection(($this->whenLoaded('localities'))),
+            'localities' => LocalityResource::collection($this->whenLoaded('localities')),
         ];
     }
 }
