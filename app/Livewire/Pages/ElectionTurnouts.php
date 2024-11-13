@@ -37,7 +37,7 @@ class ElectionTurnouts extends ElectionPage
             ->toBase()
             ->first();
 
-        if (blank($result)) {
+        if (blank($result) || blank($result->total)) {
             return null;
         }
 
