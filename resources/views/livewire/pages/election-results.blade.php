@@ -54,7 +54,7 @@
         <x-slot:footer>
             @if ($this->aggregate->count() > 5)
                 <x-table.row>
-                    <x-table.td align="right" colspan="3">
+                    <x-table.td align="right" colspan="4">
                         <button type="button"
                             @@click="expanded = ! expanded"
                             x-text="expanded ? @js(__('app.candidate.action.hide')) : @js(__('app.candidate.action.show'))">
