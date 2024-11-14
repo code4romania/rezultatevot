@@ -22,6 +22,23 @@ class CountryResource extends Resource
 
     protected static bool $isScopedToTenant = false;
 
+    protected static ?int $navigationSort = 29;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation.nomenclature');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('app.country.label.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('app.country.label.plural');
+    }
+
     public static function form(Form $form): Form
     {
         return $form

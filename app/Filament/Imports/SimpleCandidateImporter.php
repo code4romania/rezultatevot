@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Imports;
 
-use App\Actions\CheckVotable;
 use App\Models\Candidate;
 use App\Models\Party;
+use App\Services\RecordService;
 use Carbon\CarbonInterface;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
@@ -33,7 +33,7 @@ class SimpleCandidateImporter extends Importer
 
     public function resolveRecord(): Candidate|Party
     {
-        static::$model = app(CheckVotable::class)->isIndependentCandidate($this->data['name'])
+        static::$model = RecordService::isIndependentCandidate($this->data['name'])
             ? Candidate::class
             : Party::class;
 
@@ -45,7 +45,7 @@ class SimpleCandidateImporter extends Importer
 
     protected function afterValidate(): void
     {
-        $this->data['name'] = app(CheckVotable::class)->getName($this->data['name']);
+        $this->data['name'] = RecordService::getName($this->data['name']);
     }
 
     public static function getCompletedNotificationBody(Import $import): string

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\Part;
 use App\Models\Country;
 use App\Models\Election;
 use App\Models\Locality;
@@ -36,6 +37,7 @@ class RecordFactory extends Factory
         $papers_received = $papers_unused + $votes_valid + $votes_null;
 
         return [
+            'part' => fake()->randomElement(Part::values()),
             'section' => fake()->unique()->lexify('?????????'),
             'election_id' => Election::factory(),
             'eligible_voters_permanent' => $eligible_voters_permanent,

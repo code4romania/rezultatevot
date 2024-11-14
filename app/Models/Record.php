@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Concerns\BelongsToElection;
 use App\Concerns\HasTemporaryTable;
 use App\Contracts\TemporaryTable;
+use App\Enums\Part;
 use Database\Factories\RecordFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,7 @@ class Record extends Model implements TemporaryTable
         'county_id',
         'locality_id',
         'section',
+        'part',
 
         // 'eligible_voters_total', // a = a1 + a2
         'eligible_voters_permanent', // a1 >= b1
@@ -56,6 +58,7 @@ class Record extends Model implements TemporaryTable
     protected function casts(): array
     {
         return [
+            'part' => Part::class,
             'eligible_voters_total' => 'integer',
             'eligible_voters_permanent' => 'integer',
             'eligible_voters_special' => 'integer',

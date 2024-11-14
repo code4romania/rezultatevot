@@ -1,5 +1,14 @@
+@props(['embed' => false])
+
 <aside class="bg-gray-100">
-    <div class="flex px-4 py-3">
+    <div class="flex gap-4 px-4 py-3">
+        @if ($embed)
+            <a href="{{ route('front.index') }}" class="flex items-center" wire:navigate>
+                <div class="sr-only">{{ config('app.name') }}</div>
+                <x-icon-logo class="h-10 md:h-14" />
+            </a>
+        @endif
+
         <a
             href="https://www.commitglobal.org"
             target="_blank"

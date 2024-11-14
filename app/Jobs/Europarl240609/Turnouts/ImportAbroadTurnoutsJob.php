@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Jobs\Europarl240609\Turnouts;
 
-use App\Actions\CheckRecordHasIssues;
 use App\Events\CountryCodeNotFound;
 use App\Exceptions\CountryCodeNotFoundException;
 use App\Exceptions\MissingSourceFileException;
 use App\Models\Country;
 use App\Models\ScheduledJob;
 use App\Models\Turnout;
+use App\Services\RecordService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,7 +34,7 @@ class ImportAbroadTurnoutsJob implements ShouldQueue
         $this->scheduledJob = $scheduledJob;
     }
 
-    public function handle(CheckRecordHasIssues $checker): void
+    public function handle(): void
     {
         $disk = $this->scheduledJob->disk();
         $path = $this->scheduledJob->getSourcePath('SR.csv');
@@ -65,7 +65,7 @@ class ImportAbroadTurnoutsJob implements ShouldQueue
                     'mobile' => $record['UM'],
 
                     'area' => $record['Mediu'],
-                    'has_issues' => $checker->checkTurnout($record),
+                    'has_issues' => RecordService::checkTurnout($record),
 
                     ...$segments->map(fn (string $segment) => $record[$segment]),
                 ]);

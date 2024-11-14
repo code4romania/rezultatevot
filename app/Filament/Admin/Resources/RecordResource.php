@@ -6,7 +6,6 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\RecordResource\Pages;
 use App\Models\Record;
-use App\Models\Result;
 use App\Tables\Columns\LocationColumn;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
@@ -19,14 +18,19 @@ class RecordResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation.election_data');
+    }
+
     public static function getModelLabel(): string
     {
-        return __('app.result.label.singular');
+        return __('app.record.label.singular');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('app.result.label.plural');
+        return __('app.record.label.plural');
     }
 
     public static function table(Table $table): Table
@@ -35,6 +39,8 @@ class RecordResource extends Resource
             ->modifyQueryUsing(fn (Builder $query) => $query->with('country', 'county', 'locality'))
             ->columns([
                 LocationColumn::make('location'),
+
+                TextColumn::make('part'),
 
                 TextColumn::make('eligible_voters_total')
                     ->label(__('app.field.eligible_voters_total'))
@@ -107,7 +113,7 @@ class RecordResource extends Resource
             ])
             ->paginated([10, 25, 50, 100])
             ->deferLoading()
-            ->recordClasses(fn (Result $result) => $result->has_issues ? 'bg-warning-50 dark:bg-warning-400/10' : null);
+            ->recordClasses(fn (Record $record) => $record->has_issues ? 'bg-warning-50 dark:bg-warning-400/10' : null);
     }
 
     public static function getRelations(): array

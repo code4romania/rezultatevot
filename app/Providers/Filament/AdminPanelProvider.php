@@ -84,8 +84,10 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->navigationItems([
                 NavigationItem::make('Settings')
+                    ->url(fn () => ElectionResource::getUrl('view', ['record' => Filament::getTenant()]))
+                    ->group(__('app.navigation.admin'))
                     ->icon('heroicon-o-cog')
-                    ->url(fn () => ElectionResource::getUrl('view', ['record' => Filament::getTenant()])),
+                    ->sort(35),
             ])
             ->collapsibleNavigationGroups(false)
             ->databaseNotifications();

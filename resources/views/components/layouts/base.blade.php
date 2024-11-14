@@ -1,5 +1,6 @@
 @props([
     'timeline' => false,
+    'embed' => false,
 ])
 
 <!doctype html>
@@ -26,18 +27,25 @@
 </head>
 
 <body @class([
-    'flex flex-col  font-sans antialiased',
+    'flex flex-col font-sans antialiased',
     $timeline ? 'h-screen' : 'min-h-screen',
 ])
     @if ($timeline) x-data="{ sidebarOpen: false }" @endif>
-    <x-site.skip-to-content />
-    <x-site.banner />
 
-    <x-site.header :$timeline />
+    @if (!$embed)
+        <x-site.skip-to-content />
+        <x-site.banner />
+
+        <x-site.header :$timeline />
+    @endif
 
     <div @class(['flex flex-1', 'overflow-hidden' => $timeline])>
         {{ $slot }}
     </div>
+
+    @if ($embed)
+        <x-site.banner embed />
+    @endif
 
     @livewireScriptConfig
     @filamentScripts

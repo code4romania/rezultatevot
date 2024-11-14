@@ -8,6 +8,7 @@ return [
     'skip' => 'Sari la conținut',
 
     'field' => [
+        'aliases' => 'Aliasuri',
         'color' => 'Culoare',
         'country' => 'Țară',
         'county' => 'Județ',
@@ -46,7 +47,9 @@ return [
 
     'navigation' => [
         'admin' => 'Administrare',
+        'election_data' => 'Date alegeri',
         'elections' => 'Alegeri',
+        'nomenclature' => 'Nomenclatoare',
         'turnout' => 'Prezența la vot',
         'results' => 'Rezultate vot',
     ],
@@ -68,6 +71,27 @@ return [
         'referendum' => 'Referendum',
     ],
 
+    'country' => [
+        'label' => [
+            'singular' => 'țară',
+            'plural' => 'țări',
+        ],
+    ],
+
+    'county' => [
+        'label' => [
+            'singular' => 'județ',
+            'plural' => 'județe',
+        ],
+    ],
+
+    'locality' => [
+        'label' => [
+            'singular' => 'localitate',
+            'plural' => 'localități',
+        ],
+    ],
+
     'candidate' => [
         'label' => [
             'singular' => 'candidat',
@@ -87,10 +111,10 @@ return [
         ],
     ],
 
-    'result' => [
+    'record' => [
         'label' => [
-            'singular' => 'rezultat',
-            'plural' => 'rezultate',
+            'singular' => 'proces verbal',
+            'plural' => 'procese verbale',
         ],
     ],
 

@@ -44,6 +44,7 @@ return new class extends Migration
                 ->on('localities');
 
             $table->string('section');
+
             $table->tinyInteger('part')->unsigned();
 
             $table->morphs('votable');

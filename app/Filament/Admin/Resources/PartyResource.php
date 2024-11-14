@@ -21,7 +21,14 @@ class PartyResource extends Resource
 {
     protected static ?string $model = Party::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    protected static ?int $navigationSort = 20;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation.nomenclature');
+    }
 
     public static function getModelLabel(): string
     {

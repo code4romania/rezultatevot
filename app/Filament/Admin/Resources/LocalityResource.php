@@ -19,9 +19,26 @@ class LocalityResource extends Resource
 {
     protected static ?string $model = Locality::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
 
     protected static bool $isScopedToTenant = false;
+
+    protected static ?int $navigationSort = 27;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation.nomenclature');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('app.locality.label.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('app.locality.label.plural');
+    }
 
     public static function form(Form $form): Form
     {
@@ -85,12 +102,6 @@ class LocalityResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
