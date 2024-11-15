@@ -13,10 +13,6 @@ class RedirectToElectionController extends Controller
     {
         $election ??= Election::latest()->first();
 
-        $route = $election->properties?->get('default_route') === 'results'
-            ? 'front.elections.results'
-            : 'front.elections.turnout';
-
-        return redirect()->route($route, $election);
+        return redirect()->to($election->getDefaultUrl());
     }
 }

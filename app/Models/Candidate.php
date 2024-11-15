@@ -26,6 +26,7 @@ class Candidate extends Model implements HasMedia, HasDisplayName
 
     protected $fillable = [
         'name',
+        'display_name',
         'color',
         'election_id',
         'party_id',
@@ -65,6 +66,6 @@ class Candidate extends Model implements HasMedia, HasDisplayName
 
     public function getDisplayName(): string
     {
-        return $this->name;
+        return $this->display_name ?? $this->name;
     }
 }

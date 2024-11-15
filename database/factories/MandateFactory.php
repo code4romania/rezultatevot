@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\Part;
+use App\Models\Candidate;
 use App\Models\Country;
 use App\Models\Election;
 use App\Models\Locality;
+use App\Models\Party;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Vote>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Mandate>
  */
-class VoteFactory extends Factory
+class MandateFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -26,8 +28,17 @@ class VoteFactory extends Factory
             'part' => fake()->randomElement(Part::values()),
             'section' => fake()->unique()->lexify('?????????'),
             'election_id' => Election::factory(),
-            'votes' => fake()->randomNumber(4),
+            'mandates' => fake()->randomNumber(3),
+            'party_id' => Party::factory(),
         ];
+    }
+
+    public function votable(Candidate|Party $votable): static
+    {
+        return $this->state(fn () => [
+            'votable_type' => $votable->getMorphClass(),
+            'votable_id' => $votable->id,
+        ]);
     }
 
     public function locality(Locality $locality): static

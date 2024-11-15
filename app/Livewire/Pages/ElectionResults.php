@@ -57,19 +57,21 @@ class ElectionResults extends ElectionPage
                 locality: $this->locality,
                 aggregate: true,
             )
-            ->withVotable(true)
             ->get();
 
         $total = $result->sum('votes');
 
-        return $result
-            ->map(fn (Vote $vote) => [
-                'name' => $vote->votable->acronym ?? $vote->votable->name,
-                'image' => $vote->votable->getFirstMediaUrl(),
+        return $result->map(function (Vote $vote) use ($total) {
+            $votable = $this->getVotable($vote->votable_type, $vote->votable_id);
+
+            return [
+                'name' => $votable->acronym ?? $votable->name,
+                'image' => $votable->getFirstMediaUrl(),
                 'votes' => ensureNumeric($vote->votes),
                 'percent' => percent($vote->votes, $total),
-                'color' => hex2rgb($vote->votable->color ?? $this->fallbackColor),
-            ]);
+                'color' => hex2rgb($votable->color ?? $this->fallbackColor),
+            ];
+        });
     }
 
     #[Computed]
@@ -99,10 +101,7 @@ class ElectionResults extends ElectionPage
             )
             ->get()
             ->mapWithKeys(function (stdClass $vote) {
-                $votable = match ($vote->votable_type) {
-                    (new Party)->getMorphClass() => $this->parties->find($vote->votable_id),
-                    (new Candidate)->getMorphClass() => $this->candidates->find($vote->votable_id),
-                };
+                $votable = $this->getVotable($vote->votable_type, $vote->votable_id);
 
                 return [
                     $vote->place => [
@@ -112,5 +111,13 @@ class ElectionResults extends ElectionPage
                     ],
                 ];
             });
+    }
+
+    protected function getVotable(string $type, int $id): Party|Candidate
+    {
+        return match ($type) {
+            (new Party)->getMorphClass() => $this->parties->find($id),
+            (new Candidate)->getMorphClass() => $this->candidates->find($id),
+        };
     }
 }

@@ -18,6 +18,8 @@ class Map extends Component
 
     public array $data = [];
 
+    public ?array $legend = null;
+
     #[Computed]
     public function file(): string
     {

@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('display_name')->nullable();
             $table->string('color')->nullable();
 
             $table->foreignIdFor(Election::class)

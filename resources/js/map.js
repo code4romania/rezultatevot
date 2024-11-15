@@ -45,20 +45,36 @@ export default () => ({
         });
 
         this.geoJSON();
+
+        this.legend(this.$wire.legend);
     },
 
     async geoJSON() {
         this.layer = L.geoJSON(await (await fetch(this.$el.dataset.url)).json(), {
             attribution: `Sursă date: <a href="https://www.roaep.ro/" rel="noopener">Autoritatea Electorală Permanentă</a> | GeoJSON: <a href="https://geo-spatial.org/vechi/download/romania-seturi-vectoriale" rel="noopener">geo-spatial.org</a>`,
-            style: (feature) => ({
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 1,
-                color: 'white',
-                fillColor: hasValue(this.$wire.data[feature.properties?.id]?.value)
-                    ? this.$wire.data[feature.properties?.id]?.color || '#DDD'
-                    : '#DDD',
-            }),
+            style: (feature) => {
+                const data = this.$wire.data[feature.properties?.id];
+                const style = {
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 1,
+                    color: '#FFF',
+                    className: 'fill-gray-300',
+                };
+
+                if (!hasValue(data)) {
+                    return style;
+                }
+
+                if (hasValue(data.class)) {
+                    style.className = data.class;
+                } else if (hasValue(data.value) && hasValue(data?.color)) {
+                    delete style.className;
+                    style.fillColor = data.color;
+                }
+
+                return style;
+            },
             onEachFeature: (feature, layer) => {
                 if (
                     !feature.properties?.id ||
@@ -113,6 +129,31 @@ export default () => ({
         this.fitBounds();
     },
 
+    legend(scale) {
+        if (!hasValue(scale) || !Array.isArray(scale)) {
+            return;
+        }
+
+        const legend = L.control({
+            position: 'bottomright',
+        });
+
+        legend.onAdd = function (map) {
+            const div = L.DomUtil.create('ol', 'bg-white py-2 px-2 rounded drop-shadow leading-4 pointer-events-none');
+
+            for (const step of scale) {
+                div.innerHTML += `<li class="flex gap-1 items-center">
+                    <i class="w-4 h-4 inline-flex ${step.color}"></i>
+                    <span>${step.label}</span>
+                </li>`;
+            }
+
+            return div;
+        };
+
+        legend.addTo(this.map);
+    },
+
     fitBounds() {
         if (this.isWorldMap) {
             this.map.setView([45.9432, 24.9668], 3);
@@ -122,6 +163,7 @@ export default () => ({
             });
         }
     },
+
     resize() {
         this.$nextTick(() => {
             if (!this.isWorldMap) {

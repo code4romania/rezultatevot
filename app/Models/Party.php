@@ -69,6 +69,6 @@ class Party extends Model implements HasMedia, HasDisplayName
 
     public function getDisplayName(): string
     {
-        return $this->acronym;
+        return $this->name;
     }
 }

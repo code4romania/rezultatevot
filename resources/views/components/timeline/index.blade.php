@@ -67,7 +67,7 @@
                                 <x-timeline.item
                                     :isActive="$isActiveElection($elections->first())"
                                     :isLive="$elections->first()->is_live"
-                                    :url="route('front.elections.results', $elections->first())"
+                                    :url="$elections->first()->getDefaultUrl()"
                                     :label="$type" />
                             @else
                                 <li x-data="{ open: @js($isActiveElectionType($type)) }">
@@ -88,7 +88,7 @@
                                             <x-timeline.item
                                                 :isActive="$isActiveElection($election)"
                                                 :isLive="$election->is_live"
-                                                :url="route('front.elections.results', $election)"
+                                                :url="$election->getDefaultUrl()"
                                                 :label="$election->title" />
                                         @endforeach
                                     </ul>

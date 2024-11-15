@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\DefaultElectionPage;
 use App\Enums\ElectionType;
 use App\Filament\Admin\Resources\ElectionResource\Pages;
 use App\Filament\Admin\Resources\ElectionResource\RelationManagers\ScheduledJobRelationManager;
 use App\Models\Election;
 use Filament\Forms;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -68,14 +70,6 @@ class ElectionResource extends Resource
                             ->enum(ElectionType::class)
                             ->required(),
 
-                        TextInput::make('title')
-                            ->label(__('app.field.title'))
-                            ->required(),
-
-                        TextInput::make('subtitle')
-                            ->label(__('app.field.subtitle'))
-                            ->nullable(),
-
                         /*
                          * @see https://dev.mysql.com/doc/refman/8.4/en/year.html Documentation for the YEAR data type
                          */
@@ -87,10 +81,33 @@ class ElectionResource extends Resource
                             ->default(today()->year)
                             ->required(),
 
+                        TextInput::make('title')
+                            ->label(__('app.field.title'))
+                            ->required(),
+
+                        TextInput::make('subtitle')
+                            ->label(__('app.field.subtitle'))
+                            ->nullable(),
+
                         Toggle::make('is_live')
                             ->label(__('app.field.is_live'))
                             ->default(false),
 
+                        Select::make('properties.default_tab')
+                            ->label(__('app.field.default_tab'))
+                            ->options(DefaultElectionPage::options())
+                            ->enum(DefaultElectionPage::class)
+                            ->selectablePlaceholder(false)
+                            ->nullable(),
+
+                        KeyValue::make('properties.tabs')
+                            ->label(__('app.field.tabs'))
+                            ->columnSpanFull()
+                            ->nullable(),
+
+                        Toggle::make('properties.show_threshold')
+                            ->label(__('app.field.show_threshold'))
+                            ->default(false),
                     ]),
             ]);
     }

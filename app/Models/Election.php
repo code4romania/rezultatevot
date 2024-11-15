@@ -59,6 +59,17 @@ class Election extends Model implements HasName, HasAvatar
         return $query->where('is_live', true);
     }
 
+    public function getDefaultUrl(): string
+    {
+        $name = match ($this->properties?->get('default_tab')) {
+            'results' => 'front.elections.results',
+            'turnout' => 'front.elections.turnout',
+            default => 'front.elections.turnout',
+        };
+
+        return route($name, $this);
+    }
+
     public function getFilamentName(): string
     {
         return \sprintf('%s: %s', $this->year, $this->title);

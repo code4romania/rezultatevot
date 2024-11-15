@@ -14,6 +14,7 @@ return [
         'county' => 'Județ',
         'created_at' => 'Creat la',
         'date' => 'Dată',
+        'default_tab' => 'Tab implicit',
         'email' => 'Email',
         'id' => 'ID',
         'siruta' => 'ID SIRUTA',

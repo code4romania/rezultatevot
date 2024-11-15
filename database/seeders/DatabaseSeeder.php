@@ -31,10 +31,10 @@ class DatabaseSeeder extends Seeder
 
         Election::factory()
             ->live()
-            ->withLocalTurnout()
-            ->withAbroadTurnout()
-            ->withNationalRecords()
-            ->withDiasporaRecords()
+            // ->withLocalTurnout()
+            // ->withAbroadTurnout()
+            // ->withNationalRecords()
+            // ->withDiasporaRecords()
             ->create();
 
         Artisan::call('scout:rebuild');

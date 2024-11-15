@@ -28,7 +28,7 @@ abstract class ElectionPage extends Component implements HasForms
 
     public Election $election;
 
-    #[Url(as: 'nivel', history: true)]
+    #[Url(as: 'nivel', history: true, except: DataLevel::NATIONAL)]
     public DataLevel $level = DataLevel::NATIONAL;
 
     #[Url(as: 'tara', history: true)]
@@ -130,5 +130,18 @@ abstract class ElectionPage extends Component implements HasForms
         if (filled($locality)) {
             $this->locality = $locality;
         }
+    }
+
+    #[Computed]
+    public function getQueryParameters(): array
+    {
+        return collect([
+            'nivel' => $this->level->value,
+            'tara' => $this->country,
+            'judet' => $this->county,
+            'localitate' => $this->locality,
+        ])
+            ->filter(fn ($value) => filled($value) && $value !== DataLevel::NATIONAL->value)
+            ->toArray();
     }
 }
