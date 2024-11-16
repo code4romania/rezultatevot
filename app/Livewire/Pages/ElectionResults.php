@@ -123,7 +123,7 @@ class ElectionResults extends ElectionPage
 
     public function getEmbedUrl(): ?string
     {
-        return route('front.elections.results.embed', [
+        return route('front.elections.embed.results', [
             'election' => $this->election,
             ...$this->getQueryParameters(),
         ]);

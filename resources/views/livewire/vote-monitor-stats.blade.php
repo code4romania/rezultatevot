@@ -1,7 +1,13 @@
 <section>
-    <div class="prose prose-lg prose-purple">
-        <h2>Observarea independentă a alegerilor</h2>
+    <div class="flex justify-between gap-6 mb-6">
+        <h1 class="text-3xl font-bold">Observarea independentă a alegerilor</h1>
 
+        @if ($showEmbed)
+            <livewire:embed-button :url="route('front.elections.embed.stats', $election)" />
+        @endif
+    </div>
+
+    <div class="prose prose-lg prose-purple">
         <p>
             Aceste date sunt colectate prin aplicația
             <a

@@ -32,6 +32,8 @@
             :data="$this->data->toArray()"
             :legend="$this->getLegend()" />
 
-        <livewire:vote-monitor-stats :election="$election" />
+        <livewire:vote-monitor-stats
+            :election="$election"
+            show-embed />
     </section>
 </div>

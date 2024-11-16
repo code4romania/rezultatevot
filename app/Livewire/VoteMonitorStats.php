@@ -13,6 +13,8 @@ class VoteMonitorStats extends Component
 {
     public Election $election;
 
+    public bool $showEmbed = false;
+
     #[Computed]
     public function stats(): array
     {

@@ -149,7 +149,7 @@ class ElectionTurnouts extends ElectionPage
 
     public function getEmbedUrl(): string
     {
-        return route('front.elections.turnout.embed', [
+        return route('front.elections.embed.turnout', [
             'election' => $this->election,
             ...$this->getQueryParameters(),
         ]);
