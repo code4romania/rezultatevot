@@ -8,22 +8,28 @@
         :election="$election"
         page="results" />
 
-    @if (filled($this->aggregate))
-        <x-stacked-bar
-            :show-threshold="data_get($election, 'properties.show_threshold', false)"
-            :items="$this->aggregate"
-            :maxItems="4" />
-    @endif
+    <section class="contents">
+        <x-election.title
+            :title="__('app.navigation.results')"
+            :embed-url="$this->getEmbedUrl()"
+            :level="$level" />
 
-    <livewire:map
-        :key="$this->mapKey()"
-        :country="$country"
-        :county="$county"
-        :level="$level"
-        :data="$this->data->toArray()" />
+        @if (filled($this->aggregate))
+            <x-stacked-bar
+                :s how-threshold="data_get($election, 'properties.show_threshold', false)"
+                :items="$this->aggregate"
+                :maxItems="4" />
+        @endif
 
-    @if (filled($this->aggregate))
-        <x-candidates-table :items="$this->aggregate" />
-    @endif
+        <livewire:map
+            :key="$this->mapKey()"
+            :country="$country"
+            :county="$county"
+            :level="$level"
+            :data="$this->data->toArray()" />
 
+        @if (filled($this->aggregate))
+            <x-candidates-table :items="$this->aggregate" />
+        @endif
+    </section>
 </div>

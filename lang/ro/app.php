@@ -143,6 +143,13 @@ return [
         ],
     ],
 
+    'page' => [
+        'label' => [
+            'singular' => 'pagină',
+            'plural' => 'pagini',
+        ],
+    ],
+
     'cron' => [
         'every_minute' => '1 minut',
         'every_2_minutes' => '2 minute',
@@ -173,4 +180,12 @@ return [
     ],
 
     'others' => 'Alții',
+
+    'vote_monitor_stats' => [
+        'observers' => 'Observatori logați în aplicație',
+        'counties' => 'Județe acoperite',
+        'polling_stations' => 'Secții de votare acoperite',
+        'messages' => 'Mesaje trimise de către observatori',
+        'problems' => 'Probleme sesizate',
+    ],
 ];

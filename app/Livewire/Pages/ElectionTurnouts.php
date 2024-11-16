@@ -146,4 +146,12 @@ class ElectionTurnouts extends ElectionPage
             ],
         ];
     }
+
+    public function getEmbedUrl(): string
+    {
+        return route('front.elections.turnout.embed', [
+            'election' => $this->election,
+            ...$this->getQueryParameters(),
+        ]);
+    }
 }

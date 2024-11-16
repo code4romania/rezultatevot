@@ -116,6 +116,15 @@ abstract class ElectionPage extends Component implements HasForms
         return hash('xxh128', "map-{$this->level->value}-{$this->county}");
     }
 
+    /**
+     * Used to refresh the embed component when the url changes.
+     */
+    #[Computed]
+    public function embedKey(): string
+    {
+        return hash('xxh128', "embed-{$this->getEmbedUrl()}");
+    }
+
     #[On('map:click')]
     public function refreshData(?string $country = null, ?int $county = null, ?int $locality = null): void
     {

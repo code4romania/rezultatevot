@@ -8,6 +8,7 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/css/filament/common/theme.css',
                 'resources/js/app.js',
+                'resources/js/iframe.js',
             ],
             refresh: [...refreshPaths, 'app/Livewire/**'],
         }),

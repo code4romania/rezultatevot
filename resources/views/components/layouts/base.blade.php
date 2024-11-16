@@ -28,7 +28,8 @@
 
 <body @class([
     'flex flex-col font-sans antialiased',
-    $timeline ? 'h-screen' : 'min-h-screen',
+    'h-screen' => $timeline,
+    'min-h-screen' => !$timeline && !$embed,
 ])
     @if ($timeline) x-data="{ sidebarOpen: false }" @endif>
 
@@ -45,6 +46,8 @@
 
     @if ($embed)
         <x-site.banner embed />
+    @else
+        <x-site.footer />
     @endif
 
     @livewireScriptConfig

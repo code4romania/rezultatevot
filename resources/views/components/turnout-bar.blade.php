@@ -28,7 +28,7 @@
         <x-legend
             :value="$value"
             :max="$max"
-            label="Cetățeni cu drept de vot"
+            label="Au votat"
             :description="sprintf('%s (%s)', percent($value, $max, formatted: true), Number::format($value))"
             :color="Color::Yellow[500]" />
     </ul>

@@ -54,6 +54,11 @@ class Election extends Model implements HasName, HasAvatar
         return $this->hasMany(ScheduledJob::class);
     }
 
+    public function voteMonitorStats(): HasMany
+    {
+        return $this->hasMany(VoteMonitorStat::class);
+    }
+
     public function scopeWhereLive(Builder $query): Builder
     {
         return $query->where('is_live', true);

@@ -120,4 +120,12 @@ class ElectionResults extends ElectionPage
             (new Candidate)->getMorphClass() => $this->candidates->find($id),
         };
     }
+
+    public function getEmbedUrl(): ?string
+    {
+        return route('front.elections.results.embed', [
+            'election' => $this->election,
+            ...$this->getQueryParameters(),
+        ]);
+    }
 }

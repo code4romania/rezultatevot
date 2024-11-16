@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\ElectionType;
+use App\Enums\VoteMonitorStatKey;
 use App\Models\Candidate;
 use App\Models\Country;
 use App\Models\Election;
@@ -13,7 +14,9 @@ use App\Models\Party;
 use App\Models\Record;
 use App\Models\ScheduledJob;
 use App\Models\Turnout;
+use App\Models\VoteMonitorStat;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Lottery;
 use Illuminate\Support\Str;
@@ -53,6 +56,16 @@ class ElectionFactory extends Factory
                 ->for($election)
                 ->enabled($election->is_live)
                 ->count(2)
+                ->create();
+
+            VoteMonitorStat::factory()
+                ->for($election)
+                ->sequence(
+                    fn (Sequence $sequence) => [
+                        'key' => VoteMonitorStatKey::values()[$sequence->index],
+                    ]
+                )
+                ->count(\count(VoteMonitorStatKey::values()))
                 ->create();
 
             return;
