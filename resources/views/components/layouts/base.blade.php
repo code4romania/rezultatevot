@@ -46,8 +46,6 @@
 
     @if ($embed)
         <x-site.banner embed />
-    @else
-        <x-site.footer />
     @endif
 
     @livewireScriptConfig

@@ -1,6 +1,10 @@
 export default () => ({
     id: `rezultatevot-embed-${Math.floor(Date.now()).toString(36)}`,
-    url: this.$wire.url,
+    url: null,
+
+    init() {
+        this.url = this.$wire.url;
+    },
 
     copy() {
         const code =
