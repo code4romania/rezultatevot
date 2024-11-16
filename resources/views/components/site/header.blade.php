@@ -7,8 +7,8 @@
 
         <div class="flex items-center gap-4 sm:relative">
             <div class="items-center hidden gap-2 md:flex">
-                @foreach ($menuItems as $route => $label)
-                    <x-navigation-item :route="$route" :label="$label" />
+                @foreach ($menuItems as $item)
+                    <x-navigation-item :item="$item" />
                 @endforeach
             </div>
 
@@ -32,11 +32,11 @@
             </button>
         </div>
 
-        <div class="absolute inset-x-0 z-50 transition origin-top transform bg-white shadow-lg top-full lg:hidden"
+        <div class="absolute inset-x-0 z-50 transition origin-top transform bg-white shadow-lg top-full md:hidden"
             x-show="menuOpen" x-collapse x-cloak>
             <ul class="container flex flex-col py-4 text-gray-600 gap-y-1 md:py-8">
-                @foreach ($menuItems as $route => $label)
-                    <li><x-navigation-item mobile :route="$route" :label="$label" /></li>
+                @foreach ($menuItems as $item)
+                    <li><x-navigation-item mobile :item="$item" /></li>
                 @endforeach
             </ul>
         </div>

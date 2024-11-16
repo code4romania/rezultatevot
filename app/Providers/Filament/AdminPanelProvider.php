@@ -6,7 +6,11 @@ namespace App\Providers\Filament;
 
 use App\Filament\Admin\Pages\Auth\Login;
 use App\Filament\Admin\Resources\ElectionResource;
+use App\Filament\Admin\Resources\MenuResource;
 use App\Models\Election;
+use App\Models\Page;
+use Datlechin\FilamentMenuBuilder\FilamentMenuBuilderPlugin;
+use Datlechin\FilamentMenuBuilder\MenuPanel\ModelMenuPanel;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Http\Middleware\Authenticate;
@@ -55,6 +59,18 @@ class AdminPanelProvider extends PanelProvider
                 BreezyCore::make()
                     ->myProfile(slug: 'profile')
                     ->enableTwoFactorAuthentication(),
+
+                FilamentMenuBuilderPlugin::make()
+                    ->usingResource(MenuResource::class)
+                    ->addLocations([
+                        'header' => 'Header',
+                        'footer' => 'Footer',
+                    ])
+                    ->addMenuPanels([
+                        ModelMenuPanel::make()
+                            ->model(Page::class),
+
+                    ]),
             ])
             ->viteTheme('resources/css/filament/common/theme.css')
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
