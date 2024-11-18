@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\HasSlug;
 use App\Enums\ElectionType;
 use Database\Factories\ElectionFactory;
 use Filament\Models\Contracts\HasAvatar;
@@ -12,11 +13,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Election extends Model implements HasName, HasAvatar
 {
     /** @use HasFactory<ElectionFactory> */
     use HasFactory;
+    use HasSlug;
 
     protected static string $factory = ElectionFactory::class;
 
@@ -25,18 +28,21 @@ class Election extends Model implements HasName, HasAvatar
         'type',
         'subtitle',
         'slug',
-        'year',
+        'date',
         'is_live',
         'properties',
+        'old_id',
     ];
 
     protected function casts(): array
     {
         return [
             'type' => ElectionType::class,
+            'date' => 'date',
             'year' => 'int',
             'is_live' => 'boolean',
             'properties' => 'collection',
+            'old_id' => 'int',
         ];
     }
 
@@ -46,6 +52,10 @@ class Election extends Model implements HasName, HasAvatar
             return $query
                 ->orderByDesc('year')
                 ->orderByDesc('is_live');
+        });
+
+        static::creating(function (self $model) {
+            $model->slug = Str::slug("{$model->title}-{$model->date->year}");
         });
     }
 

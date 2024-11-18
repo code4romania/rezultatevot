@@ -5,17 +5,23 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\BelongsToElection;
+use App\Concerns\CanGroupByDataLevel;
 use App\Concerns\HasTemporaryTable;
 use App\Contracts\TemporaryTable;
+use App\Enums\DataLevel;
 use App\Enums\Part;
 use Database\Factories\RecordFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Tpetry\QueryExpressions\Function\Aggregate\Sum;
+use Tpetry\QueryExpressions\Language\Alias;
 
 class Record extends Model implements TemporaryTable
 {
     use BelongsToElection;
+    use CanGroupByDataLevel;
     /** @use HasFactory<RecordFactory> */
     use HasFactory;
     use HasTemporaryTable;
@@ -86,6 +92,18 @@ class Record extends Model implements TemporaryTable
     public function locality(): BelongsTo
     {
         return $this->belongsTo(Locality::class);
+    }
+
+    public function scopeForLevel(Builder $query, DataLevel $level, ?string $country = null, ?int $county = null, ?int $locality = null, bool $aggregate = false): Builder
+    {
+        return $query
+            ->select([
+                new Alias(new Sum('eligible_voters_total'), 'eligible_voters_total'),
+                new Alias(new Sum('present_voters_total'), 'present_voters_total'),
+                new Alias(new Sum('votes_valid'), 'votes_valid'),
+                new Alias(new Sum('votes_null'), 'votes_null'),
+            ])
+            ->forDataLevel($level, $country, $county, $locality, $aggregate);
     }
 
     public function getTemporaryTableUniqueColumns(): array

@@ -21,6 +21,7 @@ class Country extends Model
         'id',
         'name',
         'aliases',
+        'old_id',
     ];
 
     /**

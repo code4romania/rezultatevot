@@ -6,9 +6,11 @@ namespace App\Livewire\Pages;
 
 use App\Models\Candidate;
 use App\Models\Party;
+use App\Models\Record;
 use App\Models\Vote;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Number;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use stdClass;
@@ -72,6 +74,28 @@ class ElectionResults extends ElectionPage
                 'color' => hex2rgb($votable->color ?? $this->fallbackColor),
             ];
         });
+    }
+
+    #[Computed]
+    public function recordStats(): Collection
+    {
+        $record = Record::query()
+            ->whereBelongsTo($this->election)
+            ->forLevel(
+                level: $this->level,
+                country: $this->country,
+                county: $this->county,
+                locality: $this->locality,
+                aggregate: true,
+            )
+            ->toBase()
+            ->first();
+
+        return collect($record)
+            ->forget('place')
+            ->mapWithKeys(fn ($value, $key) => [
+                __("app.field.$key") => Number::format(ensureNumeric($value)),
+            ]);
     }
 
     #[Computed]

@@ -22,6 +22,7 @@ class Locality extends Model
         'level',
         'type',
         'parent_id',
+        'old_id',
     ];
 
     public function county(): BelongsTo
@@ -57,6 +58,7 @@ class Locality extends Model
             'id' => (string) $this->id,
             'name' => $this->name,
             'county' => $this->county->name,
+            'county_id' => (string) $this->county_id,
         ];
     }
 
@@ -75,6 +77,10 @@ class Locality extends Model
                     ],
                     [
                         'name' => 'county',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'county_id',
                         'type' => 'string',
                     ],
                 ],

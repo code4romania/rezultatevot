@@ -16,7 +16,7 @@
 
         @if (filled($this->aggregate))
             <x-stacked-bar
-                :s how-threshold="data_get($election, 'properties.show_threshold', false)"
+                :show-threshold="data_get($election, 'properties.show_threshold', false)"
                 :items="$this->aggregate"
                 :maxItems="4" />
         @endif
@@ -27,6 +27,8 @@
             :county="$county"
             :level="$level"
             :data="$this->data->toArray()" />
+
+        <x-stats.records :stats="$this->recordStats" />
 
         @if (filled($this->aggregate))
             <x-candidates-table :items="$this->aggregate" />

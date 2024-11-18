@@ -19,6 +19,8 @@ return new class extends Migration
             $table->smallInteger('id')->unsigned()->primary();
             $table->string('code', 2)->unique();
             $table->string('name');
+
+            $table->smallInteger('old_id')->unsigned()->nullable()->unique();
         });
 
         Schema::create('localities', function (Blueprint $table) {
@@ -39,6 +41,8 @@ return new class extends Migration
                 ->on('localities');
 
             $table->string('name');
+
+            $table->mediumInteger('old_id')->unsigned()->nullable()->unique();
         });
 
         // Excel::import(new CountiesImport, '240708-siruta.xlsx', 'seed-data');

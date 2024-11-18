@@ -74,16 +74,16 @@ return new class extends Migration
 
             $table->string('area', 1)->nullable();
 
-            $table->mediumInteger('men_18-24')->unsigned()->default(0);
-            $table->mediumInteger('men_25-34')->unsigned()->default(0);
-            $table->mediumInteger('men_35-44')->unsigned()->default(0);
-            $table->mediumInteger('men_45-64')->unsigned()->default(0);
-            $table->mediumInteger('men_65')->unsigned()->default(0);
-            $table->mediumInteger('women_18-24')->unsigned()->default(0);
-            $table->mediumInteger('women_25-34')->unsigned()->default(0);
-            $table->mediumInteger('women_35-44')->unsigned()->default(0);
-            $table->mediumInteger('women_45-64')->unsigned()->default(0);
-            $table->mediumInteger('women_65')->unsigned()->default(0);
+            $table->mediumInteger('men_18-24')->unsigned()->nullable();
+            $table->mediumInteger('men_25-34')->unsigned()->nullable();
+            $table->mediumInteger('men_35-44')->unsigned()->nullable();
+            $table->mediumInteger('men_45-64')->unsigned()->nullable();
+            $table->mediumInteger('men_65')->unsigned()->nullable();
+            $table->mediumInteger('women_18-24')->unsigned()->nullable();
+            $table->mediumInteger('women_25-34')->unsigned()->nullable();
+            $table->mediumInteger('women_35-44')->unsigned()->nullable();
+            $table->mediumInteger('women_45-64')->unsigned()->nullable();
+            $table->mediumInteger('women_65')->unsigned()->nullable();
         });
 
         Schema::create('_temp_turnouts', function (Blueprint $table) {
@@ -115,16 +115,16 @@ return new class extends Migration
 
             $table->string('area', 1)->nullable();
 
-            $table->mediumInteger('men_18-24')->unsigned();
-            $table->mediumInteger('men_25-34')->unsigned();
-            $table->mediumInteger('men_35-44')->unsigned();
-            $table->mediumInteger('men_45-64')->unsigned();
-            $table->mediumInteger('men_65')->unsigned();
-            $table->mediumInteger('women_18-24')->unsigned();
-            $table->mediumInteger('women_25-34')->unsigned();
-            $table->mediumInteger('women_35-44')->unsigned();
-            $table->mediumInteger('women_45-64')->unsigned();
-            $table->mediumInteger('women_65')->unsigned();
+            $table->mediumInteger('men_18-24')->unsigned()->nullable();
+            $table->mediumInteger('men_25-34')->unsigned()->nullable();
+            $table->mediumInteger('men_35-44')->unsigned()->nullable();
+            $table->mediumInteger('men_45-64')->unsigned()->nullable();
+            $table->mediumInteger('men_65')->unsigned()->nullable();
+            $table->mediumInteger('women_18-24')->unsigned()->nullable();
+            $table->mediumInteger('women_25-34')->unsigned()->nullable();
+            $table->mediumInteger('women_35-44')->unsigned()->nullable();
+            $table->mediumInteger('women_45-64')->unsigned()->nullable();
+            $table->mediumInteger('women_65')->unsigned()->nullable();
         });
     }
 };

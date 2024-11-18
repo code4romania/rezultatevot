@@ -16,10 +16,13 @@ return new class extends Migration
             $table->string('title');
             $table->string('subtitle')->nullable();
             $table->string('slug')->unique();
-            $table->year('year');
+            $table->date('date');
+            $table->year('year')->storedAs('(YEAR(date))');
             $table->boolean('is_live');
             $table->json('properties')->nullable();
             $table->timestamps();
+
+            $table->tinyInteger('old_id')->unsigned()->nullable()->unique();
         });
     }
 };

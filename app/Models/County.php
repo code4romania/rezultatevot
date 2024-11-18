@@ -20,6 +20,7 @@ class County extends Model
         'id',
         'code',
         'name',
+        'old_id',
     ];
 
     protected static function booted(): void
