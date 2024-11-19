@@ -52,9 +52,11 @@ class ImportTurnoutsCommand extends Command
             ->whereIn('turnouts.Division', [3]) // 3 = locality, 4 = diaspora_country
             ->orderBy('turnouts.Id')
             ->leftJoin('localities', 'turnouts.LocalityId', '=', 'localities.LocalityId')
+            ->leftJoin('countries', 'turnouts.CountryId', '=', 'countries.Id')
             ->select([
-                '*',
+                'turnouts.*',
                 'localities.Name as LocalityName',
+                'countries.Name as CountryName',
             ]);
 
         $this->createProgressBar(
@@ -62,11 +64,9 @@ class ImportTurnoutsCommand extends Command
             $query->count()
         );
 
-        // $this->countries = Country::pluck('id', 'old_id');
+        $this->countries = $this->getCountries();
         $this->counties = County::pluck('id', 'old_id');
-        $this->localities = Locality::query()
-            ->whereNull('parent_id')
-            ->pluck('id', 'old_id');
+        $this->localities = $this->getLocalities();
 
         Election::all()->each(function (Election $election) use ($query) {
             $index = 1;
@@ -106,6 +106,8 @@ class ImportTurnoutsCommand extends Command
                     Turnout::insert($turnouts);
 
                     // Record::insert($records);
+
+                    $this->progressBar->advance($rows->count());
                 });
         });
 
@@ -114,10 +116,38 @@ class ImportTurnoutsCommand extends Command
         return static::SUCCESS;
     }
 
+    protected function getCountries(): Collection
+    {
+        $countries = collect();
+
+        Country::each(function (Country $country) use ($countries) {
+            collect($country->old_ids)->each(
+                fn (int $oldId) => $countries->put($oldId, $country->id)
+            );
+        });
+
+        return $countries;
+    }
+
+    protected function getLocalities(): Collection
+    {
+        $localities = collect();
+
+        Locality::query()
+            ->whereNotNull('old_ids')
+            ->each(function (Locality $locality) use ($localities) {
+                collect($locality->old_ids)->each(
+                    fn (int $oldId) => $localities->put($oldId, $locality->id)
+                );
+            });
+
+        return $localities;
+    }
+
     protected function getPlace(stdClass $row): ?array
     {
         $place = [
-            // 'country_id' => $this->countries->get($row->CountryId),
+            'country_id' => $this->countries->get($row->CountryId),
             'county_id' => $this->counties->get($row->CountyId),
             'locality_id' => $this->localities->get($row->LocalityId),
         ];
@@ -129,28 +159,15 @@ class ImportTurnoutsCommand extends Command
         ]);
 
         if ($validation->fails()) {
-            if (blank($place['locality_id'])) {
-                $place['locality_id'] = match ((int) $row->LocalityId) {
-                    116921 => 61069, // Băneasa, Constanța
-                    713, 21469 => 9280, // Fântânele, Arad
-                    default => Locality::search($row->LocalityName)
-                        ->where('county_id', $place['county_id'])
-                        ->first()
-                        ?->id,
-                };
-            }
+            logger()->error('Could not determine location.', [
+                'BallotId' => $row->BallotId,
+                'TurnoutId' => $row->Id,
+                'CountyId' => $row->CountyId,
+                'LocalityId' => $row->LocalityId,
+                'locality_id' => $place['locality_id'],
+            ]);
 
-            $validation->setData($place);
-
-            if ($validation->fails()) {
-                logger()->error("Could not determine location for turnout id {$row->Id}", [
-                    'BallotId' => $row->BallotId,
-                    'LocalityId' => $row->LocalityId,
-                    'place' => $place,
-                ]);
-
-                return null;
-            }
+            return null;
         }
 
         return $place;

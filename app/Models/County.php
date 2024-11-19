@@ -36,6 +36,11 @@ class County extends Model
         return $this->hasMany(Locality::class);
     }
 
+    public function records(): HasManyThrough
+    {
+        return $this->hasManyThrough(Record::class, Locality::class);
+    }
+
     public function turnouts(): HasManyThrough
     {
         return $this->hasManyThrough(Turnout::class, Locality::class);

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('id', 2)->primary();
             $table->string('name');
             $table->json('aliases');
+            $table->json('old_ids')->nullable();
         });
 
         Excel::import(new CountriesImport, 'countries.csv', 'seed-data');

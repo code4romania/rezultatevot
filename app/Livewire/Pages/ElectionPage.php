@@ -17,6 +17,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Support\Enums\MaxWidth;
+use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -42,6 +43,11 @@ abstract class ElectionPage extends Component implements HasForms
 
     public function form(Form $form): Form
     {
+        $whereHasKey = match (static::class) {
+            ElectionResults::class => 'records',
+            ElectionTurnouts::class => 'turnouts',
+        };
+
         return $form
             ->schema([
                 Grid::make()
@@ -67,7 +73,13 @@ abstract class ElectionPage extends Component implements HasForms
                             ->label(__('app.field.country'))
                             ->placeholder(__('app.field.country'))
                             ->hiddenLabel()
-                            ->options(Country::pluck('name', 'id'))
+                            ->options(
+                                fn () => Country::query()
+                                    ->whereHas($whereHasKey, function (Builder $query) {
+                                        $query->whereBelongsTo($this->election);
+                                    })
+                                    ->pluck('name', 'id')
+                            )
                             ->afterStateUpdated(function (Set $set) {
                                 $set('county', null);
                                 $set('locality', null);
@@ -80,7 +92,13 @@ abstract class ElectionPage extends Component implements HasForms
                             ->label(__('app.field.county'))
                             ->placeholder(__('app.field.county'))
                             ->hiddenLabel()
-                            ->options(County::pluck('name', 'id'))
+                            ->options(
+                                fn () => County::query()
+                                    ->whereHas($whereHasKey, function (Builder $query) {
+                                        $query->whereBelongsTo($this->election);
+                                    })
+                                    ->pluck('name', 'id')
+                            )
                             ->afterStateUpdated(function (Set $set) {
                                 $set('locality', null);
                             })
@@ -95,7 +113,9 @@ abstract class ElectionPage extends Component implements HasForms
                             ->options(
                                 fn (Get $get) => Locality::query()
                                     ->where('county_id', $get('county'))
-                                    ->whereNull('parent_id')
+                                    ->whereHas($whereHasKey, function (Builder $query) {
+                                        $query->whereBelongsTo($this->election);
+                                    })
                                     ->limit(1000)
                                     ->pluck('name', 'id')
                             )

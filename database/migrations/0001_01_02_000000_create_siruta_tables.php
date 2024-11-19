@@ -42,7 +42,7 @@ return new class extends Migration
 
             $table->string('name');
 
-            $table->mediumInteger('old_id')->unsigned()->nullable()->unique();
+            $table->json('old_ids')->nullable();
         });
 
         // Excel::import(new CountiesImport, '240708-siruta.xlsx', 'seed-data');

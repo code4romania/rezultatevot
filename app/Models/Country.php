@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 
 class Country extends Model
@@ -21,7 +22,7 @@ class Country extends Model
         'id',
         'name',
         'aliases',
-        'old_id',
+        'old_ids',
     ];
 
     /**
@@ -33,7 +34,18 @@ class Country extends Model
     {
         return [
             'aliases' => 'array',
+            'old_ids' => 'array',
         ];
+    }
+
+    public function records(): HasMany
+    {
+        return $this->hasMany(Record::class);
+    }
+
+    public function turnouts(): HasMany
+    {
+        return $this->hasMany(Turnout::class);
     }
 
     /**

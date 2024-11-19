@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 
 class Locality extends Model
@@ -22,8 +23,20 @@ class Locality extends Model
         'level',
         'type',
         'parent_id',
-        'old_id',
+        'old_ids',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'old_ids' => 'array',
+        ];
+    }
 
     public function county(): BelongsTo
     {
@@ -33,6 +46,16 @@ class Locality extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(static::class, 'parent_id');
+    }
+
+    public function records(): HasMany
+    {
+        return $this->hasMany(Record::class);
+    }
+
+    public function turnouts(): HasMany
+    {
+        return $this->hasMany(Turnout::class);
     }
 
     protected function getNameWithCountyAttribute(): string

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Import;
 
+use App\Models\Country;
 use App\Models\County;
 use App\Models\Locality;
 use stdClass;
@@ -44,7 +45,35 @@ class ImportOldIdsCommand extends Command
 
     protected function importCountryIds(): void
     {
-        //
+        $query = $this->db
+            ->table('countries')
+            ->orderBy('countries.Id');
+
+        $this->createProgressBar(
+            'Importing country IDs...',
+            $query->count()
+        );
+
+        $query->each(function (stdClass $row) {
+            $country = Country::search($row->Name)->first();
+
+            if (blank($country)) {
+                logger()->error("Country not found: {$row->Name}");
+
+                return;
+            }
+
+            $oldIds = $country->old_ids ?? [];
+            $oldIds[] = $row->Id;
+
+            $country->updateQuietly([
+                'old_ids' => $oldIds,
+            ]);
+
+            $this->progressBar->advance();
+        }, (int) $this->option('chunk'));
+
+        $this->finishProgressBar('Imported country IDs');
     }
 
     protected function importCountyIds(): void
@@ -81,22 +110,55 @@ class ImportOldIdsCommand extends Command
     {
         $query = $this->db
             ->table('localities')
-            ->orderBy('localities.Siruta')
-            ->where('localities.Siruta', '!=', 0);
+            ->orderBy('localities.Siruta');
 
         $this->createProgressBar(
             'Importing locality IDs...',
             $query->count()
         );
 
-        $query->each(function (stdClass $row) {
-            Locality::query()
-                ->where('id', $row->Siruta)
-                ->update([
-                    'old_id' => $row->LocalityId,
-                ]);
+        $counties = County::pluck('id', 'old_id');
+
+        $query->each(function (stdClass $row) use ($counties) {
+            // $siruta = match ($row->Siruta) {
+            //     116921 => 61069, // Băneasa, Constanța
+            //     713, 21469 => 9280, // Fântânele, Arad
+            //     default => $row->Siruta
+            // };
+
+            if ($row->Siruta === 0) {
+                $locality = $this->searchLocalities($row->Name, $counties->get($row->CountyId));
+            } else {
+                $locality = Locality::query()
+                    ->where('id', $row->Siruta)
+                    ->firstOr(fn () => $this->searchLocalities($row->Name, $counties->get($row->CountyId)));
+            }
+
+            logger()->info("{$row->LocalityId} | {$row->Name} | Siruta: {$row->Siruta} => " . $locality?->name ?? 'NULL');
+
+            if (blank($locality)) {
+                logger()->error("Locality not found: {$row->Name}");
+
+                return;
+            }
+
+            $oldIds = $locality->old_ids ?? [];
+            $oldIds[] = $row->LocalityId;
+
+            $locality->updateQuietly([
+                'old_ids' => $oldIds,
+            ]);
+
+            $this->progressBar->advance();
         }, (int) $this->option('chunk'));
 
         $this->finishProgressBar('Imported locality IDs');
+    }
+
+    protected function searchLocalities(string $name, int $county_id): ?Locality
+    {
+        return Locality::search($name)
+            ->where('county_id', $county_id)
+            ->first();
     }
 }
