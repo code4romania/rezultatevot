@@ -20,6 +20,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TurnoutController extends Controller
 {
+    /**
+     * @operationId Total
+     */
     public function total(Election $election): JsonResponse
     {
         $result = Turnout::query()
@@ -32,6 +35,9 @@ class TurnoutController extends Controller
         return response()->json(TurnoutResource::make($result));
     }
 
+    /**
+     * @operationId Diaspora
+     */
     public function diaspora(Election $election): JsonResponse
     {
         $general = Turnout::query()
@@ -54,6 +60,9 @@ class TurnoutController extends Controller
         return response()->json(TurnoutDiasporaAggregatedResource::make($general));
     }
 
+    /**
+     * @operationId DiasporaCountry
+     */
     public function country(Election $election, Country $country): JsonResource
     {
         return TurnoutDiasporaResource::make(
@@ -67,6 +76,9 @@ class TurnoutController extends Controller
         );
     }
 
+    /**
+     * @operationId National
+     */
     public function national(Election $election): JsonResponse
     {
         $result = Turnout::query()
@@ -89,6 +101,9 @@ class TurnoutController extends Controller
         return response()->json(TurnoutNationalAggregatedResource::make($result));
     }
 
+    /**
+     * @operationId NationalCounty
+     */
     public function county(Election $election, County $county): JsonResponse
     {
         return response()->json(

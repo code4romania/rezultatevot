@@ -15,6 +15,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class NomenclatureController extends Controller
 {
+    /**
+     * @operationId Elections
+     */
     public function elections(): JsonResource
     {
         return ElectionResource::collection(
@@ -24,16 +27,25 @@ class NomenclatureController extends Controller
         );
     }
 
+    /**
+     * @operationId Countries
+     */
     public function countries(): JsonResource
     {
         return CountryResource::collection(Country::all());
     }
 
+    /**
+     * @operationId Counties
+     */
     public function counties(): JsonResource
     {
         return CountyResource::collection(County::all());
     }
 
+    /**
+     * @operationId County
+     */
     public function county(County $county): JsonResource
     {
         return CountyResource::make(

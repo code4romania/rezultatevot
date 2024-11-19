@@ -31,7 +31,6 @@ Route::group([
             'controller' => TurnoutController::class,
         ], function () {
             Route::get('/', 'total')->name('total');
-
             Route::group([
                 'as' => 'diaspora.',
                 'prefix' => 'diaspora',

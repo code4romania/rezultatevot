@@ -41,7 +41,7 @@ class TurnoutNationalResource extends JsonResource
              * Uat name.
              * @var string
              */
-            'uat_name' => $this->getUatName($this->place),
+            'name' => $this->getUatName($this->place),
         ];
     }
 
