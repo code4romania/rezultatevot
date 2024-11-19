@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Turnout\National;
 
-use App\Models\County;
-use App\Models\Locality;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -41,19 +39,7 @@ class TurnoutNationalResource extends JsonResource
              * Uat name.
              * @var string
              */
-            'name' => $this->getUatName($this->place),
+//            'name' => $this->locality?->name ?? $this->county->name,
         ];
-    }
-
-    private function getUatName(int $place)
-    {
-        $uats = \Cache::rememberForever('uats', function () {
-            return [
-                'localities' => Locality::whereNull('parent_id')->pluck('name', 'id')->toArray(),
-                'counties' => County::pluck('name', 'id')->toArray(),
-            ];
-        });
-
-        return $uats['localities'][$place] ?? $uats['counties'][$place];
     }
 }

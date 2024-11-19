@@ -33,7 +33,7 @@ class TurnoutNationalAggregatedResource extends JsonResource
              * Array uats.
              * @var TurnoutNationalResource[]
              */
-            'place' => TurnoutNationalResource::collection($this->uats),
+            'places' => TurnoutNationalResource::collection($this->places),
 
         ];
     }

@@ -9,13 +9,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Turnout\Diaspora\TurnoutDiasporaAggregatedResource;
 use App\Http\Resources\Turnout\Diaspora\TurnoutDiasporaResource;
 use App\Http\Resources\Turnout\National\TurnoutNationalAggregatedResource;
-use App\Http\Resources\Turnout\National\TurnoutNationalResource;
 use App\Http\Resources\Turnout\TurnoutResource;
 use App\Models\Country;
 use App\Models\County;
 use App\Models\Election;
 use App\Models\Turnout;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TurnoutController extends Controller
@@ -23,7 +21,7 @@ class TurnoutController extends Controller
     /**
      * @operationId Total
      */
-    public function total(Election $election): JsonResponse
+    public function total(Election $election): JsonResource
     {
         $result = Turnout::query()
             ->whereBelongsTo($election)
@@ -32,13 +30,13 @@ class TurnoutController extends Controller
             )
             ->first();
 
-        return response()->json(TurnoutResource::make($result));
+        return TurnoutResource::make($result);
     }
 
     /**
      * @operationId Diaspora
      */
-    public function diaspora(Election $election): JsonResponse
+    public function diaspora(Election $election): JsonResource
     {
         $general = Turnout::query()
             ->whereBelongsTo($election)
@@ -48,7 +46,7 @@ class TurnoutController extends Controller
             )
             ->first();
 
-        $general->uats = Turnout::query()
+        $general->places = Turnout::query()
             ->whereBelongsTo($election)
             ->forLevel(
                 level: DataLevel::DIASPORA,
@@ -57,7 +55,7 @@ class TurnoutController extends Controller
             ->get()
             ->toArray();
 
-        return response()->json(TurnoutDiasporaAggregatedResource::make($general));
+        return TurnoutDiasporaAggregatedResource::make($general);
     }
 
     /**
@@ -79,7 +77,7 @@ class TurnoutController extends Controller
     /**
      * @operationId National
      */
-    public function national(Election $election): JsonResponse
+    public function national(Election $election): JsonResource
     {
         $result = Turnout::query()
             ->whereBelongsTo($election)
@@ -90,33 +88,37 @@ class TurnoutController extends Controller
             ->toBase()
             ->first();
 
-        $result->uats = Turnout::query()->whereBelongsTo($election)
+        $result->places = Turnout::query()->whereBelongsTo($election)
             ->forLevel(
                 level: DataLevel::NATIONAL,
             )
-            ->toBase()
-            ->get()
-            ->toArray();
+            ->get();
 
-        return response()->json(TurnoutNationalAggregatedResource::make($result));
+        return TurnoutNationalAggregatedResource::make($result);
     }
 
     /**
      * @operationId NationalCounty
      */
-    public function county(Election $election, County $county): JsonResponse
+    public function county(Election $election, County $county): JsonResource
     {
-        return response()->json(
-            TurnoutNationalResource::make(
-                Turnout::query()
-                    ->whereBelongsTo($election)
-                    ->forLevel(
-                        level: DataLevel::NATIONAL,
-                        county: $county->id,
-                    )
-                    ->toBase()
-                    ->first()
+        $countyData = Turnout::query()
+            ->whereBelongsTo($election)
+            ->forLevel(
+                level: DataLevel::NATIONAL,
+                county: $county->id,
+                aggregate: true
             )
-        );
+            ->first();
+
+        $countyData->places = Turnout::query()
+            ->whereBelongsTo($election)
+            ->forLevel(
+                level: DataLevel::NATIONAL,
+                county: $county->id,
+            )
+            ->get();
+
+        return TurnoutNationalAggregatedResource::make($countyData);
     }
 }
