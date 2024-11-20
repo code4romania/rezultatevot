@@ -30,6 +30,7 @@ class Election extends Model implements HasName, HasAvatar
         'slug',
         'date',
         'is_live',
+        'has_lists',
         'properties',
         'old_id',
     ];
@@ -41,6 +42,7 @@ class Election extends Model implements HasName, HasAvatar
             'date' => 'date',
             'year' => 'int',
             'is_live' => 'boolean',
+            'has_lists' => 'boolean',
             'properties' => 'collection',
             'old_id' => 'int',
         ];
@@ -67,6 +69,21 @@ class Election extends Model implements HasName, HasAvatar
     public function voteMonitorStats(): HasMany
     {
         return $this->hasMany(VoteMonitorStat::class);
+    }
+
+    public function parties(): HasMany
+    {
+        return $this->hasMany(Party::class);
+    }
+
+    public function candidates(): HasMany
+    {
+        return $this->hasMany(Candidate::class);
+    }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class);
     }
 
     public function scopeWhereLive(Builder $query): Builder

@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Import;
 
+use App\Concerns\Import\HasPlace;
+use App\Enums\Part;
 use App\Models\Country;
-use App\Models\County;
 use App\Models\Election;
 use App\Models\Locality;
 use App\Models\Record;
 use App\Models\Turnout;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
 use stdClass;
 
 class ImportTurnoutsCommand extends Command
 {
+    use HasPlace;
+
     /**
      * The name and signature of the console command.
      *
@@ -31,12 +33,6 @@ class ImportTurnoutsCommand extends Command
      * @var string
      */
     protected $description = 'Import turnouts from the old database.';
-
-    protected ?Collection $countries = null;
-
-    protected ?Collection $counties = null;
-
-    protected ?Collection $localities = null;
 
     /**
      * Execute the console command.
@@ -64,10 +60,6 @@ class ImportTurnoutsCommand extends Command
             $query->count()
         );
 
-        $this->countries = $this->getCountries();
-        $this->counties = County::pluck('id', 'old_id');
-        $this->localities = $this->getLocalities();
-
         Election::all()->each(function (Election $election) use ($query) {
             $index = 1;
 
@@ -80,32 +72,50 @@ class ImportTurnoutsCommand extends Command
                     $rows->each(function (stdClass $row) use ($election, &$index, &$turnouts, &$records) {
                         $place = $this->getPlace($row);
 
+                        $section = $index++;
+
                         if (blank($place)) {
                             return;
                         }
 
                         $turnouts[] = [
                             'election_id' => $election->id,
-                            'section' => $index++,
+                            'section' => $section,
 
                             'initial_permanent' => $row->EligibleVoters,
                             'initial_complement' => 0,
 
-                            'permanent' => $row->PermanentListsVotes,
-                            'complement' => $row->SpecialListsVotes,
-                            'supplement' => $row->SuplimentaryVotes,
-                            'mobile' => 0,
+                            'permanent' => $row->TotalVotes,
+                            'complement' => 0, //$row->SpecialListsVotes,
+                            'supplement' => 0, //$row->SuplimentaryVotes,
+                            'mobile' => 0, //max($row->VotesByMail, $row->CorrespondenceVotes),
                             ...$place,
                         ];
 
                         $records[] = [
+                            'election_id' => $election->id,
+                            'section' => $section,
+                            'part' => Part::FINAL,
+
+                            'eligible_voters_permanent' => $row->EligibleVoters,
+                            'eligible_voters_special' => 0,
+
+                            'present_voters_permanent' => $row->TotalVotes,
+                            'present_voters_special' => 0,
+                            'present_voters_supliment' => 0,
+
+                            'papers_received' => 0,
+                            'papers_unused' => 0,
+                            'votes_valid' => $row->ValidVotes,
+                            'votes_null' => $row->NullVotes,
+
                             ...$place,
                         ];
                     });
 
                     Turnout::insert($turnouts);
 
-                    // Record::insert($records);
+                    Record::insert($records);
 
                     $this->progressBar->advance($rows->count());
                 });
@@ -114,62 +124,5 @@ class ImportTurnoutsCommand extends Command
         $this->finishProgressBar('Imported turnouts');
 
         return static::SUCCESS;
-    }
-
-    protected function getCountries(): Collection
-    {
-        $countries = collect();
-
-        Country::each(function (Country $country) use ($countries) {
-            collect($country->old_ids)->each(
-                fn (int $oldId) => $countries->put($oldId, $country->id)
-            );
-        });
-
-        return $countries;
-    }
-
-    protected function getLocalities(): Collection
-    {
-        $localities = collect();
-
-        Locality::query()
-            ->whereNotNull('old_ids')
-            ->each(function (Locality $locality) use ($localities) {
-                collect($locality->old_ids)->each(
-                    fn (int $oldId) => $localities->put($oldId, $locality->id)
-                );
-            });
-
-        return $localities;
-    }
-
-    protected function getPlace(stdClass $row): ?array
-    {
-        $place = [
-            'country_id' => $this->countries->get($row->CountryId),
-            'county_id' => $this->counties->get($row->CountyId),
-            'locality_id' => $this->localities->get($row->LocalityId),
-        ];
-
-        $validation = Validator::make($place, [
-            'country_id' => ['required_without:county_id,locality_id'],
-            'county_id' => ['required_without:country_id', 'required_with:locality_id'],
-            'locality_id' => ['required_without:country_id', 'required_with:county_id'],
-        ]);
-
-        if ($validation->fails()) {
-            logger()->error('Could not determine location.', [
-                'BallotId' => $row->BallotId,
-                'TurnoutId' => $row->Id,
-                'CountyId' => $row->CountyId,
-                'LocalityId' => $row->LocalityId,
-                'locality_id' => $place['locality_id'],
-            ]);
-
-            return null;
-        }
-
-        return $place;
     }
 }

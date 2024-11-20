@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('date');
             $table->year('year')->storedAs('(YEAR(date))');
             $table->boolean('is_live');
+            $table->boolean('has_lists')->default(false);
             $table->json('properties')->nullable();
             $table->timestamps();
 

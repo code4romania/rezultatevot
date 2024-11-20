@@ -29,7 +29,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->unique(['name', 'election_id']);
+            $table->unique(['name', 'election_id', 'party_id']);
         });
     }
 };

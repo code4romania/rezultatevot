@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Import;
 
+use App\Models\User;
 use Illuminate\Database\Console\Migrations\FreshCommand;
 
 class ImportPrepareCommand extends Command
@@ -35,6 +36,10 @@ class ImportPrepareCommand extends Command
 
         $this->callSilent(FreshCommand::class);
         $this->progressBar->advance();
+
+        User::factory(['email' => 'admin@example.com'])
+            ->admin()
+            ->create();
 
         $this->finishProgressBar('Removed old data');
 

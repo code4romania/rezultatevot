@@ -93,6 +93,10 @@ class ElectionResource extends Resource
                             ->label(__('app.field.is_live'))
                             ->default(false),
 
+                        Toggle::make('has_lists')
+                            ->label(__('app.field.has_lists'))
+                            ->default(false),
+
                         Select::make('properties.default_tab')
                             ->label(__('app.field.default_tab'))
                             ->options(DefaultElectionPage::options())
