@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Enums\ElectionType;
 use App\Enums\VoteMonitorStatKey;
+use App\Models\Article;
 use App\Models\Candidate;
 use App\Models\Country;
 use App\Models\Election;
@@ -162,6 +163,15 @@ class ElectionFactory extends Factory
                     )
                     ->toArray()
             );
+        });
+    }
+
+    public function withArticles(): static
+    {
+        return $this->afterCreating(function (Election $election) {
+            Article::factory(20)
+                ->for($election)
+                ->create();
         });
     }
 }

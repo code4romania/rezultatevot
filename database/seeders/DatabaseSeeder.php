@@ -27,11 +27,13 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         Election::factory()
+            ->withArticles()
             ->count(10)
             ->create();
 
         Election::factory()
             ->live()
+            ->withArticles()
             // ->withLocalTurnout()
             // ->withAbroadTurnout()
             // ->withNationalRecords()
