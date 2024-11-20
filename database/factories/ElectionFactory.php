@@ -34,16 +34,19 @@ class ElectionFactory extends Factory
     public function definition(): array
     {
         $title = fake()->words(3, true);
-        $year = fake()->numberBetween(1991, date('Y'));
+        $date = fake()->dateTimeBetween(
+            '1990-01-01',
+            'now'
+        );
 
         return [
             'type' => fake()->randomElement(ElectionType::values()),
             'title' => $title,
-            'slug' => Str::slug("$title-$year"),
+            'slug' => Str::slug("{$title}-{$date->format('Y')}"),
             'subtitle' => Lottery::odds(1, 5)
                 ->winner(fn () => fake()->word())
                 ->loser(fn () => null),
-            'year' => $year,
+            'date' => $date,
             'is_live' => false,
             'properties' => [],
         ];
@@ -92,7 +95,7 @@ class ElectionFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_live' => true,
-            'year' => now()->year,
+            'date' => today(),
         ]);
     }
 
