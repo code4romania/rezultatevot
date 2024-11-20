@@ -145,4 +145,18 @@ class Turnout extends Model implements TemporaryTable
     {
         return ['election_id', 'county_id', 'country_id', 'section'];
     }
+
+    public function getNameAttribute(): string
+    {
+        if ($this->hasAttribute('locality_id') && $this->locality_id) {
+            return $this->loadMissing('locality')->locality->name;
+        }
+
+        if ($this->hasAttribute('county_id') && $this->county_id) {
+            return $this->loadMissing('county')->county->name;
+        }
+        if ($this->hasAttribute('country_id') && $this->country_id) {
+            return $this->loadMissing('country')->country->name;
+        }
+    }
 }

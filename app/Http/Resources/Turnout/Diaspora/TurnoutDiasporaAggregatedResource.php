@@ -33,7 +33,7 @@ class TurnoutDiasporaAggregatedResource extends JsonResource
              * Array of countries and their respective turnout.
              * @var TurnoutDiasporaResource[]
              */
-            'countries' => TurnoutDiasporaResource::collection($this->places),
+            'places' => TurnoutDiasporaResource::collection($this->places),
 
         ];
     }

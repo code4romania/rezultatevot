@@ -51,9 +51,9 @@ class TurnoutController extends Controller
             ->forLevel(
                 level: DataLevel::DIASPORA,
             )
-            ->toBase()
+            ->addSelect('country_id')
             ->get()
-            ->toArray();
+            ->append('name');
 
         return TurnoutDiasporaAggregatedResource::make($general);
     }
@@ -70,6 +70,7 @@ class TurnoutController extends Controller
                     level: DataLevel::DIASPORA,
                     country: $country->id,
                 )
+                ->addSelect('country_id')
                 ->first()
         );
     }
@@ -85,13 +86,13 @@ class TurnoutController extends Controller
                 level: DataLevel::NATIONAL,
                 aggregate: true,
             )
-            ->toBase()
             ->first();
 
         $result->places = Turnout::query()->whereBelongsTo($election)
             ->forLevel(
                 level: DataLevel::NATIONAL,
             )
+            ->addSelect('county_id')
             ->get();
 
         return TurnoutNationalAggregatedResource::make($result);
@@ -117,7 +118,9 @@ class TurnoutController extends Controller
                 level: DataLevel::NATIONAL,
                 county: $county->id,
             )
-            ->get();
+            ->addSelect('locality_id')
+            ->get()
+            ->append('name');
 
         return TurnoutNationalAggregatedResource::make($countyData);
     }

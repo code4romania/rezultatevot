@@ -34,6 +34,12 @@ class TurnoutDiasporaResource extends JsonResource
              * @var string
              */
             'code' => $this->place,
+
+            /*
+             * Country name.
+             * @var string
+             */
+            'name' => $this->name,
         ];
     }
 }
