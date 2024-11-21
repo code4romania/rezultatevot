@@ -31,21 +31,12 @@ Route::group([
             'controller' => TurnoutController::class,
         ], function () {
             Route::get('/', 'total')->name('total');
-            Route::group([
-                'as' => 'diaspora.',
-                'prefix' => 'diaspora',
-            ], function () {
-                Route::get('/', 'diaspora')->name('diaspora');
-                Route::get('{country}', 'country')->name('country');
-            });
 
-            Route::group([
-                'as' => 'national.',
-                'prefix' => 'national',
-            ], function () {
-                Route::get('/', 'national')->name('national');
-                Route::get('{county}', 'county')->name('county');
-            });
+            Route::get('/diaspora', 'diaspora')->name('diaspora');
+            Route::get('/diaspora/{country}', 'country')->name('diaspora.country');
+
+            Route::get('/national', 'national')->name('national');
+            Route::get('/national/{county}', 'county')->name('national.county');
         });
     });
 });

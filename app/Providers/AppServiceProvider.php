@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\QueryException;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -33,6 +34,11 @@ class AppServiceProvider extends ServiceProvider
         $this->registerStrMacros();
 
         JsonResource::withoutWrapping();
+
+        tap($this->getAppVersion(), function (string $version) {
+            Config::set('scramble.info.version', $version);
+            Config::set('sentry.release', $version);
+        });
     }
 
     /**
@@ -59,6 +65,22 @@ class AppServiceProvider extends ServiceProvider
         Scramble::registerApi('v1', [
             'api_path' => 'api/v1',
         ]);
+    }
+
+    /**
+     * Read the application version.
+     *
+     * @return string
+     */
+    public function getAppVersion(): string
+    {
+        $version = base_path('.version');
+
+        if (! file_exists($version)) {
+            return 'develop';
+        }
+
+        return trim(file_get_contents($version));
     }
 
     protected function registerStrMacros(): void

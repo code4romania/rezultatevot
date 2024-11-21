@@ -67,11 +67,12 @@ class Election extends Model implements HasName, HasAvatar
     {
         return $this->hasMany(VoteMonitorStat::class);
     }
-  
+
     public function articles(): HasMany
     {
         return $this->hasMany(Article::class);
     }
+
     public function parties(): HasMany
     {
         return $this->hasMany(Party::class);
@@ -85,7 +86,6 @@ class Election extends Model implements HasName, HasAvatar
     public function votes(): HasMany
     {
         return $this->hasMany(Vote::class);
-
     }
 
     public function contributors(): BelongsToMany

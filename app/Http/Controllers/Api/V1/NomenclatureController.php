@@ -23,6 +23,7 @@ class NomenclatureController extends Controller
         return ElectionResource::collection(
             Election::query()
                 ->orderBy('is_live', 'desc')
+                ->where('is_visible', true)
                 ->get()
         );
     }
