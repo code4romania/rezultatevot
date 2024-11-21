@@ -6,37 +6,90 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\ArticleResource\Pages;
 use App\Models\Article;
-use Filament\Forms;
+use Carbon\Carbon;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class ArticleResource extends Resource
 {
     protected static ?string $model = Article::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
+
+    protected static ?int $navigationSort = 10;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation.newsfeed');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('app.article.singular');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('app.article.plural');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Select::make('election_id')
-                    ->reactive()
-                    ->relationship('election', 'title'),
-                Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->required(),
-                TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\RichEditor::make('content')
-                    ->required()
-                    ->columnSpanFull(),
+                Section::make()
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('title')
+                            ->required()
+                            ->label(__('app.article.title'))
+                            ->maxLength(255),
+
+                        Select::make('author_id')
+                            ->relationship('author', 'name')
+                            ->required()
+                            ->label(__('app.article.author'))
+                            ->preload(),
+
+                        DateTimePicker::make('published_at')
+                            ->label(__('app.article.published_at'))
+                            ->nullable(),
+
+                        RichEditor::make('content')
+                            ->required()
+                            ->label(__('app.article.content'))
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make()
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('media')
+                            ->multiple()
+                            ->reorderable()
+                            ->previewable(false),
+                    ]),
+
+                Section::make()
+                    ->schema([
+                        Repeater::make('embeds')
+                            ->label(__('app.article.embeds'))
+                            ->schema([
+                                Textarea::make('html'),
+                            ]),
+                    ]),
+
             ]);
     }
 
@@ -44,36 +97,40 @@ class ArticleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('election.title')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('user.name')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('id')
+                    ->prefix('#')
+                    ->sortable()
+                    ->shrink(),
+
                 TextColumn::make('title')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('author.name')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->toggleable(),
+
+                TextColumn::make('published_at')
+                    ->formatStateUsing(fn (?Carbon $state) => $state?->toDateTimeString())
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('author')
+                    ->relationship('author', 'name')
+                    ->multiple()
+                    ->preload(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('id', 'desc');
     }
 
     public static function getRelations(): array

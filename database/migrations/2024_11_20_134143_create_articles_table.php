@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Election;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -15,12 +17,21 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Election::class)->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Election::class)
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignIdFor(User::class, 'author_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('content');
+            $table->json('embeds')->nullable();
+
             $table->timestamps();
+            $table->timestamp('published_at')->nullable();
         });
     }
 

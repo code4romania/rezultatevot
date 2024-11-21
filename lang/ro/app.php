@@ -53,6 +53,7 @@ return [
         'nomenclature' => 'Nomenclatoare',
         'turnout' => 'Prezența la vot',
         'results' => 'Rezultate vot',
+        'newsfeed' => 'Știri',
     ],
 
     'election' => [
@@ -187,5 +188,15 @@ return [
         'polling_stations' => 'Secții de votare acoperite',
         'messages' => 'Mesaje trimise de către observatori',
         'problems' => 'Probleme sesizate',
+    ],
+
+    'article' => [
+        'singular' => 'Articol',
+        'plural' => 'Articole',
+        'title' => 'Titlu',
+        'author' => 'Autor',
+        'published_at' => 'Publicat la',
+        'content' => 'Conținut',
+        'embeds' => 'Embeduri',
     ],
 ];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Enums\User\Role;
@@ -21,9 +23,14 @@ class ArticleFactory extends Factory
         return [
             'title' => $this->faker->sentence,
             'content' => $this->faker->paragraphs(3, true),
-            'user_id' => User::factory([
+            'published_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'author_id' => User::factory([
                 'role' => Role::CONTRIBUTOR,
             ]),
+            'embeds' => $this->faker->boolean() ? [
+                '<embed src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />',
+            ] : null,
+
         ];
     }
 }

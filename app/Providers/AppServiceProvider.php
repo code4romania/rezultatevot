@@ -74,6 +74,7 @@ class AppServiceProvider extends ServiceProvider
             'turnout' => \App\Models\Turnout::class,
             'user' => \App\Models\User::class,
             'vote' => \App\Models\Vote::class,
+            'article' => \App\Models\Article::class,
         ]);
     }
 
