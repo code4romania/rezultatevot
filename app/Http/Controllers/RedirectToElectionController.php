@@ -11,7 +11,14 @@ class RedirectToElectionController extends Controller
 {
     public function __invoke(?Election $election = null): RedirectResponse
     {
-        $election ??= Election::latest()->first();
+        $election ??= Election::query()
+            ->where('is_visible', true)
+            ->latest()
+            ->first();
+
+        if (blank($election)) {
+            abort(404);
+        }
 
         return redirect()->to($election->getDefaultUrl());
     }
