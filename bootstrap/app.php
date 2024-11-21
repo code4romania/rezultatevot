@@ -19,6 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->trustProxies('*');
+
         // Fix for `Route [login] not defined` exception
         // @see https://github.com/filamentphp/filament/discussions/5226#discussioncomment-10555366
         $middleware->redirectGuestsTo(fn () => Filament::getCurrentPanel()?->getLoginUrl() ?? route('front.index'));
