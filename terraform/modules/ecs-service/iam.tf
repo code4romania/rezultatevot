@@ -30,9 +30,8 @@ data "aws_iam_policy_document" "ssm_policy" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name                = "${var.name}-ecs-task-execution-role"
-  assume_role_policy  = data.aws_iam_policy_document.ecs_task_assume.json
-  managed_policy_arns = concat(["arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"], var.managed_policies)
+  name               = "${var.name}-ecs-task-execution-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume.json
 
   dynamic "inline_policy" {
     for_each = var.allowed_secrets == null ? [] : [1]
@@ -62,4 +61,15 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   }
 
   tags = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerServiceforEC2Role" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+resource "aws_iam_role_policy_attachment" "managed_policies_attachment" {
+  count      = length(var.managed_policies)
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = var.managed_policies[count.index]
 }
