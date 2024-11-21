@@ -73,6 +73,16 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         ];
     }
 
+    public function elections(): BelongsToMany
+    {
+        return $this->belongsToMany(Election::class);
+    }
+
+    public function articles(): HasMany
+    {
+        return $this->hasMany(Article::class, 'author_id');
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('avatar')
@@ -107,22 +117,24 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
 
     public function canAccessPanel(Panel $panel): bool
     {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        if ($panel->getId() === 'contributor') {
+            return $this->isContributor();
+        }
+
         return $panel->getId() === 'admin';
     }
 
     public function getTenants(Panel $panel): Collection
     {
-        if ($this->isAdmin())
-        {
+        if ($this->isAdmin()) {
             return Election::all();
         }
+
         return $this->elections;
-
-    }
-
-    public function elections(): BelongsToMany
-    {
-        return $this->belongsToMany(Election::class);
     }
 
     public function canAccessTenant(Model $tenant): bool

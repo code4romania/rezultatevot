@@ -113,6 +113,9 @@ class UserResource extends Resource
 
                             TextEntry::make('elections.slug')
                                 ->label(__('app.election.label.plural')),
+
+                            TextEntry::make('articles.title')
+                                ->label(__('app.article.plural')),
                         ]),
                 ]),
             ]);
@@ -140,10 +143,16 @@ class UserResource extends Resource
 
                 TextColumn::make('elections.slug')
                     ->limitList(1)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label(__('app.election.label.plural')),
+
+                TextColumn::make('articles_count')
+                    ->label(__('app.article.plural'))
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
