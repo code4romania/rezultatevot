@@ -10,7 +10,8 @@ module "ecs_horizon" {
   min_capacity = 1
   max_capacity = 1
 
-  deployment_maximum_percent = 100
+  deployment_minimum_healthy_percent = 0
+  deployment_maximum_percent         = 100
 
   image_repo = local.image.repo
   image_tag  = local.image.tag
