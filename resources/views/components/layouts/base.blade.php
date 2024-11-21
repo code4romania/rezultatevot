@@ -17,6 +17,7 @@
     @filamentStyles
     @vite('resources/css/app.css')
 
+
     <style>
         [x-cloak] {
             display: none !important;

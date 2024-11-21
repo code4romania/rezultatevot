@@ -130,7 +130,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
 
     public function getTenants(Panel $panel): Collection
     {
-        if ($this->isAdmin()) {
+        if ($panel->getId() === 'admin') {
             return Election::all();
         }
 
@@ -146,6 +146,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         if ($tenant instanceof Election) {
             return $this->elections->contains($tenant);
         }
+
         return false;
     }
 
