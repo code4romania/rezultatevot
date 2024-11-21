@@ -3,9 +3,7 @@ resource "aws_cloudfront_distribution" "main" {
   enabled         = true
   is_ipv6_enabled = true
   http_version    = "http2and3"
-  aliases = [
-    var.domain_name
-  ]
+  aliases         = local.domains
 
   origin {
     domain_name = aws_lb.main.dns_name
@@ -33,6 +31,11 @@ resource "aws_cloudfront_distribution" "main" {
     origin_request_policy_id = aws_cloudfront_origin_request_policy.default.id
     viewer_protocol_policy   = "redirect-to-https"
     compress                 = true
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.www_redirect.arn
+    }
   }
 
   default_cache_behavior {
@@ -44,6 +47,11 @@ resource "aws_cloudfront_distribution" "main" {
 
     cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" #Managed-CachingDisabled
     origin_request_policy_id = aws_cloudfront_origin_request_policy.admin.id
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.www_redirect.arn
+    }
   }
 
   restrictions {
@@ -125,4 +133,12 @@ resource "aws_cloudfront_origin_request_policy" "admin" {
   query_strings_config {
     query_string_behavior = "all"
   }
+}
+
+resource "aws_cloudfront_function" "www_redirect" {
+  name    = "${local.namespace}-www-redirect"
+  runtime = "cloudfront-js-1.0"
+  comment = "Redirects ${var.domain_name} to www.${var.domain_name}"
+  publish = true
+  code    = file("${path.module}/functions/www-redirect.js")
 }

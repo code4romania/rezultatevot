@@ -21,6 +21,7 @@ class Timeline extends Component
     public function __construct()
     {
         $this->years = Election::query()
+            ->where('is_visible', true)
             ->get()
             ->groupBy([
                 'year',

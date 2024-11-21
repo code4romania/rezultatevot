@@ -9,6 +9,7 @@ use App\Contracts\HasDisplayName;
 use Database\Factories\PartyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Spatie\Image\Enums\Fit;
@@ -65,6 +66,11 @@ class Party extends Model implements HasMedia, HasDisplayName
                     ->keepOriginalImageFormat()
                     ->optimize();
             });
+    }
+
+    public function votes(): MorphMany
+    {
+        return $this->morphMany(Vote::class, 'votable');
     }
 
     public function getDisplayName(): string

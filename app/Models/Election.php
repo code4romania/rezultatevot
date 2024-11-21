@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
 
 class Election extends Model implements HasName, HasAvatar
 {
@@ -28,8 +27,8 @@ class Election extends Model implements HasName, HasAvatar
         'title',
         'type',
         'subtitle',
-        'slug',
         'date',
+        'is_visible',
         'is_live',
         'has_lists',
         'properties',
@@ -42,6 +41,7 @@ class Election extends Model implements HasName, HasAvatar
             'type' => ElectionType::class,
             'date' => 'date',
             'year' => 'int',
+            'is_visible' => 'boolean',
             'is_live' => 'boolean',
             'has_lists' => 'boolean',
             'properties' => 'collection',
@@ -55,10 +55,6 @@ class Election extends Model implements HasName, HasAvatar
             return $query
                 ->orderByDesc('year')
                 ->orderByDesc('is_live');
-        });
-
-        static::creating(function (self $model) {
-            $model->slug = Str::slug("{$model->title}-{$model->date->year}");
         });
     }
 

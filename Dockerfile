@@ -46,4 +46,6 @@ RUN set -ex; \
 COPY docker/s6-rc.d /etc/s6-overlay/s6-rc.d
 COPY --from=assets --chown=www-data:www-data /build/public/build /var/www/public/build
 
+ENV SENTRY_SAMPLE_RATE=1.0
+
 EXPOSE 80

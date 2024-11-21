@@ -1,10 +1,14 @@
 locals {
   namespace = "rezultatevot-v2-${var.env}"
   image = {
-    repo = "code4romaina/rezultatevot",
-    tag  = "0.1.0"
+    repo = "code4romania/rezultatevot",
+    tag  = "0.1.8"
   }
-  #   availability_zone = data.aws_availability_zones.current.names[0]
+
+  domains = [
+    var.domain_name,
+    "www.${var.domain_name}",
+  ]
 
   networking = {
     cidr_block = "10.0.0.0/16"

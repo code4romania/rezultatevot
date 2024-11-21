@@ -5,10 +5,13 @@ module "ecs_app" {
     module.ecs_cluster
   ]
 
-  name         = local.namespace
+  name         = "${local.namespace}-app"
   cluster_name = module.ecs_cluster.cluster_name
-  min_capacity = 4
-  max_capacity = 8
+  min_capacity = 3
+  max_capacity = 9
+
+  deployment_minimum_healthy_percent = 33
+  deployment_maximum_percent         = 166
 
   image_repo = local.image.repo
   image_tag  = local.image.tag
@@ -20,9 +23,9 @@ module "ecs_app" {
   lb_listener_arn         = aws_lb_listener.http.arn
   lb_hosts                = ["www.${var.domain_name}"]
   lb_health_check_enabled = true
-  lb_path                 = "/"
+  lb_path                 = "/up"
 
-  container_memory_soft_limit = 1024
+  container_memory_soft_limit = 1536
   container_memory_hard_limit = 2048
 
   log_group_name                 = module.ecs_cluster.log_group_name

@@ -1,8 +1,9 @@
 # A record
 resource "aws_route53_record" "ipv4" {
+  count = length(local.domains)
 
   zone_id = data.aws_route53_zone.main.zone_id
-  name    = var.domain_name
+  name    = local.domains[count.index]
   type    = "A"
 
   alias {
@@ -14,8 +15,10 @@ resource "aws_route53_record" "ipv4" {
 
 # AAAA record
 resource "aws_route53_record" "ipv6" {
+  count = length(local.domains)
+
   zone_id = data.aws_route53_zone.main.zone_id
-  name    = var.domain_name
+  name    = local.domains[count.index]
   type    = "AAAA"
 
   alias {

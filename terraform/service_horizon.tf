@@ -5,10 +5,13 @@ module "ecs_horizon" {
     module.ecs_cluster
   ]
 
-  name         = local.namespace
+  name         = "${local.namespace}-horizon"
   cluster_name = module.ecs_cluster.cluster_name
   min_capacity = 1
   max_capacity = 1
+
+  deployment_minimum_healthy_percent = 0
+  deployment_maximum_percent         = 100
 
   image_repo = local.image.repo
   image_tag  = local.image.tag
@@ -17,8 +20,8 @@ module "ecs_horizon" {
 
   use_load_balancer = false
 
-  container_memory_soft_limit = 3072
-  container_memory_hard_limit = 4096
+  container_memory_soft_limit = 2560
+  container_memory_hard_limit = 3072
 
   log_group_name                 = module.ecs_cluster.log_group_name
   service_discovery_namespace_id = module.ecs_cluster.service_discovery_namespace_id
