@@ -81,15 +81,6 @@ class ArticleResource extends Resource
                             ->previewable(false),
                     ]),
 
-                Section::make()
-                    ->schema([
-                        Repeater::make('embeds')
-                            ->label(__('app.article.embeds'))
-                            ->schema([
-                                Textarea::make('html'),
-                            ]),
-                    ]),
-
             ]);
     }
 

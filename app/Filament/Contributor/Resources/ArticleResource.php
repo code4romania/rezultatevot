@@ -81,16 +81,6 @@ class ArticleResource extends Resource
                             ->reorderable()
                             ->previewable(false),
                     ]),
-
-                Section::make()
-                    ->schema([
-                        Repeater::make('embeds')
-                            ->label(__('app.article.embeds'))
-                            ->schema([
-                                Textarea::make('html'),
-                            ]),
-                    ]),
-
             ]);
     }
 
@@ -121,8 +111,9 @@ class ArticleResource extends Resource
                     ->toggleable(),
             ])
             ->filters([
-                SelectFilter::make('author')
-                    ->relationship('author', 'name')
+                SelectFilter::make('election')
+                    ->relationship('election', 'name')
+                    ->label(__('app.article.election'))
                     ->multiple()
                     ->preload(),
             ])
