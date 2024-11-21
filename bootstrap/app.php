@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\SetCloudfrontHeaders;
 use Filament\Facades\Filament;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
@@ -19,7 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->trustProxies('*');
+        $middleware->trustProxies('*')
+            ->append(SetCloudfrontHeaders::class);
 
         // Fix for `Route [login] not defined` exception
         // @see https://github.com/filamentphp/filament/discussions/5226#discussioncomment-10555366
