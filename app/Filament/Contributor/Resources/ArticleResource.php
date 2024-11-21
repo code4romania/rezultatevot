@@ -8,13 +8,10 @@ use App\Filament\Contributor\Resources\ArticleResource\Pages;
 use App\Models\Article;
 use App\Models\Election;
 use Carbon\Carbon;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -22,6 +19,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Database\Eloquent\Builder;
 
 class ArticleResource extends Resource
@@ -29,11 +27,6 @@ class ArticleResource extends Resource
     protected static ?string $model = Article::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('app.navigation.newsfeed');
-    }
 
     public static function getModelLabel(): string
     {
@@ -53,25 +46,25 @@ class ArticleResource extends Resource
                     ->columns(2)
                     ->schema([
                         TextInput::make('title')
-                            ->required()
                             ->label(__('app.article.title'))
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->required(),
 
                         Select::make('election_id')
-                            ->required()
-                            ->relationship('election', 'slug')
-                            ->options(
-                                fn () => Election::query()
+                            ->label(__('app.article.election'))
+                            ->relationship(
+                                'election',
+                                'slug',
+                                fn ($query) => $query
                                     ->where('is_live', true)
                                     ->whereHas('contributors', fn ($query) => $query->where('id', auth()->id()))
-                                    ->pluck('slug', 'id')
                             )
-                            ->label(__('app.article.election')),
+                            ->required(),
 
-                        RichEditor::make('content')
-                            ->required()
+                        TiptapEditor::make('content')
                             ->label(__('app.article.content'))
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->required(),
                     ]),
 
                 Section::make()

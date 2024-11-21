@@ -29,11 +29,6 @@ class ArticleResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
-    public static function getNavigationGroup(): ?string
-    {
-        return __('app.navigation.newsfeed');
-    }
-
     public static function getModelLabel(): string
     {
         return __('app.article.singular');

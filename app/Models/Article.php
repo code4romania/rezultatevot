@@ -12,8 +12,6 @@ use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -31,27 +29,19 @@ class Article extends Model implements HasMedia
         'author_id',
         'election_id',
         'content',
-        'slug',
-        'embeds'
-    ];
-
-    protected $casts = [
-        'embeds' => 'array',
     ];
 
     protected static function booted(): void
     {
         static::creating(function (self $model) {
-            $model->slug = Str::slug($model->title);
-            if (Article::where('slug', $model->slug)->exists()) {
-                $model->slug .= '-' . Str::random(5);
-            }
             if (blank($model->election_id)) {
                 $model->election_id = Filament::getTenant()->id;
             }
+
             if (blank($model->author_id)) {
                 $model->author_id = auth()->id();
             }
+
             if (blank($model->published_at)) {
                 $model->published_at = now();
             }
@@ -72,16 +62,6 @@ class Article extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('default')
-            ->useFallbackUrl(
-                \sprintf(
-                    'https://ui-avatars.com/api/?%s',
-                    Arr::query([
-                        'name' => $this->title,
-                        'color' => 'FFFFFF',
-                        'background' => '09090B',
-                    ])
-                )
-            )
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
                     ->fit(Fit::Contain, 64, 64)

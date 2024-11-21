@@ -32,7 +32,6 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 
@@ -57,10 +56,10 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->maxContentWidth('full')
             ->tenant(Election::class)
-            ->brandLogo(fn () => new HtmlString(\Blade::render('<x-icon-logo />')))
-            ->brandLogoHeight('60px')
+            ->brandLogo(fn () => view('filament.brand'))
+            ->brandLogoHeight('3rem')
             ->colors([
-                'primary' => Color::hex('#6b46c1'),
+                'primary' => Color::Red,
             ])
             ->plugins([
                 BreezyCore::make()

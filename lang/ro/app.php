@@ -56,7 +56,6 @@ return [
         'nomenclature' => 'Nomenclatoare',
         'turnout' => 'Prezența la vot',
         'results' => 'Rezultate vot',
-        'newsfeed' => 'Știri',
     ],
 
     'election' => [
@@ -202,5 +201,11 @@ return [
         'published_at' => 'Publicat la',
         'content' => 'Conținut',
         'embeds' => 'Embeduri',
+    ],
+
+    'newsfeed' => [
+        'title' => 'Live newsfeed',
+        'description' => 'Aici vezi ultimele știri și informații relevante acestei alegeri, culese din surse de încredere de către echipa Code for Romania.',
+        'more' => 'Vezi mai mult',
     ],
 ];

@@ -17,7 +17,6 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class ContributorPanelProvider extends PanelProvider
@@ -28,10 +27,10 @@ class ContributorPanelProvider extends PanelProvider
             ->id('contributor')
             ->path('contributor')
             ->login(Login::class)
-            ->brandLogo(fn () => new HtmlString(\Blade::render('<x-icon-logo />')))
-            ->brandLogoHeight('60px')
+            ->brandLogo(fn () => view('filament.brand'))
+            ->brandLogoHeight('3rem')
             ->colors([
-                'primary' => Color::hex('#6b46c1'),
+                'primary' => Color::Sky,
             ])
             ->discoverResources(in: app_path('Filament/Contributor/Resources'), for: 'App\\Filament\\Contributor\\Resources')
             ->discoverPages(in: app_path('Filament/Contributor/Pages'), for: 'App\\Filament\\Contributor\\Pages')

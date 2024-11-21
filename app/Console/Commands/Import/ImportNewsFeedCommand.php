@@ -6,16 +6,12 @@ namespace App\Console\Commands\Import;
 
 use App\Enums\User\Role;
 use App\Models\Article;
-use App\Models\Candidate;
-use App\Models\Country;
-use App\Models\County;
 use App\Models\Election;
-use App\Models\Locality;
-use App\Models\Party;
 use App\Models\User;
-use App\Models\Vote;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use stdClass;
 
 class ImportNewsFeedCommand extends Command
@@ -34,7 +30,8 @@ class ImportNewsFeedCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Import place ids from the old database.';
+    protected $description = 'Import news items from the old database.';
+
     private ?Collection $userIds = null;
 
     /**
@@ -42,7 +39,6 @@ class ImportNewsFeedCommand extends Command
      */
     public function handle(): int
     {
-        $this->userIds = collect();
         if (! $this->confirmToProceed()) {
             return static::FAILURE;
         }
@@ -58,73 +54,78 @@ class ImportNewsFeedCommand extends Command
         return static::SUCCESS;
     }
 
-    private function importAuthors()
+    private function importAuthors(): void
     {
         $query = $this->db
-            ->table('authors');
+            ->table('authors')
+            ->orderBy('authors.Id');
 
         $this->createProgressBar(
-            'Importing authors IDs...',
+            'Importing authors...',
             $query->count()
         );
 
-        $query->get()
-            ->each(function (stdClass $row) {
-                $user = User::factory()->create([
-                    'name' => $row->Name,
-                    'role' => Role::CONTRIBUTOR,
-                ]);
-                if(filled($row->Avatar))
-                {
-                    $user->addMediaFromUrl($row->Avatar)
-                        ->toMediaCollection('avatar');
-                }
+        $this->userIds = collect();
 
-                $this->userIds->put($row->Id, $user->id);
-                $this->progressBar->advance();
-            });
+        $query->each(function (stdClass $row) {
+            $user = User::create([
+                'name' => $row->Name,
+                'role' => Role::CONTRIBUTOR,
+                'email' => "contributor-{$row->Id}@example.com",
+                'password' => Hash::make(Str::random(32)),
+            ]);
 
-        $this->progressBar->finish('');
+            if (filled($row->Avatar)) {
+                $user->addMediaFromUrl($row->Avatar)
+                    ->toMediaCollection('avatar');
+            }
 
+            $this->userIds->put($row->Id, $user->id);
+            $this->progressBar->advance();
+        });
+
+        $this->finishProgressBar('Imported authors.');
     }
 
-    private function importArticles()
+    private function importArticles(): void
     {
         $query = $this->db
             ->table('articles')
             ->orderBy('articles.BallotId');
 
         $this->createProgressBar(
-            'Importing articles IDs...',
+            'Importing articles...',
             $query->count()
         );
 
-        $electionsIds = Election::pluck('id', 'old_id');
-        $media= $this->db->table('articlepictures')
+        $elections = Election::pluck('id', 'old_id');
+
+        $media = $this->db
+            ->table('articlepictures')
             ->get()
             ->keyBy('ArticleId');
 
         $query->get()
-            ->each(function (stdClass $row) use ($electionsIds, $media) {
-                $article = Article::factory()->create([
+            ->each(function (stdClass $row) use ($elections, $media) {
+                $article = Article::create([
                     'title' => $row->Title,
                     'author_id' => $this->userIds->get($row->AuthorId),
-                    'election_id' => $electionsIds->get($row->BallotId),
-                    'content' => $row->Body,
-                    'embeds' => $row->Embed? [$row->Embed]: null,
+                    'election_id' => $elections->get($row->BallotId),
+                    'content' => Str::markdown($row->Body),
                 ]);
 
-
-                if  (filled($pics=$media->get($row->Id)))
-                {
+                if (filled($pics = $media->get($row->Id))) {
                     try {
-                        $article->addMedia(file_get_contents("$pics->Url"));
+                        $article->addMediaFromUrl(Str::replace(' ', '%20', $pics->Url))
+                            ->toMediaCollection();
                     } catch (\Exception $e) {
-                        $this->logError($pics->Url);
-                        $this->logError($e->getMessage());
+                        logger()->error("Failed to import media for article {$row->Id}: {$e->getMessage()}");
                     }
                 }
+
                 $this->progressBar->advance();
             });
+
+        $this->finishProgressBar('Imported articles.');
     }
 }

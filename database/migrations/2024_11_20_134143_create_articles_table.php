@@ -26,20 +26,10 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->string('title');
-            $table->string('slug')->unique();
             $table->text('content');
-            $table->json('embeds')->nullable();
 
             $table->timestamps();
             $table->timestamp('published_at')->nullable();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('articles');
     }
 };
