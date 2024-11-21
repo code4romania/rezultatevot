@@ -35,5 +35,7 @@
         <livewire:vote-monitor-stats
             :election="$election"
             show-embed />
+
+        <livewire:news-feed :election="$election" />
     </section>
 </div>

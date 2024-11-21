@@ -12,6 +12,7 @@ use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Election extends Model implements HasName, HasAvatar
@@ -66,7 +67,11 @@ class Election extends Model implements HasName, HasAvatar
     {
         return $this->hasMany(VoteMonitorStat::class);
     }
-
+  
+    public function articles(): HasMany
+    {
+        return $this->hasMany(Article::class);
+    }
     public function parties(): HasMany
     {
         return $this->hasMany(Party::class);
@@ -80,6 +85,12 @@ class Election extends Model implements HasName, HasAvatar
     public function votes(): HasMany
     {
         return $this->hasMany(Vote::class);
+
+    }
+
+    public function contributors(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
     }
 
     public function scopeWhereLive(Builder $query): Builder

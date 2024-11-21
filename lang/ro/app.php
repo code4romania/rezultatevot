@@ -6,6 +6,7 @@ return [
 
     'banner' => 'O soluție Commit Global.',
     'skip' => 'Sari la conținut',
+    'all' => 'Toate',
 
     'field' => [
         'aliases' => 'Aliasuri',
@@ -189,5 +190,22 @@ return [
         'polling_stations' => 'Secții de votare acoperite',
         'messages' => 'Mesaje trimise de către observatori',
         'problems' => 'Probleme sesizate',
+    ],
+
+    'article' => [
+        'singular' => 'Articol',
+        'plural' => 'Articole',
+        'title' => 'Titlu',
+        'author' => 'Autor',
+        'election' => 'Rună electorală',
+        'published_at' => 'Publicat la',
+        'content' => 'Conținut',
+        'embeds' => 'Embeduri',
+    ],
+
+    'newsfeed' => [
+        'title' => 'Live newsfeed',
+        'description' => 'Aici vezi ultimele știri și informații relevante acestei alegeri, culese din surse de încredere de către echipa Code for Romania.',
+        'more' => 'Vezi mai mult',
     ],
 ];

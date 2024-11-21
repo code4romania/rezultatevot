@@ -15,9 +15,11 @@ Route::as('front.')->group(function () {
     Route::get('/alegeri/{election:slug}/prezenta', Pages\ElectionTurnouts::class)->name('elections.turnout');
     Route::get('/alegeri/{election:slug}/rezultate', Pages\ElectionResults::class)->name('elections.results');
 
-    Route::get('/embed/{election:slug}/prezenta', Embeds\ElectionTurnoutsEmbed::class)->name('elections.embed.turnout');
-    Route::get('/embed/{election:slug}/rezultate', Embeds\ElectionResultsEmbed::class)->name('elections.embed.results');
-    Route::get('/embed/{election:slug}/observatori', Embeds\VoteMonitorStatsEmbed::class)->name('elections.embed.stats');
+    Route::get('/embed/prezenta/{election:slug}', Embeds\ElectionTurnoutsEmbed::class)->name('elections.embed.turnout');
+    Route::get('/embed/rezultate/{election:slug}', Embeds\ElectionResultsEmbed::class)->name('elections.embed.results');
+    Route::get('/embed/observatori/{election:slug}', Embeds\VoteMonitorStatsEmbed::class)->name('elections.embed.stats');
+
+    Route::get('/embed/articol/{article}', Embeds\ArticleEmbed::class)->name('articles.embed');
 
     Route::get('{page:slug}', Pages\ContentPage::class)->name('pages.show');
 });

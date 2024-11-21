@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Enums\ElectionType;
 use App\Enums\VoteMonitorStatKey;
+use App\Models\Article;
 use App\Models\Candidate;
 use App\Models\Country;
 use App\Models\Election;
@@ -14,6 +15,7 @@ use App\Models\Party;
 use App\Models\Record;
 use App\Models\ScheduledJob;
 use App\Models\Turnout;
+use App\Models\User;
 use App\Models\VoteMonitorStat;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\Sequence;
@@ -162,6 +164,23 @@ class ElectionFactory extends Factory
                     )
                     ->toArray()
             );
+        });
+    }
+
+    public function withArticles(): static
+    {
+        return $this->afterCreating(function (Election $election) {
+            Article::factory(20)
+                ->for($election)
+                ->create();
+        });
+    }
+
+    public function withContributor(): static
+    {
+        return $this->afterCreating(function (Election $election) {
+            $contribute = User::where('email', 'contributer@example.com')->first();
+            $election->contributors()->attach($contribute);
         });
     }
 }

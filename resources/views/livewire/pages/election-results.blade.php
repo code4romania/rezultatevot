@@ -33,5 +33,8 @@
         @if (filled($this->aggregate))
             <x-candidates-table :items="$this->aggregate" />
         @endif
+
+        <livewire:news-feed :election="$election" />
+
     </section>
 </div>

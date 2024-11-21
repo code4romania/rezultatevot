@@ -14,6 +14,8 @@ use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
@@ -71,6 +73,16 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         ];
     }
 
+    public function elections(): BelongsToMany
+    {
+        return $this->belongsToMany(Election::class);
+    }
+
+    public function articles(): HasMany
+    {
+        return $this->hasMany(Article::class, 'author_id');
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('avatar')
@@ -105,17 +117,36 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $panel->getId() === 'admin';
+        if ($panel->getId() === 'admin') {
+            return $this->isAdmin();
+        }
+
+        if ($panel->getId() === 'contributor') {
+            return $this->isContributor();
+        }
+
+        return false;
     }
 
     public function getTenants(Panel $panel): Collection
     {
-        return Election::all();
+        if ($this->isAdmin()) {
+            return Election::all();
+        }
+
+        return $this->elections;
     }
 
     public function canAccessTenant(Model $tenant): bool
     {
-        return true;
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        if ($tenant instanceof Election) {
+            return $this->elections->contains($tenant);
+        }
+        return false;
     }
 
     public function getFilamentName(): string

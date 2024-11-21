@@ -63,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
     protected function enforceMorphMap(): void
     {
         Relation::enforceMorphMap([
+            'article' => \App\Models\Article::class,
             'candidate' => \App\Models\Candidate::class,
             'country' => \App\Models\Country::class,
             'county' => \App\Models\County::class,
