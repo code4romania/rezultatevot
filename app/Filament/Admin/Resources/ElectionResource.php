@@ -84,6 +84,12 @@ class ElectionResource extends Resource
                             ->label(__('app.field.subtitle'))
                             ->nullable(),
 
+                        TextInput::make('slug')
+                            ->label(__('app.field.slug'))
+                            ->unique(ignoreRecord: true)
+                            ->required()
+                            ->columnSpanFull(),
+
                         Toggle::make('is_live')
                             ->label(__('app.field.is_live'))
                             ->default(false),
@@ -124,11 +130,17 @@ class ElectionResource extends Resource
                     ->columnSpan(2)
                     ->columns(2)
                     ->schema([
+                        TextEntry::make('type')
+                            ->label(__('app.field.type')),
+
                         TextEntry::make('title')
                             ->label(__('app.field.title')),
 
                         TextEntry::make('subtitle')
                             ->label(__('app.field.subtitle')),
+
+                        TextEntry::make('slug')
+                            ->label(__('app.field.slug')),
 
                         TextEntry::make('date')
                             ->label(__('app.field.date'))

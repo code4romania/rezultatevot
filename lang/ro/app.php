@@ -27,6 +27,7 @@ return [
         'name' => 'Nume',
         'role' => 'Rol',
         'subtitle' => 'Subtitlu',
+        'slug' => 'Slug',
         'title' => 'Titlu',
         'type' => 'Tip',
         'updated_at' => 'Actualizat la',

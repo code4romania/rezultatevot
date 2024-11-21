@@ -27,7 +27,6 @@ class Election extends Model implements HasName, HasAvatar
         'title',
         'type',
         'subtitle',
-        'slug',
         'date',
         'is_visible',
         'is_live',
