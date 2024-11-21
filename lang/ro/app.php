@@ -6,6 +6,7 @@ return [
 
     'banner' => 'O soluție Commit Global.',
     'skip' => 'Sari la conținut',
+    'all' => 'Toate',
 
     'field' => [
         'aliases' => 'Aliasuri',
@@ -195,6 +196,7 @@ return [
         'plural' => 'Articole',
         'title' => 'Titlu',
         'author' => 'Autor',
+        'election' => 'Rună electorală',
         'published_at' => 'Publicat la',
         'content' => 'Conținut',
         'embeds' => 'Embeduri',

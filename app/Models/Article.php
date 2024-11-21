@@ -29,6 +29,7 @@ class Article extends Model implements HasMedia
     protected $fillable = [
         'title',
         'author_id',
+        'election_id',
         'content',
         'slug',
     ];
@@ -45,7 +46,14 @@ class Article extends Model implements HasMedia
         static::creating(function (self $model) {
             $model->slug = Str::slug($model->title);
             if (blank($model->election_id)) {
+                dd($model);
                 $model->election_id = Filament::getTenant()->id;
+            }
+            if (blank($model->author_id)) {
+                $model->author_id = auth()->id();
+            }
+            if (blank($model->published_at)) {
+                $model->published_at = now();
             }
         });
     }

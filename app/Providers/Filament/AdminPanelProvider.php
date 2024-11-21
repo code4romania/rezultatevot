@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
-use App\Filament\Admin\Pages\Auth\Login;
 use App\Filament\Admin\Resources\ElectionResource;
 use App\Filament\Admin\Resources\MenuResource;
+use App\Filament\Contributor\Pages\Auth\Login;
 use App\Models\Election;
 use App\Models\Page;
 use Datlechin\FilamentMenuBuilder\FilamentMenuBuilderPlugin;
@@ -22,6 +22,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Table;
 use Filament\Widgets;
@@ -31,6 +32,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 
@@ -55,6 +57,11 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->maxContentWidth('full')
             ->tenant(Election::class)
+            ->brandLogo(fn () => new HtmlString(\Blade::render('<x-icon-logo />')))
+            ->brandLogoHeight('60px')
+            ->colors([
+                'primary' => Color::hex('#6b46c1'),
+            ])
             ->plugins([
                 BreezyCore::make()
                     ->myProfile(slug: 'profile')

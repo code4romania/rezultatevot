@@ -15,6 +15,7 @@ use App\Models\Party;
 use App\Models\Record;
 use App\Models\ScheduledJob;
 use App\Models\Turnout;
+use App\Models\User;
 use App\Models\VoteMonitorStat;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\Sequence;
@@ -172,6 +173,14 @@ class ElectionFactory extends Factory
             Article::factory(20)
                 ->for($election)
                 ->create();
+        });
+    }
+
+    public function withContributor(): static
+    {
+        return $this->afterCreating(function (Election $election) {
+            $contribute = User::where('email', 'contributer@example.com')->first();
+            $election->contributors()->attach($contribute);
         });
     }
 }

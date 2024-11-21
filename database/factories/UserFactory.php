@@ -52,4 +52,11 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    public function contributor()
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => Role::CONTRIBUTOR,
+        ]);
+    }
 }

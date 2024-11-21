@@ -117,15 +117,15 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
 
     public function canAccessPanel(Panel $panel): bool
     {
-        if ($this->isAdmin()) {
-            return true;
+        if ($panel->getId() === 'admin') {
+            return $this->isAdmin();
         }
 
         if ($panel->getId() === 'contributor') {
             return $this->isContributor();
         }
 
-        return $panel->getId() === 'admin';
+        return false;
     }
 
     public function getTenants(Panel $panel): Collection
@@ -139,7 +139,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
 
     public function canAccessTenant(Model $tenant): bool
     {
-        return true;
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        if ($tenant instanceof Election) {
+            return $this->elections->contains($tenant);
+        }
+        return false;
     }
 
     public function getFilamentName(): string

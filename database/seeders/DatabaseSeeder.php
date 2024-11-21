@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\User\Role;
 use App\Models\Election;
 use App\Models\Page;
 use App\Models\User;
@@ -22,12 +23,17 @@ class DatabaseSeeder extends Seeder
             ->admin()
             ->create();
 
+        User::factory(['email' => 'contributor@example.com'])
+            ->contributor()
+            ->create();
+
         User::factory()
             ->count(10)
             ->create();
 
         Election::factory()
             ->withArticles()
+            ->withContributor()
             ->count(10)
             ->create();
 
