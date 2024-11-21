@@ -16,7 +16,7 @@
         :data="$this->data->toArray()" />
 
     @if (filled($this->aggregate))
-        <x-candidates-table :items="$this->aggregate" />
+        <x-candidates.results-table :items="$this->aggregate" />
     @endif
 
     <x-stats.records :stats="$this->recordStats" />
