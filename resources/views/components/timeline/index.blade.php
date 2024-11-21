@@ -12,7 +12,7 @@
 
 <div
     @keydown.window.escape="sidebarOpen = false"
-    class="fixed inset-y-0 mr-16 flex flex-row-reverse w-full z-50 md:w-80 items-stretch md:translate-x-0 md:relative transition ease-in-out duration-300 transform"
+    class="fixed inset-y-0 flex flex-row-reverse w-full z-50 md:w-80 items-stretch md:translate-x-0 md:relative transition ease-in-out duration-300 transform"
     x-bind:class="{
         '-translate-x-full': !sidebarOpen,
         'translate-x-0': sidebarOpen
@@ -50,7 +50,7 @@
                             'after:absolute after:left-2 after:w-3 after:h-3 after:border-2 after:box-content after:rounded-full after:-translate-x-1/2 after:translate-y-1.5',
 
                             $isActiveYear($year)
-                                ? 'after:bg-indigo-600 after:border-indigo-50' // Active marker
+                                ? 'after:bg-purple-600 after:border-purple-50' // Active marker
                                 : 'after:bg-white after:border-slate-200', // Inactive marker
                         ])>
 
@@ -67,7 +67,7 @@
                                 <x-timeline.item
                                     :isActive="$isActiveElection($elections->first())"
                                     :isLive="$elections->first()->is_live"
-                                    :url="route('front.elections.results', $elections->first())"
+                                    :url="$elections->first()->getDefaultUrl()"
                                     :label="$type" />
                             @else
                                 <li x-data="{ open: @js($isActiveElectionType($type)) }">
@@ -88,7 +88,7 @@
                                             <x-timeline.item
                                                 :isActive="$isActiveElection($election)"
                                                 :isLive="$election->is_live"
-                                                :url="route('front.elections.results', $election)"
+                                                :url="$election->getDefaultUrl()"
                                                 :label="$election->title" />
                                         @endforeach
                                     </ul>

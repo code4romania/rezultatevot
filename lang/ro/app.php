@@ -6,24 +6,29 @@ return [
 
     'banner' => 'O soluție Commit Global.',
     'skip' => 'Sari la conținut',
+    'all' => 'Toate',
 
     'field' => [
+        'aliases' => 'Aliasuri',
         'color' => 'Culoare',
         'country' => 'Țară',
         'county' => 'Județ',
         'created_at' => 'Creat la',
         'date' => 'Dată',
+        'default_tab' => 'Tab implicit',
         'email' => 'Email',
         'id' => 'ID',
         'siruta' => 'ID SIRUTA',
         'initial_complement' => 'Înscriși pe listele complementare',
         'initial_permanent' => 'Înscriși pe listele permanente',
         'is_live' => 'Live',
+        'is_visible' => 'Vizibil',
         'locality' => 'Localitate',
         'location' => 'Locație',
         'name' => 'Nume',
         'role' => 'Rol',
         'subtitle' => 'Subtitlu',
+        'slug' => 'Slug',
         'title' => 'Titlu',
         'type' => 'Tip',
         'updated_at' => 'Actualizat la',
@@ -46,7 +51,9 @@ return [
 
     'navigation' => [
         'admin' => 'Administrare',
+        'election_data' => 'Date alegeri',
         'elections' => 'Alegeri',
+        'nomenclature' => 'Nomenclatoare',
         'turnout' => 'Prezența la vot',
         'results' => 'Rezultate vot',
     ],
@@ -68,10 +75,36 @@ return [
         'referendum' => 'Referendum',
     ],
 
+    'country' => [
+        'label' => [
+            'singular' => 'țară',
+            'plural' => 'țări',
+        ],
+    ],
+
+    'county' => [
+        'label' => [
+            'singular' => 'județ',
+            'plural' => 'județe',
+        ],
+    ],
+
+    'locality' => [
+        'label' => [
+            'singular' => 'localitate',
+            'plural' => 'localități',
+        ],
+    ],
+
     'candidate' => [
         'label' => [
             'singular' => 'candidat',
             'plural' => 'candidați',
+        ],
+
+        'action' => [
+            'show' => 'Afișează toți candidații',
+            'hide' => 'Ascunde candidații',
         ],
     ],
 
@@ -82,10 +115,10 @@ return [
         ],
     ],
 
-    'result' => [
+    'record' => [
         'label' => [
-            'singular' => 'rezultat',
-            'plural' => 'rezultate',
+            'singular' => 'proces verbal',
+            'plural' => 'procese verbale',
         ],
     ],
 
@@ -110,6 +143,13 @@ return [
             'admin' => 'Administrator',
             'contributor' => 'Contribuitor',
             'viewer' => 'Vizitator',
+        ],
+    ],
+
+    'page' => [
+        'label' => [
+            'singular' => 'pagină',
+            'plural' => 'pagini',
         ],
     ],
 
@@ -143,4 +183,29 @@ return [
     ],
 
     'others' => 'Alții',
+
+    'vote_monitor_stats' => [
+        'observers' => 'Observatori logați în aplicație',
+        'counties' => 'Județe acoperite',
+        'polling_stations' => 'Secții de votare acoperite',
+        'messages' => 'Mesaje trimise de către observatori',
+        'problems' => 'Probleme sesizate',
+    ],
+
+    'article' => [
+        'singular' => 'Articol',
+        'plural' => 'Articole',
+        'title' => 'Titlu',
+        'author' => 'Autor',
+        'election' => 'Rună electorală',
+        'published_at' => 'Publicat la',
+        'content' => 'Conținut',
+        'embeds' => 'Embeduri',
+    ],
+
+    'newsfeed' => [
+        'title' => 'Live newsfeed',
+        'description' => 'Aici vezi ultimele știri și informații relevante acestei alegeri, culese din surse de încredere de către echipa Code for Romania.',
+        'more' => 'Vezi mai mult',
+    ],
 ];

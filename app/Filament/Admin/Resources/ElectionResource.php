@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\DefaultElectionPage;
 use App\Enums\ElectionType;
 use App\Filament\Admin\Resources\ElectionResource\Pages;
 use App\Filament\Admin\Resources\ElectionResource\RelationManagers\ScheduledJobRelationManager;
 use App\Models\Election;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -68,6 +71,11 @@ class ElectionResource extends Resource
                             ->enum(ElectionType::class)
                             ->required(),
 
+                        DatePicker::make('date')
+                            ->label(__('app.field.date'))
+                            ->default(today())
+                            ->required(),
+
                         TextInput::make('title')
                             ->label(__('app.field.title'))
                             ->required(),
@@ -76,21 +84,39 @@ class ElectionResource extends Resource
                             ->label(__('app.field.subtitle'))
                             ->nullable(),
 
-                        /*
-                         * @see https://dev.mysql.com/doc/refman/8.4/en/year.html Documentation for the YEAR data type
-                         */
-                        TextInput::make('year')
-                            ->label(__('app.field.year'))
-                            ->minValue(1901)
-                            ->maxValue(2155)
-                            ->numeric()
-                            ->default(today()->year)
-                            ->required(),
+                        TextInput::make('slug')
+                            ->label(__('app.field.slug'))
+                            ->unique(ignoreRecord: true)
+                            ->required()
+                            ->columnSpanFull(),
 
                         Toggle::make('is_live')
                             ->label(__('app.field.is_live'))
                             ->default(false),
 
+                        Toggle::make('is_visible')
+                            ->label(__('app.field.is_visible'))
+                            ->default(false),
+
+                        Toggle::make('has_lists')
+                            ->label(__('app.field.has_lists'))
+                            ->default(false),
+
+                        Select::make('properties.default_tab')
+                            ->label(__('app.field.default_tab'))
+                            ->options(DefaultElectionPage::options())
+                            ->enum(DefaultElectionPage::class)
+                            ->selectablePlaceholder(false)
+                            ->nullable(),
+
+                        KeyValue::make('properties.tabs')
+                            ->label(__('app.field.tabs'))
+                            ->columnSpanFull()
+                            ->nullable(),
+
+                        Toggle::make('properties.show_threshold')
+                            ->label(__('app.field.show_threshold'))
+                            ->default(false),
                     ]),
             ]);
     }
@@ -104,17 +130,28 @@ class ElectionResource extends Resource
                     ->columnSpan(2)
                     ->columns(2)
                     ->schema([
+                        TextEntry::make('type')
+                            ->label(__('app.field.type')),
+
                         TextEntry::make('title')
                             ->label(__('app.field.title')),
 
                         TextEntry::make('subtitle')
                             ->label(__('app.field.subtitle')),
 
-                        TextEntry::make('year')
-                            ->label(__('app.field.year')),
+                        TextEntry::make('slug')
+                            ->label(__('app.field.slug')),
+
+                        TextEntry::make('date')
+                            ->label(__('app.field.date'))
+                            ->date(),
 
                         IconEntry::make('is_live')
                             ->label(__('app.field.is_live'))
+                            ->boolean(),
+
+                        IconEntry::make('is_visible')
+                            ->label(__('app.field.is_visible'))
                             ->boolean(),
                     ]),
 
@@ -152,13 +189,18 @@ class ElectionResource extends Resource
                     ->sortable()
                     ->description(fn (Election $record) => $record->subtitle),
 
-                TextColumn::make('year')
-                    ->label(__('app.field.year'))
+                TextColumn::make('date')
+                    ->label(__('app.field.date'))
                     ->sortable(),
 
                 IconColumn::make('is_live')
                     ->label(__('app.field.is_live'))
                     ->boolean(),
+
+                IconColumn::make('is_visible')
+                    ->label(__('app.field.is_visible'))
+                    ->boolean(),
+
             ])
             ->filters([
                 SelectFilter::make('type')

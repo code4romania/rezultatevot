@@ -43,7 +43,7 @@ CK,Insulele Cook,
 CL,Chile,Republica Chile
 CM,Camerun,
 CN,China,Republica Populară Chineză
-CO,Columbia,R.Columbia
+CO,Columbia,R.Columbia,Republica Columbia
 CR,Costa Rica,
 CU,Cuba,
 CV,Republica Capului Verde,
@@ -79,7 +79,7 @@ GL,Groenlanda,
 GM,Gambia,
 GN,Guinea,
 GQ,Guineea Ecuatorială,
-GR,Grecia,
+GR,Grecia,Republica Elenă
 GS,Georgia de Sud și Insulele Sandwich de Sud,
 GT,Guatemala,
 GU,Guam,
@@ -95,7 +95,7 @@ ID,Indonezia,Republica Indonezia
 IE,Irlanda,
 IL,Israel,
 IM,Insula Man,
-IN,India,
+IN,India,Republica India
 IO,Teritoriul Britanic din Oceanul Indian,
 IQ,Irak,
 IR,Iran,Republica Islamică Iran
@@ -127,14 +127,14 @@ LT,Lituania,
 LU,Luxemburg,
 LV,Letonia,
 LY,Libia,
-MA,Maroc,
+MA,Maroc,Regatul Maroc
 MC,Monaco,Principatul Monaco
 MD,Moldova,Republica Moldova
 ME,Muntenegru,
 MF,Saint Martin,
 MG,Madagascar,
 MH,Insulele Marshall,
-MK,Macedonia de Nord,
+MK,Macedonia de Nord,Republica Macedonia de Nord
 ML,Mali,
 MM,Myanmar,
 MN,Mongolia,
@@ -153,9 +153,9 @@ NA,Namibia,
 NC,Noua Caledonie,
 NE,Niger,
 NF,Insula Norfolk,
-NG,Nigeria,
+NG,Nigeria,Republica Federală Nigeria
 NI,Nicaragua,
-NL,Olanda,
+NL,Olanda,Regatul Țărilor de Jos
 NO,Norvegia,
 NP,Nepal,
 NR,Nauru,
@@ -163,7 +163,7 @@ NU,Niue,
 NZ,Noua Zeelandă,
 OM,Oman,Sultanatul Oman
 PA,Panama,
-PE,Peru,
+PE,Peru,Republica Peru
 PF,Polinezia Franceză,
 PG,Papua Noua Guinee,
 PH,Filipine,
@@ -178,7 +178,7 @@ PW,Palau,
 PY,Paraguay,
 QA,Qatar,
 RO,România,
-RS,Serbia,
+RS,Serbia,Republica Serbia
 RU,Rusia,Federația Rusă
 RW,Rwanda,
 SA,Arabia Saudită,Regatul Arabiei Saudite
@@ -186,7 +186,7 @@ SB,Insulele Solomon,
 SC,Seychelles,
 SD,Sudan,
 SE,Suedia,
-SG,Singapore,
+SG,Singapore,Republica Singapore
 SH,Insula Sfânta Elena,
 SI,Slovenia,
 SK,Slovacia,Republica Slovacă
@@ -199,17 +199,17 @@ SS,Sudanul de Sud,
 ST,Sao Tome și Príncipe,
 SV,El Salvador,
 SX,Sint Maarten,
-SY,Siria,
+SY,Siria,Republica Arabă Siriană
 SZ,Eswatini,
 TC,Insulele Turks și Caicos,
 TD,Chad,
 TF,Teritoriile australe și antarctice franceze,
 TG,Togo,
-TH,Thailanda,
+TH,Thailanda,Regatul Thailandei
 TJ,Tadjikistan,
 TL,Timorul de Est,
 TM,Turkmenistan,
-TN,Tunisia,
+TN,Tunisia,Republica Tunisiană
 TO,Tonga,
 TR,Turcia,
 TT,Trinidad și Tobago,
@@ -219,7 +219,7 @@ TZ,Tanzania,
 UA,Ucraina,
 UG,Uganda,
 US,Statele Unite ale Americii,
-UY,Uruguay,
+UY,Uruguay,Republica Orientală a Uruguayului
 UZ,Uzbekistan,
 VA,Vatican,
 VC,Saint Vincent și Grenadinele,
@@ -232,6 +232,7 @@ WF,Wallis și Futuna,
 WS,Samoa,
 XK,Kosovo,
 YE,Yemen,
+YU,Iugoslavia,
 ZA,Africa de Sud,
 ZM,Zambia,
 ZW,Zimbabwe,

@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
-use App\Filament\Admin\Pages\Auth\Login;
 use App\Filament\Admin\Resources\ElectionResource;
+use App\Filament\Admin\Resources\MenuResource;
+use App\Filament\Contributor\Pages\Auth\Login;
 use App\Models\Election;
+use App\Models\Page;
+use Datlechin\FilamentMenuBuilder\FilamentMenuBuilderPlugin;
+use Datlechin\FilamentMenuBuilder\MenuPanel\ModelMenuPanel;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Http\Middleware\Authenticate;
@@ -18,6 +22,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Table;
 use Filament\Widgets;
@@ -51,10 +56,27 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->maxContentWidth('full')
             ->tenant(Election::class)
+            ->brandLogo(fn () => view('filament.brand'))
+            ->brandLogoHeight('3rem')
+            ->colors([
+                'primary' => Color::Red,
+            ])
             ->plugins([
                 BreezyCore::make()
                     ->myProfile(slug: 'profile')
                     ->enableTwoFactorAuthentication(),
+
+                FilamentMenuBuilderPlugin::make()
+                    ->usingResource(MenuResource::class)
+                    ->addLocations([
+                        'header' => 'Header',
+                        'footer' => 'Footer',
+                    ])
+                    ->addMenuPanels([
+                        ModelMenuPanel::make()
+                            ->model(Page::class),
+
+                    ]),
             ])
             ->viteTheme('resources/css/filament/common/theme.css')
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
@@ -84,8 +106,10 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->navigationItems([
                 NavigationItem::make('Settings')
+                    ->url(fn () => ElectionResource::getUrl('view', ['record' => Filament::getTenant()]))
+                    ->group(__('app.navigation.admin'))
                     ->icon('heroicon-o-cog')
-                    ->url(fn () => ElectionResource::getUrl('view', ['record' => Filament::getTenant()])),
+                    ->sort(35),
             ])
             ->collapsibleNavigationGroups(false)
             ->databaseNotifications();

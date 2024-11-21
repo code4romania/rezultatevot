@@ -47,6 +47,8 @@ return new class extends Migration
 
             $table->string('section');
 
+            $table->tinyInteger('part')->unsigned();
+
             $table->integer('eligible_voters_total')
                 ->unsigned()
                 ->storedAs(<<<'SQL'
@@ -94,6 +96,8 @@ return new class extends Migration
                 ->nullable();
 
             $table->string('section');
+
+            $table->tinyInteger('part')->unsigned();
 
             $table->mediumInteger('eligible_voters_permanent')->unsigned();
             $table->mediumInteger('eligible_voters_special')->unsigned();

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\User\Role;
 use App\Models\Election;
+use App\Models\Page;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,20 +23,31 @@ class DatabaseSeeder extends Seeder
             ->admin()
             ->create();
 
+        User::factory(['email' => 'contributor@example.com'])
+            ->contributor()
+            ->create();
+
         User::factory()
             ->count(10)
             ->create();
 
         Election::factory()
+            ->withArticles()
+            ->withContributor()
             ->count(10)
             ->create();
 
         Election::factory()
             ->live()
-            ->withLocalTurnout()
-            ->withAbroadTurnout()
-            ->withNationalRecords()
-            ->withDiasporaRecords()
+            ->withArticles()
+            // ->withLocalTurnout()
+            // ->withAbroadTurnout()
+            // ->withNationalRecords()
+            // ->withDiasporaRecords()
+            ->create();
+
+        Page::factory()
+            ->count(10)
             ->create();
 
         Artisan::call('scout:rebuild');

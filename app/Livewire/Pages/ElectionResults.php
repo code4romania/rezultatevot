@@ -6,19 +6,20 @@ namespace App\Livewire\Pages;
 
 use App\Models\Candidate;
 use App\Models\Party;
+use App\Models\Record;
 use App\Models\Vote;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\On;
 use stdClass;
 use Tpetry\QueryExpressions\Function\Aggregate\Max;
+use Tpetry\QueryExpressions\Function\Aggregate\Min;
 use Tpetry\QueryExpressions\Function\Aggregate\Sum;
 use Tpetry\QueryExpressions\Language\Alias;
 
-#[On('map:update')]
 class ElectionResults extends ElectionPage
 {
     protected string $fallbackColor = '#DDD';
@@ -34,6 +35,9 @@ class ElectionResults extends ElectionPage
     {
         return Party::query()
             ->whereBelongsTo($this->election)
+            ->whereHas('votes', function (Builder $query) {
+                $query->whereBelongsTo($this->election);
+            })
             ->with('media')
             ->get();
     }
@@ -43,6 +47,9 @@ class ElectionResults extends ElectionPage
     {
         return Candidate::query()
             ->whereBelongsTo($this->election)
+            ->whereHas('votes', function (Builder $query) {
+                $query->whereBelongsTo($this->election);
+            })
             ->with('media')
             ->get();
     }
@@ -59,17 +66,42 @@ class ElectionResults extends ElectionPage
                 locality: $this->locality,
                 aggregate: true,
             )
-            ->withVotable()
             ->get();
 
         $total = $result->sum('votes');
 
-        return $result
-            ->map(fn (Vote $vote) => [
-                'name' => $vote->votable->acronym ?? $vote->votable->name,
-                'votes' => Number::format(ensureNumeric($vote->votes)),
+        return $result->map(function (Vote $vote) use ($total) {
+            $votable = $this->getVotable($vote->votable_type, $vote->votable_id);
+
+            return [
+                'name' => $votable->acronym ?? $votable->name,
+                'image' => $votable->getFirstMediaUrl(),
+                'votes' => ensureNumeric($vote->votes),
                 'percent' => percent($vote->votes, $total),
-                'color' => hex2rgb($vote->votable->color ?? $this->fallbackColor),
+                'color' => hex2rgb($votable->color ?? $this->fallbackColor),
+            ];
+        });
+    }
+
+    #[Computed]
+    public function recordStats(): Collection
+    {
+        $record = Record::query()
+            ->whereBelongsTo($this->election)
+            ->forLevel(
+                level: $this->level,
+                country: $this->country,
+                county: $this->county,
+                locality: $this->locality,
+                aggregate: true,
+            )
+            ->toBase()
+            ->first();
+
+        return collect($record)
+            ->forget('place')
+            ->mapWithKeys(fn ($value, $key) => [
+                __("app.field.$key") => Number::format(ensureNumeric($value)),
             ]);
     }
 
@@ -82,6 +114,7 @@ class ElectionResults extends ElectionPage
                 new Alias(DB::raw('ANY_VALUE(votable_type)'), 'votable_type'),
                 new Alias(new Max('votes'), 'votes'),
                 new Alias(new Sum('votes'), 'total_votes'),
+                new Alias(new Min('part'), 'part'),
                 'place',
             ])
             ->groupBy('place')
@@ -99,19 +132,31 @@ class ElectionResults extends ElectionPage
             )
             ->get()
             ->mapWithKeys(function (stdClass $vote) {
-                $votable = match ($vote->votable_type) {
-                    (new Party)->getMorphClass() => $this->parties->find($vote->votable_id),
-                    (new Candidate)->getMorphClass() => $this->candidates->find($vote->votable_id),
-                };
+                $votable = $this->getVotable($vote->votable_type, $vote->votable_id);
 
                 return [
                     $vote->place => [
-                        'value' => Number::format(ensureNumeric($vote->votes)),
-                        'percent' => percent($vote->votes, $vote->total_votes, formatted: true),
+                        'value' => percent($vote->votes, $vote->total_votes, formatted: true),
                         'color' => $votable->color,
                         'label' => $votable->getDisplayName(),
                     ],
                 ];
             });
+    }
+
+    protected function getVotable(string $type, int $id): Party|Candidate
+    {
+        return match ($type) {
+            (new Party)->getMorphClass() => $this->parties->find($id),
+            (new Candidate)->getMorphClass() => $this->candidates->find($id),
+        };
+    }
+
+    public function getEmbedUrl(): ?string
+    {
+        return route('front.elections.embed.results', [
+            'election' => $this->election,
+            ...$this->getQueryParameters(),
+        ]);
     }
 }

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Tpetry\QueryExpressions\Function\Aggregate\Min;
 use Tpetry\QueryExpressions\Function\Aggregate\Sum;
 use Tpetry\QueryExpressions\Language\Alias;
 
@@ -70,6 +71,7 @@ class Vote extends Model implements TemporaryTable
                 'votable_type',
                 'votable_id',
                 new Alias(new Sum('votes'), 'votes'),
+                new Alias(new Min('part'), 'part'),
             ])
             ->groupBy('votable_type', 'votable_id')
             ->forDataLevel($level, $country, $county, $locality, $aggregate)

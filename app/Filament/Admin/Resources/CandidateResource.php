@@ -21,7 +21,24 @@ class CandidateResource extends Resource
 {
     protected static ?string $model = Candidate::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
+
+    protected static ?int $navigationSort = 21;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation.nomenclature');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('app.candidate.label.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('app.candidate.label.plural');
+    }
 
     public static function form(Form $form): Form
     {
@@ -33,10 +50,12 @@ class CandidateResource extends Resource
                     ->maxLength(255),
 
                 ColorPicker::make('color')
-                    ->label(__('app.field.color')),
+                    ->label(__('app.field.color'))
+                    ->required(),
 
                 Select::make('party_id')
-                    ->relationship('party', 'name'),
+                    ->relationship('party', 'name')
+                    ->label(__('app.field.party')),
             ]);
     }
 

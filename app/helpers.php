@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Number;
+
 if (! function_exists('ensureNumeric')) {
     function ensureNumeric(int|float|string $value): int|float
     {
@@ -34,7 +36,7 @@ if (! function_exists('percent')) {
         $percent = (float) number_format(min(100, max(0, $value / $max * 100)), $precision);
 
         if ($formatted) {
-            $percent = sprintf('%s%%', $percent);
+            $percent = Number::percentage($percent, $precision);
         }
 
         return $percent;

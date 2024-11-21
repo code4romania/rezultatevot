@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Jobs\Europarl240609\Records;
 
-use App\Actions\CheckRecordHasIssues;
-use App\Actions\GenerateMappedVotablesList;
-use App\Enums\Part;
 use App\Exceptions\MissingSourceFileException;
 use App\Models\County;
 use App\Models\Record;
 use App\Models\ScheduledJob;
 use App\Models\Vote;
+use App\Services\RecordService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -49,7 +47,7 @@ class ImportCountyRecordsJob implements ShouldQueue
         $this->county = $county;
     }
 
-    public function handle(CheckRecordHasIssues $checker, GenerateMappedVotablesList $generator): void
+    public function handle(): void
     {
         $disk = $this->scheduledJob->disk();
         $path = $this->scheduledJob->getSourcePath("{$this->county->code}.csv");
@@ -70,14 +68,17 @@ class ImportCountyRecordsJob implements ShouldQueue
 
         $records = collect();
 
-        $votables = $generator->votables($reader->getHeader());
+        $votables = RecordService::generateVotables($reader->getHeader());
 
         foreach ($reader->getRecords() as $row) {
+            $part = RecordService::getPart($row['report_stage_code']);
+
             $records->push([
                 'election_id' => $this->scheduledJob->election_id,
                 'county_id' => $this->county->id,
                 'locality_id' => $row['uat_siruta'],
                 'section' => $row['precinct_nr'],
+                'part' => $part,
 
                 'eligible_voters_permanent' => $row['a1'],
                 'eligible_voters_special' => $row['a2'],
@@ -91,7 +92,7 @@ class ImportCountyRecordsJob implements ShouldQueue
                 'votes_valid' => $row['e'],
                 'votes_null' => $row['f'],
 
-                'has_issues' => $checker->checkRecord($row),
+                'has_issues' => RecordService::checkRecord($row),
             ]);
 
             $votes = collect();
@@ -102,11 +103,7 @@ class ImportCountyRecordsJob implements ShouldQueue
                     'county_id' => $this->county->id,
                     'locality_id' => $row['uat_siruta'],
                     'section' => $row['precinct_nr'],
-                    'part' => match ($row['report_stage_code']) {
-                        'FINAL' => Part::FINAL,
-                        'PART' => Part::PART,
-                        'PROV' => Part::PROV,
-                    },
+                    'part' => $part,
 
                     'votable_type' => $votable['votable_type'],
                     'votable_id' => $votable['votable_id'],

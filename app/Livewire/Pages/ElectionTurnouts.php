@@ -37,7 +37,7 @@ class ElectionTurnouts extends ElectionPage
             ->toBase()
             ->first();
 
-        if (blank($result)) {
+        if (blank($result) || blank($result->total)) {
             return null;
         }
 
@@ -63,38 +63,95 @@ class ElectionTurnouts extends ElectionPage
             ->mapWithKeys(function (stdClass $turnout) {
                 if ($this->level->is(DataLevel::DIASPORA)) {
                     $value = Number::format(ensureNumeric($turnout->total));
-                    $color = '#FFD700';
+                    $class = 'fill-purple-900';
                 } else {
                     $value = percent($turnout->total, $turnout->initial_total, formatted: true);
-                    $color = $this->getColor($turnout->total, $turnout->initial_total);
+                    $class = $this->getFill($turnout->total, $turnout->initial_total);
                 }
 
                 return [
                     $turnout->place => [
                         'value' => $value,
-                        'color' => $color,
+                        'class' => $class,
                     ],
                 ];
             });
     }
 
-    protected function getColor(int|float|string $value, int|float|string $max): string
+    protected function getFill(int|float|string $value, int|float|string $max): string
     {
-        $colors = ['#A50026', '#DA372A', '#F67B4A', '#FDBF6F', '#FEEEA2', '#EAF6A2', '#B7E075', '#74C365', '#229C52', '#006837'];
         $percent = percent($value, $max);
 
         return match (true) {
-            $percent > 90 => $colors[9],
-            $percent > 80 => $colors[8],
-            $percent > 70 => $colors[7],
-            $percent > 60 => $colors[6],
-            $percent > 50 => $colors[5],
-            $percent > 40 => $colors[4],
-            $percent > 30 => $colors[3],
-            $percent > 20 => $colors[2],
-            $percent > 10 => $colors[1],
-            $percent > 0 => $colors[0],
-            default => '#DDD',
+            $percent >= 90 => 'fill-purple-950',
+            $percent >= 80 => 'fill-purple-900',
+            $percent >= 70 => 'fill-purple-800',
+            $percent >= 60 => 'fill-purple-700',
+            $percent >= 50 => 'fill-purple-600',
+            $percent >= 40 => 'fill-purple-500',
+            $percent >= 30 => 'fill-purple-400',
+            $percent >= 20 => 'fill-purple-300',
+            $percent >= 10 => 'fill-purple-200',
+            $percent > 0 => 'fill-purple-100',
+            default => 'fill-gray-400',
         };
+    }
+
+    public function getLegend(): ?array
+    {
+        if ($this->level->is(DataLevel::DIASPORA)) {
+            return null;
+        }
+
+        return [
+            [
+                'label' => '0–9%',
+                'color' => 'bg-purple-100',
+            ],
+            [
+                'label' => '10–19%',
+                'color' => 'bg-purple-200',
+            ],
+            [
+                'label' => '20–29%',
+                'color' => 'bg-purple-300',
+            ],
+            [
+                'label' => '30–39%',
+                'color' => 'bg-purple-400',
+            ],
+            [
+                'label' => '40–49%',
+                'color' => 'bg-purple-500',
+            ],
+            [
+                'label' => '50–59%',
+                'color' => 'bg-purple-600',
+            ],
+            [
+                'label' => '60–69%',
+                'color' => 'bg-purple-700',
+            ],
+            [
+                'label' => '70–79%',
+                'color' => 'bg-purple-800',
+            ],
+            [
+                'label' => '80–89%',
+                'color' => 'bg-purple-900',
+            ],
+            [
+                'label' => '90%+',
+                'color' => 'bg-purple-950',
+            ],
+        ];
+    }
+
+    public function getEmbedUrl(): string
+    {
+        return route('front.elections.embed.turnout', [
+            'election' => $this->election,
+            ...$this->getQueryParameters(),
+        ]);
     }
 }

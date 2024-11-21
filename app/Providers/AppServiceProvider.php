@@ -6,6 +6,8 @@ namespace App\Providers;
 
 use App\Models\ScheduledJob;
 use Dedoc\Scramble\Scramble;
+use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -45,6 +47,9 @@ class AppServiceProvider extends ServiceProvider
 
         Number::useLocale($this->app->getLocale());
 
+        CreateRecord::disableCreateAnother();
+        CreateAction::configureUsing(fn (CreateAction $action) => $action->createAnother(false));
+
         $this->enforceMorphMap();
 
         $this->resolveSchedule();
@@ -66,11 +71,13 @@ class AppServiceProvider extends ServiceProvider
     protected function enforceMorphMap(): void
     {
         Relation::enforceMorphMap([
+            'article' => \App\Models\Article::class,
             'candidate' => \App\Models\Candidate::class,
             'country' => \App\Models\Country::class,
             'county' => \App\Models\County::class,
             'election' => \App\Models\Election::class,
             'locality' => \App\Models\Locality::class,
+            'page' => \App\Models\Page::class,
             'party' => \App\Models\Party::class,
             'record' => \App\Models\Record::class,
             'turnout' => \App\Models\Turnout::class,

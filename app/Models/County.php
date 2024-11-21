@@ -20,6 +20,7 @@ class County extends Model
         'id',
         'code',
         'name',
+        'old_id',
     ];
 
     protected static function booted(): void
@@ -33,6 +34,11 @@ class County extends Model
     public function localities(): HasMany
     {
         return $this->hasMany(Locality::class);
+    }
+
+    public function records(): HasManyThrough
+    {
+        return $this->hasManyThrough(Record::class, Locality::class);
     }
 
     public function turnouts(): HasManyThrough

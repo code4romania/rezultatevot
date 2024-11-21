@@ -10,6 +10,7 @@ use Database\Factories\CandidateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
@@ -26,6 +27,7 @@ class Candidate extends Model implements HasMedia, HasDisplayName
 
     protected $fillable = [
         'name',
+        'display_name',
         'color',
         'election_id',
         'party_id',
@@ -63,8 +65,13 @@ class Candidate extends Model implements HasMedia, HasDisplayName
         return $this->belongsTo(Party::class);
     }
 
+    public function votes(): MorphMany
+    {
+        return $this->morphMany(Vote::class, 'votable');
+    }
+
     public function getDisplayName(): string
     {
-        return $this->name;
+        return $this->display_name ?? $this->name;
     }
 }

@@ -4,29 +4,20 @@ declare(strict_types=1);
 
 namespace App\View\Components;
 
-use Closure;
+use Datlechin\FilamentMenuBuilder\Models\MenuItem;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Route;
 use Illuminate\View\Component;
 
 class NavigationItem extends Component
 {
-    public string $route;
+    public MenuItem $item;
 
-    public string $label;
-
-    public function __construct(string $route, string $label)
+    public function __construct(MenuItem $item)
     {
-        $this->route = $route;
-        $this->label = $label;
+        $this->item = $item;
     }
 
-    public function isCurrent(): bool
-    {
-        return Route::currentRouteName() === $this->route;
-    }
-
-    public function render(): View|Closure|string
+    public function render(): View
     {
         return view('components.navigation-item');
     }

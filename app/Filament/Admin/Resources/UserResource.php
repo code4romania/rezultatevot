@@ -13,6 +13,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Infolists;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -74,8 +75,15 @@ class UserResource extends Resource
                                 ->label(__('app.field.role'))
                                 ->options(Role::options())
                                 ->enum(Role::class)
-                                ->reactive()
+                                ->live()
                                 ->required(),
+
+                            Select::make('election_id')
+                                ->label(__('app.election.label.plural'))
+                                ->relationship('elections', 'slug')
+                                ->hidden(fn (Get $get) => Role::from($get('role')) !== Role::CONTRIBUTOR)
+                                ->multiple()
+                                ->preload(),
                         ]),
                 ])->from('md'),
             ]);
@@ -102,6 +110,12 @@ class UserResource extends Resource
 
                             TextEntry::make('role')
                                 ->label(__('app.field.role')),
+
+                            TextEntry::make('elections.slug')
+                                ->label(__('app.election.label.plural')),
+
+                            TextEntry::make('articles.title')
+                                ->label(__('app.article.plural')),
                         ]),
                 ]),
             ]);
@@ -126,9 +140,19 @@ class UserResource extends Resource
 
                 TextColumn::make('role')
                     ->label(__('app.field.role')),
+
+                TextColumn::make('elections.slug')
+                    ->limitList(1)
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('app.election.label.plural')),
+
+                TextColumn::make('articles_count')
+                    ->label(__('app.article.plural'))
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()

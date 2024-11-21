@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('display_name')->nullable();
             $table->string('color')->nullable();
 
             $table->foreignIdFor(Election::class)
@@ -28,7 +29,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->unique(['name', 'election_id']);
+            $table->unique(['name', 'election_id', 'party_id']);
         });
     }
 };

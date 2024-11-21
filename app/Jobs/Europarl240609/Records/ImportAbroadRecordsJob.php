@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Jobs\Europarl240609\Records;
 
-use App\Actions\CheckRecordHasIssues;
-use App\Actions\GenerateMappedVotablesList;
-use App\Enums\Part;
 use App\Events\CountryCodeNotFound;
 use App\Exceptions\CountryCodeNotFoundException;
 use App\Exceptions\MissingSourceFileException;
@@ -14,6 +11,7 @@ use App\Models\Country;
 use App\Models\Record;
 use App\Models\ScheduledJob;
 use App\Models\Vote;
+use App\Services\RecordService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -47,7 +45,7 @@ class ImportAbroadRecordsJob implements ShouldQueue
         $this->scheduledJob = $scheduledJob;
     }
 
-    public function handle(CheckRecordHasIssues $checker, GenerateMappedVotablesList $generator): void
+    public function handle(): void
     {
         $disk = $this->scheduledJob->disk();
         $path = $this->scheduledJob->getSourcePath('sr.csv');
@@ -68,16 +66,19 @@ class ImportAbroadRecordsJob implements ShouldQueue
 
         $records = collect();
 
-        $votables = $generator->votables($reader->getHeader());
+        $votables = RecordService::generateVotables($reader->getHeader());
 
         foreach ($reader->getRecords() as $row) {
             try {
                 $countryId = $this->getCountryId($row['uat_name']);
 
+                $part = RecordService::getPart($row['report_stage_code']);
+
                 $records->push([
                     'election_id' => $this->scheduledJob->election_id,
                     'country_id' => $countryId,
                     'section' => $row['precinct_nr'],
+                    'part' => $part,
 
                     'eligible_voters_permanent' => $row['a1'],
                     'eligible_voters_special' => $row['a2'],
@@ -91,7 +92,7 @@ class ImportAbroadRecordsJob implements ShouldQueue
                     'votes_valid' => $row['e'],
                     'votes_null' => $row['f'],
 
-                    'has_issues' => $checker->checkRecord($row),
+                    'has_issues' => RecordService::checkRecord($row),
                 ]);
 
                 $votes = collect();
@@ -100,11 +101,7 @@ class ImportAbroadRecordsJob implements ShouldQueue
                         'election_id' => $this->scheduledJob->election_id,
                         'country_id' => $countryId,
                         'section' => $row['precinct_nr'],
-                        'part' => match ($row['report_stage_code']) {
-                            'FINAL' => Part::FINAL,
-                            'PART' => Part::PART,
-                            'PROV' => Part::PROV,
-                        },
+                        'part' => $part,
 
                         'votable_type' => $votable['votable_type'],
                         'votable_id' => $votable['votable_id'],

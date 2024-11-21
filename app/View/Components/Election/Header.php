@@ -6,33 +6,23 @@ namespace App\View\Components\Election;
 
 use App\Models\Election;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Route;
 use Illuminate\View\Component;
 
 class Header extends Component
 {
     public Election $election;
 
-    public Collection $items;
+    public string $page;
 
-    public function __construct(Election $election)
+    public function __construct(Election $election, string $page)
     {
         $this->election = $election;
 
-        $this->items = collect([
-            'front.elections.turnout' => __('app.navigation.turnout'),
-            'front.elections.results' => __('app.navigation.results'),
-        ]);
+        $this->page = $page;
     }
 
     public function render(): View
     {
         return view('components.election.header');
-    }
-
-    public function isCurrent(string $route): bool
-    {
-        return Route::currentRouteName() === $route;
     }
 }

@@ -17,9 +17,26 @@ class CountyResource extends Resource
 {
     protected static ?string $model = County::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-map';
 
     protected static bool $isScopedToTenant = false;
+
+    protected static ?int $navigationSort = 28;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation.nomenclature');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('app.county.label.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('app.county.label.plural');
+    }
 
     public static function form(Form $form): Form
     {
@@ -52,7 +69,6 @@ class CountyResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ]);
     }
 

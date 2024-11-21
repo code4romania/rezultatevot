@@ -8,6 +8,8 @@ use App\Filament\Admin\Resources\PartyResource\Pages;
 use App\Filament\Imports\SimpleCandidateImporter;
 use App\Models\Party;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -21,7 +23,14 @@ class PartyResource extends Resource
 {
     protected static ?string $model = Party::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    protected static ?int $navigationSort = 20;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation.nomenclature');
+    }
 
     public static function getModelLabel(): string
     {
@@ -37,7 +46,19 @@ class PartyResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('name')
+                    ->label(__('app.field.name'))
+                    ->required()
+                    ->maxLength(255),
+
+                TextInput::make('acronym')
+                    ->label(__('app.field.acronym'))
+                    ->required()
+                    ->maxLength(255),
+
+                ColorPicker::make('color')
+                    ->label(__('app.field.color'))
+                    ->required(),
             ]);
     }
 
