@@ -21,6 +21,7 @@ return [
         'initial_complement' => 'Înscriși pe listele complementare',
         'initial_permanent' => 'Înscriși pe listele permanente',
         'is_live' => 'Live',
+        'is_visible' => 'Vizibil',
         'locality' => 'Localitate',
         'location' => 'Locație',
         'name' => 'Nume',
