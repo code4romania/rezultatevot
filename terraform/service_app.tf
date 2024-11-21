@@ -10,6 +10,9 @@ module "ecs_app" {
   min_capacity = 3
   max_capacity = 9
 
+  deployment_minimum_healthy_percent = 33
+  deployment_maximum_percent         = 166
+
   image_repo = local.image.repo
   image_tag  = local.image.tag
 
