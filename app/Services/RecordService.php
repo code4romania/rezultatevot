@@ -71,21 +71,23 @@ class RecordService
         return Str::afterLast($name, config('import.independent_candidate_prefix'));
     }
 
-    public static function generateVotables(array $header): Collection
+    public static function generateVotables(array $header, int $electionId): Collection
     {
         return Cache::tags(['votables'])->remember(
             hash('xxh128', implode(',', $header)),
             Time::MINUTE_IN_SECONDS,
             fn () => collect($header)
                 ->filter(fn (string $column) => Str::endsWith($column, config('import.candidate_votes_suffix')))
-                ->mapWithKeys(function (string $column) {
+                ->mapWithKeys(function (string $column) use ($electionId) {
                     $name = Str::before($column, config('import.candidate_votes_suffix'));
 
                     $votable = Party::query()
                         ->where('name', $name)
+                        ->where('election_id', $electionId)
                         ->firstOr(
                             fn () => Candidate::query()
                                 ->where('name', $name)
+                                ->where('election_id', $electionId)
                                 ->first()
                         );
 

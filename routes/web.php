@@ -18,6 +18,7 @@ Route::as('front.')->group(function () {
     Route::get('/embed/prezenta/{election:slug}', Embeds\ElectionTurnoutsEmbed::class)->name('elections.embed.turnout');
     Route::get('/embed/rezultate/{election:slug}', Embeds\ElectionResultsEmbed::class)->name('elections.embed.results');
     Route::get('/embed/observatori/{election:slug}', Embeds\VoteMonitorStatsEmbed::class)->name('elections.embed.stats');
+    Route::get('/embed/candidati/{election:slug}', Embeds\CandidatesEmbed::class)->name('elections.embed.candidates');
 
     Route::get('/embed/articol/{article}', Embeds\ArticleEmbed::class)->name('articles.embed');
 

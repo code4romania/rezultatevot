@@ -36,6 +36,8 @@
             :election="$election"
             show-embed />
 
+        <x-candidates.turnouts-table :items="$this->candidates" />
+
         <livewire:news-feed :election="$election" />
     </section>
 </div>

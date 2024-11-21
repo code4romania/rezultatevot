@@ -1,11 +1,16 @@
 <section>
     @if ($this->count)
         <div class="flex justify-between gap-6 mb-6">
-            <h1 class="text-3xl font-bold">Observarea independentă a alegerilor</h1>
+            <div>
+                <h1 class="text-3xl font-bold">Observarea independentă a alegerilor</h1>
+                @if (!$showEmbed)
+                    <h2 class="font-medium text-gray-900 sm:text-lg">
+                        {{ $election->type->getLabel() }} {{ $election->year }}
+                    </h2>
+                @endif
+            </div>
 
-            @if ($showEmbed)
-                <livewire:embed-button :url="route('front.elections.embed.stats', $election)" />
-            @endif
+            <livewire:embed-button :url="route('front.elections.embed.stats', $election)" />
         </div>
 
         <div class="prose prose-lg prose-purple">

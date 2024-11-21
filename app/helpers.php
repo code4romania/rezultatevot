@@ -24,8 +24,12 @@ if (! function_exists('ensureNumeric')) {
 }
 
 if (! function_exists('percent')) {
-    function percent(int|float|string $value, int|float|string $max, int $precision = 2, bool $formatted = false): float|string|null
+    function percent(int|float|string|null $value, int|float|string|null $max, int $precision = 2, bool $formatted = false): float|string|null
     {
+        if (is_null($value) || is_null($max)) {
+            return null;
+        }
+
         $value = ensureNumeric($value);
         $max = ensureNumeric($max);
 

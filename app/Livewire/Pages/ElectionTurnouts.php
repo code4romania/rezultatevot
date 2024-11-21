@@ -6,6 +6,7 @@ namespace App\Livewire\Pages;
 
 use App\DataTransferObjects\ProgressData;
 use App\Enums\DataLevel;
+use App\Models\Candidate;
 use App\Models\Turnout;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Number;
@@ -20,6 +21,19 @@ class ElectionTurnouts extends ElectionPage
     public function render(): View
     {
         return view('livewire.pages.election-turnouts');
+    }
+
+    #[Computed]
+    public function candidates(): Collection
+    {
+        return $this->election->candidates()
+            ->with('party.media')
+            ->get()
+            ->map(fn (Candidate $candidate) => [
+                'name' => $candidate->name,
+                'image' => $candidate->getFirstMediaUrl(),
+                'party' => $candidate->party?->name,
+            ]);
     }
 
     #[Computed]
@@ -78,7 +92,7 @@ class ElectionTurnouts extends ElectionPage
             });
     }
 
-    protected function getFill(int|float|string $value, int|float|string $max): string
+    protected function getFill(int|float|string|null $value, int|float|string|null $max): string
     {
         $percent = percent($value, $max);
 

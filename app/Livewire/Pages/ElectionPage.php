@@ -29,8 +29,8 @@ abstract class ElectionPage extends Component implements HasForms
 
     public Election $election;
 
-    #[Url(as: 'nivel', history: true, except: DataLevel::NATIONAL)]
-    public DataLevel $level = DataLevel::NATIONAL;
+    #[Url(as: 'nivel', history: true, except: DataLevel::TOTAL)]
+    public DataLevel $level = DataLevel::TOTAL;
 
     #[Url(as: 'tara', history: true)]
     public ?string $country = null;

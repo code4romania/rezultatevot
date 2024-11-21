@@ -66,7 +66,10 @@ class ImportAbroadRecordsJob implements ShouldQueue
 
         $records = collect();
 
-        $votables = RecordService::generateVotables($reader->getHeader());
+        $votables = RecordService::generateVotables(
+            $reader->getHeader(),
+            $this->scheduledJob->election_id
+        );
 
         foreach ($reader->getRecords() as $row) {
             try {

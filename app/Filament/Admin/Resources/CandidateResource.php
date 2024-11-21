@@ -50,8 +50,7 @@ class CandidateResource extends Resource
                     ->maxLength(255),
 
                 ColorPicker::make('color')
-                    ->label(__('app.field.color'))
-                    ->required(),
+                    ->label(__('app.field.color')),
 
                 Select::make('party_id')
                     ->relationship('party', 'name')

@@ -68,7 +68,10 @@ class ImportCountyRecordsJob implements ShouldQueue
 
         $records = collect();
 
-        $votables = RecordService::generateVotables($reader->getHeader());
+        $votables = RecordService::generateVotables(
+            $reader->getHeader(),
+            $this->scheduledJob->election_id
+        );
 
         foreach ($reader->getRecords() as $row) {
             $part = RecordService::getPart($row['report_stage_code']);
