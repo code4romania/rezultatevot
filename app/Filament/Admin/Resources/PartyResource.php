@@ -9,6 +9,7 @@ use App\Filament\Imports\SimpleCandidateImporter;
 use App\Models\Party;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -59,6 +60,10 @@ class PartyResource extends Resource
                 ColorPicker::make('color')
                     ->label(__('app.field.color'))
                     ->required(),
+
+                SpatieMediaLibraryFileUpload::make('logo')
+                    ->label(__('app.field.logo'))
+                    ->columnSpanFull(),
             ]);
     }
 

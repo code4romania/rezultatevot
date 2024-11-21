@@ -8,6 +8,7 @@ use App\Filament\Admin\Resources\CandidateResource\Pages;
 use App\Models\Candidate;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -55,6 +56,10 @@ class CandidateResource extends Resource
                 Select::make('party_id')
                     ->relationship('party', 'name')
                     ->label(__('app.field.party')),
+
+                SpatieMediaLibraryFileUpload::make('image')
+                    ->label(__('app.field.logo'))
+                    ->columnSpanFull(),
             ]);
     }
 
