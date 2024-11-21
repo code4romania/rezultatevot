@@ -1,4 +1,4 @@
-@props(['id' => config('services.google_analytics_id')])
+@props(['id' => config('services.google_analytics_tracking_id')])
 
 @if ($id)
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ $id }}"></script>
