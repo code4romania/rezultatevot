@@ -32,14 +32,21 @@ class Article extends Model implements HasMedia
         'election_id',
         'content',
         'slug',
+        'embeds'
+    ];
+
+    protected $casts = [
+        'embeds' => 'array',
     ];
 
     protected static function booted(): void
     {
         static::creating(function (self $model) {
             $model->slug = Str::slug($model->title);
+            if (Article::where('slug', $model->slug)->exists()) {
+                $model->slug .= '-' . Str::random(5);
+            }
             if (blank($model->election_id)) {
-                dd($model);
                 $model->election_id = Filament::getTenant()->id;
             }
             if (blank($model->author_id)) {

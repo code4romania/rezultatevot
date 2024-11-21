@@ -13,7 +13,6 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -79,6 +78,18 @@ class ArticleResource extends Resource
                             ->multiple()
                             ->reorderable()
                             ->previewable(false),
+                    ]),
+
+                Section::make()
+                    ->schema([
+                        Repeater::make('embeds')
+                            ->label(__('app.article.embeds'))
+                            ->defaultItems(0)
+                            ->schema([
+                                TextInput::make('html')
+                                    ->label(__('app.article.html'))
+                                    ->required(),
+                            ]),
                     ]),
 
             ]);

@@ -81,6 +81,18 @@ class ArticleResource extends Resource
                             ->reorderable()
                             ->previewable(false),
                     ]),
+
+                Section::make()
+                    ->schema([
+                        Repeater::make('embeds')
+                            ->label(__('app.article.embeds'))
+                            ->defaultItems(0)
+                            ->schema([
+                                TextInput::make('html')
+                                    ->label(__('app.article.html'))
+                                    ->required(),
+                            ]),
+                    ]),
             ]);
     }
 
@@ -112,8 +124,14 @@ class ArticleResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('election')
-                    ->relationship('election', 'name')
+                    ->relationship('election', 'slug')
                     ->label(__('app.article.election'))
+                    ->options(
+                        fn () => Election::query()
+                            ->where('is_live', true)
+                            ->whereHas('contributors', fn ($query) => $query->where('id', auth()->id()))
+                            ->pluck('slug', 'id')
+                    )
                     ->multiple()
                     ->preload(),
             ])
