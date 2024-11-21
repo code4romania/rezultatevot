@@ -6,6 +6,7 @@ namespace App\Console\Commands\Import;
 
 use App\Enums\ElectionType;
 use App\Models\Election;
+use Carbon\Carbon;
 use stdClass;
 
 class ImportElectionsCommand extends Command
@@ -45,16 +46,27 @@ class ImportElectionsCommand extends Command
         );
 
         $query->each(function (stdClass $row) {
+            $type = match ($row->BallotType) {
+                0 => ElectionType::REFERENDUM,
+                1 => ElectionType::PRESIDENTIAL,
+                2,3 => ElectionType::PARLIAMENTARY,
+                7 => ElectionType::EURO,
+                default => ElectionType::LOCAL,
+            };
+
+            $date = Carbon::parse($row->Date);
+
+            $slug = match ($type) {
+                ElectionType::PRESIDENTIAL => "prezidentiale-{$row->Name}-{$date->year}",
+                ElectionType::EURO => "europarlamentare {$date->year}",
+                default => "{$row->Name}-{$date->year}",
+            };
+
             Election::create([
                 'title' => $row->Name,
-                'type' => match ($row->BallotType) {
-                    0 => ElectionType::REFERENDUM,
-                    1 => ElectionType::PRESIDENTIAL,
-                    2,3 => ElectionType::PARLIAMENTARY,
-                    7 => ElectionType::EURO,
-                    default => ElectionType::LOCAL,
-                },
-                'date' => $row->Date,
+                'slug' => $slug,
+                'type' => $type,
+                'date' => $date->toDateString(),
                 'is_live' => false,
                 'has_lists' => match ($row->BallotType) {
                     // Referendum = 0,

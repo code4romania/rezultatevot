@@ -8,6 +8,7 @@ use App\Models\Candidate;
 use App\Models\Party;
 use App\Models\Record;
 use App\Models\Vote;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
@@ -34,6 +35,9 @@ class ElectionResults extends ElectionPage
     {
         return Party::query()
             ->whereBelongsTo($this->election)
+            ->whereHas('votes', function (Builder $query) {
+                $query->whereBelongsTo($this->election);
+            })
             ->with('media')
             ->get();
     }
@@ -43,6 +47,9 @@ class ElectionResults extends ElectionPage
     {
         return Candidate::query()
             ->whereBelongsTo($this->election)
+            ->whereHas('votes', function (Builder $query) {
+                $query->whereBelongsTo($this->election);
+            })
             ->with('media')
             ->get();
     }

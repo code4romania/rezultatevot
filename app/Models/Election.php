@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
 
 class Election extends Model implements HasName, HasAvatar
 {
@@ -55,10 +54,6 @@ class Election extends Model implements HasName, HasAvatar
             return $query
                 ->orderByDesc('year')
                 ->orderByDesc('is_live');
-        });
-
-        static::creating(function (self $model) {
-            $model->slug = Str::slug("{$model->title}-{$model->date->year}");
         });
     }
 

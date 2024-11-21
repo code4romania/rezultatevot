@@ -39,7 +39,7 @@ trait HasSlug
 
         $this->slug = Str::slug($this->slug);
 
-        if (! $this->slug || $this->slugAlreadyUsed($this->slug)) {
+        if (blank($this->slug) || $this->slugAlreadyUsed($this->slug)) {
             $this->slug = $this->generateSlug();
         }
     }
