@@ -20,7 +20,7 @@ module "ecs_app" {
   lb_listener_arn         = aws_lb_listener.http.arn
   lb_hosts                = ["www.${var.domain_name}"]
   lb_health_check_enabled = true
-  lb_path                 = "/"
+  lb_path                 = "/up"
 
   container_memory_soft_limit = 1536
   container_memory_hard_limit = 2048
