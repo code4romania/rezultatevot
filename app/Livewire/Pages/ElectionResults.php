@@ -100,6 +100,7 @@ class ElectionResults extends ElectionPage
 
         return collect($record)
             ->forget('place')
+            ->filter(fn (mixed $value) => $value !== null)
             ->mapWithKeys(fn ($value, $key) => [
                 __("app.field.$key") => Number::format(ensureNumeric($value)),
             ]);
