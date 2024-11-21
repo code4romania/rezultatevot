@@ -14,6 +14,8 @@ use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
@@ -110,7 +112,17 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
 
     public function getTenants(Panel $panel): Collection
     {
-        return Election::all();
+        if ($this->isAdmin())
+        {
+            return Election::all();
+        }
+        return $this->elections;
+
+    }
+
+    public function elections(): BelongsToMany
+    {
+        return $this->belongsToMany(Election::class);
     }
 
     public function canAccessTenant(Model $tenant): bool
