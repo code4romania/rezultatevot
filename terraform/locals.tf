@@ -4,7 +4,11 @@ locals {
     repo = "code4romania/rezultatevot",
     tag  = "0.1.1"
   }
-  #   availability_zone = data.aws_availability_zones.current.names[0]
+
+  domains = [
+    var.domain_name,
+    "www.${var.domain_name}",
+  ]
 
   networking = {
     cidr_block = "10.0.0.0/16"

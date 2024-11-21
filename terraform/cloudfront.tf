@@ -3,9 +3,7 @@ resource "aws_cloudfront_distribution" "main" {
   enabled         = true
   is_ipv6_enabled = true
   http_version    = "http2and3"
-  aliases = [
-    var.domain_name
-  ]
+  aliases         = local.domains
 
   origin {
     domain_name = aws_lb.main.dns_name
