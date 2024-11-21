@@ -5,7 +5,7 @@ module "ecs_app" {
     module.ecs_cluster
   ]
 
-  name         = local.namespace
+  name         = "${local.namespace}-app"
   cluster_name = module.ecs_cluster.cluster_name
   min_capacity = 4
   max_capacity = 8

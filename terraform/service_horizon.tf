@@ -5,7 +5,7 @@ module "ecs_horizon" {
     module.ecs_cluster
   ]
 
-  name         = local.namespace
+  name         = "${local.namespace}-horizon"
   cluster_name = module.ecs_cluster.cluster_name
   min_capacity = 1
   max_capacity = 1
