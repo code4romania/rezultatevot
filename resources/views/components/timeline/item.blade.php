@@ -3,13 +3,19 @@
     'label' => null,
     'isActive' => false,
     'isLive' => false,
+    'election' => null,
 ])
+
+@php
+    $url = $election->is_visible ? $url : "https://istoric.rezultatevot.ro/elections/{$election->old_id}/results";
+@endphp
 
 <li>
     <a
         href="{{ $url }}"
-        class="flex gap-1"
-        wire:navigate>
+        @if ($election->is_visible) wire:navigate
+        @else target="_blank" rel="noopener noreferrer" @endif
+        class="flex gap-1">
         <span @class(['font-semibold' => $isActive])>{{ $label }}</span>
 
         @if ($isLive)
