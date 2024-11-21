@@ -13,6 +13,8 @@ module "ecs_horizon" {
   image_repo = local.image.repo
   image_tag  = local.image.tag
 
+  command = ["php", "/var/www/artisan", "horizon", "--no-interaction"]
+
   use_load_balancer = false
 
   container_memory_soft_limit = 3072
