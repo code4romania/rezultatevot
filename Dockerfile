@@ -17,7 +17,7 @@ RUN set -ex; \
     --no-dev \
     --prefer-dist
 
-FROM node:20-alpine AS assets
+FROM node:22-alpine AS assets
 
 WORKDIR /build
 
@@ -45,23 +45,5 @@ RUN set -ex; \
 
 COPY docker/s6-rc.d /etc/s6-overlay/s6-rc.d
 COPY --from=assets --chown=www-data:www-data /build/public/build /var/www/public/build
-
-# Enable the worker
-ENV WORKER_ENABLED=false
-
-# The number of jobs to process before stopping
-ENV WORKER_MAX_JOBS=50
-
-# Number of seconds to sleep when no job is available
-ENV WORKER_SLEEP=30
-
-# Number of seconds to rest between jobs
-ENV WORKER_REST=1
-
-# The number of seconds a child process can run
-ENV WORKER_TIMEOUT=600
-
-# Number of times to attempt a job before logging it failed
-ENV WORKER_TRIES=3
 
 EXPOSE 80
