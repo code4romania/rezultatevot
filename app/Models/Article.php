@@ -34,13 +34,6 @@ class Article extends Model implements HasMedia
         'slug',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'embeds' => 'array',
-        ];
-    }
-
     protected static function booted(): void
     {
         static::creating(function (self $model) {

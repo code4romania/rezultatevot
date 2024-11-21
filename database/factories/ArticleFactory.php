@@ -27,10 +27,6 @@ class ArticleFactory extends Factory
             'author_id' => User::factory([
                 'role' => Role::CONTRIBUTOR,
             ]),
-            'embeds' => $this->faker->boolean() ? [
-                '<embed src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />',
-            ] : null,
-
         ];
     }
 }
