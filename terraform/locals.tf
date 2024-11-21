@@ -2,7 +2,7 @@ locals {
   namespace = "rezultatevot-v2-${var.env}"
   image = {
     repo = "code4romaina/rezultatevot",
-    tag  = "0.1.0"
+    tag  = "0.1.1"
   }
   #   availability_zone = data.aws_availability_zones.current.names[0]
 
