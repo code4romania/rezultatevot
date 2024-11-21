@@ -64,12 +64,12 @@ class Article extends Model implements HasMedia
         $this->addMediaCollection('default')
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
-                    ->fit(Fit::Contain, 64, 64)
+                    ->fit(Fit::Crop, 64, 64)
                     ->keepOriginalImageFormat()
                     ->optimize();
 
                 $this->addMediaConversion('large')
-                    ->fit(Fit::Contain, 256, 256)
+                    ->fit(Fit::Crop, 256, 256)
                     ->keepOriginalImageFormat()
                     ->optimize();
             });

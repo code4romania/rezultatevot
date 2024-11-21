@@ -36,12 +36,27 @@
         @if ($article->media)
             <div class="flex flex-wrap gap-4">
                 @foreach ($article->media as $media)
-                    <a href="{{ $media->getUrl() }}"
+                    <a
+                        href="{{ $media->getUrl() }}"
+                        @class([
+                            'flex gap-2 ',
+                            $media->type === 'image'
+                                ? 'shadow-sm hover:shadow-lg'
+                                : 'p-2 text-sm border rounded-md drop-shadow-sm bg-gray-50 hover:bg-purple-100 max-w-48',
+                        ])
+                        title="{{ $media->file_name }}"
                         target="_blank"
-                        class="shadow-sm hover:shadow-lg focus">
-                        <img src="{{ $media->getUrl('thumb') }}"
-                            alt="{{ $media->name }}"
-                            class="aspect-square" />
+                        rel="noopener noreferer">
+
+                        @if ($media->type === 'image')
+                            <img src="{{ $media->getUrl('large') }}"
+                                alt="{{ $media->name }}"
+                                class="aspect-square size-48" />
+                        @else
+                            <x-ri-download-2-fill class="text-gray-500 size-5 shrink-0" />
+
+                            <span class="truncate">{{ $media->file_name }}</span>
+                        @endif
                     </a>
                 @endforeach
             </div>
