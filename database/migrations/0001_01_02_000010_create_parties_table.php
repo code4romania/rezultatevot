@@ -24,7 +24,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['name', 'election_id']);
-            $table->unique(['color', 'election_id']);
             $table->unique(['acronym', 'election_id']);
         });
     }

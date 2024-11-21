@@ -41,7 +41,12 @@ class ImportCommand extends Command
         $this->call(ImportOldIdsCommand::class, [
             '--force' => $this->option('force'),
         ]);
+
         $this->call(ImportTurnoutsCommand::class, [
+            '--force' => $this->option('force'),
+        ]);
+
+        $this->call(ImportPartiesCandidatesCommand::class, [
             '--force' => $this->option('force'),
         ]);
 

@@ -55,10 +55,15 @@ class ImportOldIdsCommand extends Command
         );
 
         $query->each(function (stdClass $row) {
-            $country = Country::search($row->Name)->first();
+            $name = match ($row->Name) {
+                'Geneva' => 'Elveția',
+                default => $row->Name,
+            };
+
+            $country = Country::search($name)->first();
 
             if (blank($country)) {
-                logger()->error("Country not found: {$row->Name}");
+                logger()->error("Country not found: {$name}");
 
                 return;
             }
@@ -110,7 +115,7 @@ class ImportOldIdsCommand extends Command
     {
         $query = $this->db
             ->table('localities')
-            ->orderBy('localities.Siruta');
+            ->orderBy('localities.LocalityId');
 
         $this->createProgressBar(
             'Importing locality IDs...',
@@ -120,12 +125,6 @@ class ImportOldIdsCommand extends Command
         $counties = County::pluck('id', 'old_id');
 
         $query->each(function (stdClass $row) use ($counties) {
-            // $siruta = match ($row->Siruta) {
-            //     116921 => 61069, // Băneasa, Constanța
-            //     713, 21469 => 9280, // Fântânele, Arad
-            //     default => $row->Siruta
-            // };
-
             if ($row->Siruta === 0) {
                 $locality = $this->searchLocalities($row->Name, $counties->get($row->CountyId));
             } else {
@@ -134,10 +133,10 @@ class ImportOldIdsCommand extends Command
                     ->firstOr(fn () => $this->searchLocalities($row->Name, $counties->get($row->CountyId)));
             }
 
-            logger()->info("{$row->LocalityId} | {$row->Name} | Siruta: {$row->Siruta} => " . $locality?->name ?? 'NULL');
+            // logger()->info("{$row->LocalityId} | {$row->Name} | Siruta: {$row->Siruta} => " . $locality?->name ?? 'NULL');
 
             if (blank($locality)) {
-                logger()->error("Locality not found: {$row->Name}");
+                logger()->error("Locality not found: {$row->LocalityId} | {$row->Name} | Siruta: {$row->Siruta}");
 
                 return;
             }
@@ -157,8 +156,17 @@ class ImportOldIdsCommand extends Command
 
     protected function searchLocalities(string $name, int $county_id): ?Locality
     {
+        $name = match (true) {
+            $county_id === 118 && $name === 'Pescari' => 'Coronini',
+            $county_id === 136 && $name === 'Basarabi' => 'Murfatlar',
+            $county_id === 207 && $name === 'Unirea' => 'General Berthelot',
+            default => $name,
+        };
+
         return Locality::search($name)
             ->where('county_id', $county_id)
+            ->get()
+            ->sortBy('parent_id')
             ->first();
     }
 }

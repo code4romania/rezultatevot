@@ -82,6 +82,7 @@ class Locality extends Model
             'name' => $this->name,
             'county' => $this->county->name,
             'county_id' => (string) $this->county_id,
+            'parent_id' => (string) $this->parent_id ?: null,
         ];
     }
 
@@ -105,6 +106,11 @@ class Locality extends Model
                     [
                         'name' => 'county_id',
                         'type' => 'string',
+                    ],
+                    [
+                        'name' => 'parent_id',
+                        'type' => 'string',
+                        'optional' => true,
                     ],
                 ],
             ],

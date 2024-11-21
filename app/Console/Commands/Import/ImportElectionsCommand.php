@@ -56,6 +56,21 @@ class ImportElectionsCommand extends Command
                 },
                 'date' => $row->Date,
                 'is_live' => false,
+                'has_lists' => match ($row->BallotType) {
+                    // Referendum = 0,
+                    // President = 1,
+                    // Senate = 2,
+                    // House = 3,
+                    // LocalCouncil = 4,
+                    // CountyCouncil = 5,
+                    // Mayor = 6,
+                    // EuropeanParliament = 7,
+                    // CountyCouncilPresident = 8,
+                    // CapitalCityMayor = 9,
+                    // CapitalCityCouncil = 10,
+                    0, 1, 6, 8, 9 => false,
+                    2, 3, 4, 5, 7, 10 => true,
+                },
                 'old_id' => $row->BallotId,
             ]);
         }, (int) $this->option('chunk'));
