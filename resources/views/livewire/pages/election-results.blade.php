@@ -14,6 +14,12 @@
             :embed-url="$this->getEmbedUrl()"
             :level="$level" />
 
+        @if ($this->recordStats->isEmpty())
+            <x-alert>
+                Aici vor fi afișate rezultatele alegerilor pe măsură ce ele sunt publicate.
+            </x-alert>
+        @endif
+
         @if (filled($this->aggregate))
             <x-stacked-bar
                 :show-threshold="data_get($election, 'properties.show_threshold', false)"
@@ -28,7 +34,9 @@
             :level="$level"
             :data="$this->data->toArray()" />
 
-        <x-stats.records :stats="$this->recordStats" />
+        @if ($this->recordStats->isNotEmpty())
+            <x-stats.records :stats="$this->recordStats" />
+        @endif
 
         @if (filled($this->aggregate))
             <x-candidates.results-table :items="$this->aggregate" />
