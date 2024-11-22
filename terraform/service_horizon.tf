@@ -110,22 +110,6 @@ module "ecs_horizon" {
       name  = "SCOUT_DRIVER",
       value = "typesense"
     },
-    {
-      name  = "TYPESENSE_HOST",
-      value = "rezultatevot-v2-production-typesense.ecs.svc"
-    },
-    {
-      name  = "TYPESENSE_PORT",
-      value = 8108
-    },
-    {
-      name  = "TYPESENSE_PROTOCOL",
-      value = "http"
-    },
-    {
-      name  = "TYPESENSE_API_KEY",
-      value = "xyz"
-    },
   ]
 
   secrets = [
@@ -156,6 +140,18 @@ module "ecs_horizon" {
     {
       name      = "DB_PASSWORD"
       valueFrom = "${aws_secretsmanager_secret.rds.arn}:password::"
+    },
+    {
+      name      = "TYPESENSE_HOST"
+      valueFrom = "${aws_secretsmanager_secret.typesense.arn}:host::"
+    },
+    {
+      name      = "TYPESENSE_PORT"
+      valueFrom = "${aws_secretsmanager_secret.typesense.arn}:port::"
+    },
+    {
+      name      = "TYPESENSE_API_KEY"
+      valueFrom = "${aws_secretsmanager_secret.typesense.arn}:key::"
     },
     {
       name      = "SENTRY_DSN"
