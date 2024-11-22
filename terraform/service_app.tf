@@ -201,7 +201,8 @@ resource "aws_s3_bucket_cors_configuration" "s3_public" {
   bucket = module.s3_public.bucket
 
   cors_rule {
-    allowed_methods = ["GET"]
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "PUT", "POST"]
     allowed_origins = ["https://www.${var.domain_name}"]
     expose_headers  = ["ETag"]
     max_age_seconds = 86400
