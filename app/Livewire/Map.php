@@ -20,6 +20,8 @@ class Map extends Component
 
     public ?array $legend = null;
 
+    public bool $embed = false;
+
     #[Computed]
     public function file(): string
     {

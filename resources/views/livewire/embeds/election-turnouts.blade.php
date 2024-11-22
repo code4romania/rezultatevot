@@ -18,5 +18,7 @@
         :country="$country"
         :county="$county"
         :level="$level"
-        :data="$this->data->toArray()" />
+        :data="$this->data->toArray()"
+        embed />
+
 </div>
