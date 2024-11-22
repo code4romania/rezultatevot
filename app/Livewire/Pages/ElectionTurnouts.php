@@ -86,6 +86,41 @@ class ElectionTurnouts extends ElectionPage
     }
 
     #[Computed]
+    public function demographics(): Collection
+    {
+        $result = Turnout::query()
+            ->whereBelongsTo($this->election)
+            ->groupByDemographics(
+                level: $this->level,
+                country: $this->country,
+                county: $this->county,
+                locality: $this->locality,
+                aggregate: true,
+            )
+            ->toBase()
+            ->first();
+
+        $demographics = collect();
+
+        collect($result)
+            ->each(function ($value, string $key) use ($demographics) {
+                $segments = explode('_', $key);
+
+                if (\count($segments) !== 2) {
+                    return;
+                }
+
+                if ($segments[1] == 65) {
+                    $segments[1] .= '+';
+                }
+
+                $demographics->put("{$segments[0]}.{$segments[1]}", (int) $value);
+            });
+
+        return $demographics->undot();
+    }
+
+    #[Computed]
     public function data(): Collection
     {
         return Turnout::query()

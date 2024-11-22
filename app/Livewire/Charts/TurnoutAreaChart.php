@@ -12,6 +12,8 @@ class TurnoutAreaChart extends ChartWidget
 {
     public Collection $areas;
 
+    protected static ?string $maxHeight = '300px';
+
     public function getHeading(): string
     {
         return 'Distribuție după mediu';
@@ -38,7 +40,11 @@ class TurnoutAreaChart extends ChartWidget
         }
 
         foreach ($this->areas as $item) {
-            $labels[] = $item['area']->getLabel() . ' (' . percent($item['value'], $total, formatted: true) . ')';
+            $labels[] = \sprintf(
+                '%s (%s)',
+                $item['area']->getLabel(),
+                percent($item['value'], $total, formatted: true)
+            );
             $backgroundColor[] = "rgb({$item['area']->getColor()})";
             $data[] = $item['value'];
         }

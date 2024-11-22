@@ -1,3 +1,4 @@
+@use('App\Livewire\Charts')
 @use('Filament\Support\Colors\Color')
 
 <div class="grid gap-8">
@@ -27,11 +28,6 @@
             @endif
         @endif
 
-        <div class="grid items-stretch gap-8 sm:grid-cols-2">
-            <livewire:charts.turnout-area-chart :key="$this->mapKey()" :areas="$this->areas" />
-
-        </div>
-
         <livewire:map
             :key="$this->mapKey()"
             :country="$country"
@@ -39,6 +35,16 @@
             :level="$level"
             :data="$this->data->toArray()"
             :legend="$this->getLegend()" />
+
+        <div class="grid items-stretch gap-8 xl:grid-cols-3">
+            <livewire:charts.turnout-area-chart
+                :key="$this->mapKey()"
+                :areas="$this->areas" />
+
+            <livewire:charts.turnout-population-pyramid-chart
+                :key="$this->mapKey()"
+                :demographics="$this->demographics" />
+        </div>
 
         <livewire:vote-monitor-stats
             :election="$election"

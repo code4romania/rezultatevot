@@ -128,6 +128,24 @@ class Turnout extends Model implements TemporaryTable
             ->groupBy('area');
     }
 
+    public function scopeGroupByDemographics(Builder $query, DataLevel $level, ?string $country = null, ?int $county = null, ?int $locality = null, bool $aggregate = false): Builder
+    {
+        return $query
+            ->select([
+                new Alias(new Sum('men_18-24'), 'men_18-24'),
+                new Alias(new Sum('men_25-34'), 'men_25-34'),
+                new Alias(new Sum('men_35-44'), 'men_35-44'),
+                new Alias(new Sum('men_45-64'), 'men_45-64'),
+                new Alias(new Sum('men_65'), 'men_65'),
+                new Alias(new Sum('women_18-24'), 'women_18-24'),
+                new Alias(new Sum('women_25-34'), 'women_25-34'),
+                new Alias(new Sum('women_35-44'), 'women_35-44'),
+                new Alias(new Sum('women_45-64'), 'women_45-64'),
+                new Alias(new Sum('women_65'), 'women_65'),
+            ])
+            ->forDataLevel($level, $country, $county, $locality, $aggregate);
+    }
+
     public static function segments(): Collection
     {
         return collect(['men', 'women'])
