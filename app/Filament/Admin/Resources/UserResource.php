@@ -81,7 +81,7 @@ class UserResource extends Resource
                             Select::make('election_id')
                                 ->label(__('app.election.label.plural'))
                                 ->relationship('elections', 'slug')
-                                ->hidden(fn (Get $get) => Role::from($get('role')) !== Role::CONTRIBUTOR)
+                                ->hidden(fn (Get $get) => filled($get('role')) ? Role::from($get('role')) !== Role::CONTRIBUTOR : true)
                                 ->multiple()
                                 ->preload(),
                         ]),
