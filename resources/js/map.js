@@ -32,7 +32,7 @@ export default () => ({
             zoomControl: this.isWorldMap,
             dragging: this.isWorldMap,
             touchZoom: this.isWorldMap,
-            scrollWheelZoom: this.isWorldMap,
+            scrollWheelZoom: false,
             doubleClickZoom: this.isWorldMap,
             zoomSnap: this.isWorldMap ? 1.0 : 0.1,
             minZoom: 3,

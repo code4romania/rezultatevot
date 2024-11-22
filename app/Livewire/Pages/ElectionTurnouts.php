@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Pages;
 
 use App\DataTransferObjects\ProgressData;
+use App\Enums\Area;
 use App\Enums\DataLevel;
 use App\Models\Candidate;
 use App\Models\Turnout;
@@ -59,6 +60,64 @@ class ElectionTurnouts extends ElectionPage
             value: $result->total,
             max: $result->initial_total,
         );
+    }
+
+    #[Computed]
+    public function areas(): Collection
+    {
+        $result = Turnout::query()
+            ->whereBelongsTo($this->election)
+            ->groupByLevelAndArea(
+                level: $this->level,
+                country: $this->country,
+                county: $this->county,
+                locality: $this->locality,
+                aggregate: true,
+            )
+            ->toBase()
+            ->get()
+            ->pluck('total', 'area');
+
+        return collect(Area::cases())
+            ->map(fn (Area $area) => [
+                'area' => $area,
+                'value' => (int) $result->get($area->value, 0),
+            ]);
+    }
+
+    #[Computed]
+    public function demographics(): Collection
+    {
+        $result = Turnout::query()
+            ->whereBelongsTo($this->election)
+            ->groupByDemographics(
+                level: $this->level,
+                country: $this->country,
+                county: $this->county,
+                locality: $this->locality,
+                aggregate: true,
+            )
+            ->toBase()
+            ->first();
+
+        $demographics = collect();
+
+        collect($result)
+            ->each(function ($value, string $key) use ($demographics) {
+                $segments = explode('_', $key);
+
+                if (\count($segments) !== 2) {
+                    return;
+                }
+
+                if ($segments[1] == 65) {
+                    $segments[1] .= '+';
+                }
+
+                $demographics->put("{$segments[0]}.{$segments[1]}", (int) $value);
+            });
+
+        return $demographics->undot();
     }
 
     #[Computed]
