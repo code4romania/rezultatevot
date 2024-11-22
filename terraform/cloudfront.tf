@@ -22,6 +22,7 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
+  # API
   ordered_cache_behavior {
     path_pattern             = "/api/*"
     allowed_methods          = ["GET", "HEAD", "OPTIONS"]
@@ -31,6 +32,26 @@ resource "aws_cloudfront_distribution" "main" {
     origin_request_policy_id = aws_cloudfront_origin_request_policy.default.id
     viewer_protocol_policy   = "redirect-to-https"
     compress                 = true
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.www_redirect.arn
+    }
+  }
+
+  # Media
+  ordered_cache_behavior {
+    path_pattern     = "/media/*"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id = module.s3_public.id
+
+    cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6" #Managed-CachingOptimized
+    origin_request_policy_id   = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf" #Managed-CORS-S3Origin
+    response_headers_policy_id = "eaab4381-ed33-4a86-88ca-d9558dc6cd63" #Managed-CORS-with-preflight-and-SecurityHeadersPolicy
+
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
 
     function_association {
       event_type   = "viewer-request"
