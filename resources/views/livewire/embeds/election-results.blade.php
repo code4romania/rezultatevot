@@ -13,7 +13,8 @@
         :country="$country"
         :county="$county"
         :level="$level"
-        :data="$this->data->toArray()" />
+        :data="$this->data->toArray()"
+        embed />
 
     @if (filled($this->aggregate))
         <x-candidates.results-table :items="$this->aggregate" />

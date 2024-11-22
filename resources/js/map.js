@@ -16,7 +16,7 @@ const hasValue = (value) => {
         return false;
     }
 
-    return value !== '' && value != 0 && value !== null;
+    return value !== '' && value !== null;
 };
 
 export default () => ({
@@ -110,6 +110,10 @@ export default () => ({
                         this.layer.resetStyle(target);
                     },
                     click: ({ target }) => {
+                        if (this.$wire.embed) {
+                            return;
+                        }
+
                         if (this.$wire.level === 'D') {
                             this.$dispatch('map:click', { country: target.feature.properties.id });
                         }
