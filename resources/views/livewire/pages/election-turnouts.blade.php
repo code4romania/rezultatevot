@@ -27,6 +27,11 @@
             @endif
         @endif
 
+        <div class="grid items-stretch gap-8 sm:grid-cols-2">
+            <livewire:charts.turnout-area-chart :key="$this->mapKey()" :areas="$this->areas" />
+
+        </div>
+
         <livewire:map
             :key="$this->mapKey()"
             :country="$country"

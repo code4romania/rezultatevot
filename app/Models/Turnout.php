@@ -117,6 +117,17 @@ class Turnout extends Model implements TemporaryTable
             ->forDataLevel($level, $country, $county, $locality, $aggregate);
     }
 
+    public function scopeGroupByLevelAndArea(Builder $query, DataLevel $level, ?string $country = null, ?int $county = null, ?int $locality = null, bool $aggregate = false): Builder
+    {
+        return $query
+            ->select([
+                new Alias(new Sum('total'), 'total'),
+                'area',
+            ])
+            ->forDataLevel($level, $country, $county, $locality, $aggregate)
+            ->groupBy('area');
+    }
+
     public static function segments(): Collection
     {
         return collect(['men', 'women'])
