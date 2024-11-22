@@ -1,6 +1,7 @@
 export default () => ({
     id: `rezultatevot-embed-${Math.floor(Date.now()).toString(36)}`,
     url: null,
+    isSuccesful: false,
 
     init() {
         this.url = this.$wire.url;
@@ -13,5 +14,11 @@ export default () => ({
             `<script>iframeResize({license:'GPLv3'},'#${this.id}');</script>`;
 
         this.$clipboard(code);
+
+        this.isSuccesful = true;
+
+        setTimeout(() => {
+            this.isSuccesful = false;
+        }, 5000);
     },
 });
