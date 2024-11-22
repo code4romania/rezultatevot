@@ -7,6 +7,7 @@ namespace App\Providers;
 use App\Models\ScheduledJob;
 use Dedoc\Scramble\Scramble;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
@@ -38,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
         tap($this->getAppVersion(), function (string $version) {
             Config::set('scramble.info.version', $version);
             Config::set('sentry.release', $version);
+        });
+
+        SpatieMediaLibraryFileUpload::configureUsing(function (SpatieMediaLibraryFileUpload $fileUpload) {
+            $fileUpload->disk(config('filament.default_filesystem_disk'));
         });
     }
 
