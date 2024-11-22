@@ -46,7 +46,7 @@ module "ecs_typesense" {
   environment = [
     {
       name  = "TYPESENSE_DATA_DIR"
-      value = "/tmp/ts"
+      value = "/tmp"
     },
     {
       name  = "TYPESENSE_API_KEY"
