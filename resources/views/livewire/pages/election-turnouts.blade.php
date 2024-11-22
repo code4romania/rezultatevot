@@ -29,7 +29,7 @@
         @endif
 
         <livewire:map
-            :key="$this->mapKey()"
+            :key="$this->mapKey() . '-map'"
             :country="$country"
             :county="$county"
             :level="$level"
@@ -38,11 +38,15 @@
 
         <div class="grid items-stretch gap-8 xl:grid-cols-3">
             <livewire:charts.turnout-area-chart
-                :key="$this->mapKey()"
+                :key="$this->mapKey() . '-area'"
+                :parameters="$this->getQueryParameters()"
+                :election="$election"
                 :areas="$this->areas" />
 
             <livewire:charts.turnout-population-pyramid-chart
-                :key="$this->mapKey()"
+                :key="$this->mapKey() . '-population'"
+                :parameters="$this->getQueryParameters()"
+                :election="$election"
                 :demographics="$this->demographics" />
         </div>
 

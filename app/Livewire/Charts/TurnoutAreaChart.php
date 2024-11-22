@@ -4,19 +4,32 @@ declare(strict_types=1);
 
 namespace App\Livewire\Charts;
 
+use App\Models\Election;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 
 class TurnoutAreaChart extends ChartWidget
 {
+    public Election $election;
+
     public Collection $areas;
+
+    public array $parameters = [];
 
     protected static ?string $maxHeight = '300px';
 
-    public function getHeading(): string
+    public function getHeading(): Htmlable
     {
-        return 'Distribuție după mediu';
+        return new HtmlString(view('components.chart-heading', [
+            'title' => 'Distribuție după mediu',
+            'url' => route('front.elections.embed.area', [
+                'election' => $this->election,
+                ...$this->parameters,
+            ]),
+        ])->render());
     }
 
     protected function getData(): array

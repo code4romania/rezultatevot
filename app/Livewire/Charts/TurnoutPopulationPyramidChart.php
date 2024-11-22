@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace App\Livewire\Charts;
 
+use App\Models\Election;
 use Filament\Support\Colors\Color;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 
 class TurnoutPopulationPyramidChart extends ChartWidget
 {
+    public Election $election;
+
     public Collection $demographics;
+
+    public array $parameters = [];
 
     public int $total = 0;
 
@@ -22,9 +29,15 @@ class TurnoutPopulationPyramidChart extends ChartWidget
 
     protected static ?string $maxHeight = '300px';
 
-    public function getHeading(): string
+    public function getHeading(): Htmlable
     {
-        return 'Distribuție după gen și vârstă';
+        return new HtmlString(view('components.chart-heading', [
+            'title' => 'Distribuție după gen și vârstă',
+            'url' => route('front.elections.embed.demographic', [
+                'election' => $this->election,
+                ...$this->parameters,
+            ]),
+        ])->render());
     }
 
     protected function getData(): array

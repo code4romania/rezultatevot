@@ -6,5 +6,8 @@
         :county="$county"
         :locality="$locality" />
 
-    <x-candidates.turnouts-table :items="$this->candidates" />
+    <livewire:charts.turnout-area-chart
+        :parameters="$this->getQueryParameters()"
+        :election="$election"
+        :areas="$this->areas" />
 </div>
