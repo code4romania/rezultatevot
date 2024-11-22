@@ -106,6 +106,26 @@ module "ecs_horizon" {
       name  = "REDIS_PORT"
       value = aws_elasticache_cluster.main.cache_nodes.0.port
     },
+    {
+      name  = "SCOUT_DRIVER",
+      value = "typesense"
+    },
+    {
+      name  = "TYPESENSE_HOST",
+      value = "rezultatevot-v2-production-typesense.ecs.svc"
+    },
+    {
+      name  = "TYPESENSE_PORT",
+      value = 8108
+    },
+    {
+      name  = "TYPESENSE_PROTOCOL",
+      value = "http"
+    },
+    {
+      name  = "TYPESENSE_API_KEY",
+      value = "xyz"
+    },
   ]
 
   secrets = [
