@@ -178,6 +178,7 @@ module "ecs_app" {
 
   allowed_secrets = [
     aws_secretsmanager_secret.app_key.arn,
+    aws_secretsmanager_secret.typesense.arn,
     aws_secretsmanager_secret.sentry_dsn.arn,
     aws_secretsmanager_secret.rds.arn,
   ]
@@ -216,6 +217,20 @@ resource "aws_secretsmanager_secret" "app_key" {
 resource "aws_secretsmanager_secret_version" "app_key" {
   secret_id     = aws_secretsmanager_secret.app_key.id
   secret_string = random_password.app_key.result
+}
+
+resource "aws_secretsmanager_secret" "typesense" {
+  name = "${local.namespace}-typesense-${random_string.secrets_suffix.result}"
+}
+
+resource "aws_secretsmanager_secret_version" "typesense" {
+  secret_id = aws_secretsmanager_secret.typesense.id
+
+  secret_string = jsonencode({
+    "host" = "10.0.6.178",
+    "port" = "8108",
+    "key"  = "xyz"
+  })
 }
 
 resource "aws_secretsmanager_secret" "sentry_dsn" {

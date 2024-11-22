@@ -166,6 +166,7 @@ module "ecs_horizon" {
 
   allowed_secrets = [
     aws_secretsmanager_secret.app_key.arn,
+    aws_secretsmanager_secret.typesense.arn,
     aws_secretsmanager_secret.sentry_dsn.arn,
     aws_secretsmanager_secret.rds.arn,
   ]
