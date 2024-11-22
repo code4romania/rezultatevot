@@ -22,6 +22,12 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
+  origin {
+    domain_name              = module.s3_public.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.s3.id
+    origin_id                = module.s3_public.id
+  }
+
   # API
   ordered_cache_behavior {
     path_pattern             = "/api/*"
@@ -154,6 +160,14 @@ resource "aws_cloudfront_origin_request_policy" "admin" {
   query_strings_config {
     query_string_behavior = "all"
   }
+}
+
+resource "aws_cloudfront_origin_access_control" "s3" {
+  name                              = "${local.namespace}-s3-always-signv4"
+  description                       = ""
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
 }
 
 resource "aws_cloudfront_function" "www_redirect" {
