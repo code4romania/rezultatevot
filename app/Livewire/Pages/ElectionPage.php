@@ -170,7 +170,7 @@ abstract class ElectionPage extends Component implements HasForms
             'judet' => $this->county,
             'localitate' => $this->locality,
         ])
-            ->filter(fn ($value) => filled($value) && $value !== DataLevel::NATIONAL->value)
+            ->filter(fn ($value) => filled($value) && $value !== DataLevel::TOTAL->value)
             ->toArray();
     }
 }
