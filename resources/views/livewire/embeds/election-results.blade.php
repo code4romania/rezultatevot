@@ -1,5 +1,10 @@
 <div class="grid gap-8">
-    <x-election.header :election="$election" page="results" />
+    <x-election.title
+        :title="__('app.navigation.results')"
+        :level="$level"
+        :country="$country"
+        :county="$county"
+        :locality="$locality" />
 
     @if (filled($this->aggregate))
         <x-stacked-bar

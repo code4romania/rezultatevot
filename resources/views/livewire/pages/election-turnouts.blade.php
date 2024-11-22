@@ -14,7 +14,10 @@
         <x-election.title
             :title="__('app.navigation.turnout')"
             :embed-url="$this->getEmbedUrl()"
-            :level="$level" />
+            :level="$level"
+            :country="$country"
+            :county="$county"
+            :locality="$locality" />
 
         @if (filled($this->aggregate))
             @if ($this->aggregate->max)
