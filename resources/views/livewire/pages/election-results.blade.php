@@ -12,7 +12,10 @@
         <x-election.title
             :title="__('app.navigation.results')"
             :embed-url="$this->getEmbedUrl()"
-            :level="$level" />
+            :level="$level"
+            :country="$country"
+            :county="$county"
+            :locality="$locality" />
 
         @if ($this->recordStats->isEmpty())
             <x-alert>

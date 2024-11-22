@@ -3,7 +3,10 @@
 <div class="grid gap-8">
     <x-election.title
         :title="__('app.navigation.turnout')"
-        :level="$level" />
+        :level="$level"
+        :country="$country"
+        :county="$county"
+        :locality="$locality" />
 
     @if (filled($this->aggregate))
         @if ($this->aggregate->max)
@@ -20,5 +23,4 @@
         :level="$level"
         :data="$this->data->toArray()"
         embed />
-
 </div>
