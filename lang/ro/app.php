@@ -7,6 +7,7 @@ return [
     'banner' => 'O soluție Commit Global.',
     'skip' => 'Sari la conținut',
     'all' => 'Toate',
+    'generate' => 'Generează',
 
     'field' => [
         'acronym' => 'Acronim',
@@ -38,6 +39,7 @@ return [
         'slug' => 'Slug',
         'source_part' => 'Parte',
         'source_password' => 'Parolă',
+        'change_password' => 'Schimbă parola',
         'source_url' => 'URL sursă',
         'source_username' => 'Utilizator',
         'subtitle' => 'Subtitlu',
@@ -51,6 +53,7 @@ return [
         'voters_supplement' => 'Votanți pe liste suplimentare',
         'voters_total' => 'Total votanți',
         'year' => 'An',
+        'description' => 'Descriere',
     ],
 
     'navigation' => [
