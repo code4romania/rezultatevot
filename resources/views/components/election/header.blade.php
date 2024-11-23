@@ -5,5 +5,10 @@
 
     <span class="font-semibold text-indigo-600">
         {{ $election->title }}
+
+        @if ($election->subtitle)
+            /
+            {{ $election->subtitle }}
+        @endif
     </span>
 </header>
