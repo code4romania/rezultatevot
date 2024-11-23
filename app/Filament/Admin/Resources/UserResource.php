@@ -13,6 +13,7 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Infolists;
@@ -74,11 +75,11 @@ class UserResource extends Resource
                                 ->required()
                                 ->unique(ignoreRecord: true),
 
-                            Forms\Components\Toggle::make('change_password')
+                            Toggle::make('change_password')
                                 ->label(__('app.field.change_password'))
                                 ->default(false)
                                 ->live()
-                                ->hidden(fn (?User $record) => ! filled($record)),
+                                ->hidden(fn (?User $record) => blank($record)),
 
                             TextInput::make('password')
                                 ->label(__('app.field.source_password'))
