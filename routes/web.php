@@ -22,6 +22,7 @@ Route::as('front.')->group(function () {
     Route::get('/embed/mediu/{election:slug}', Embeds\AreaEmbed::class)->name('elections.embed.area');
     Route::get('/embed/demografic/{election:slug}', Embeds\DemographicEmbed::class)->name('elections.embed.demographic');
     Route::get('/embed/top/judete/{election:slug}', Embeds\TopCountiesEmbed::class)->name('elections.embed.top-counties');
+    Route::get('/embed/top/orase/{election:slug}', Embeds\TopLocalitiesEmbed::class)->name('elections.embed.top-localities');
 
     Route::get('/embed/articol/{article}', Embeds\ArticleEmbed::class)->name('articles.embed');
 
