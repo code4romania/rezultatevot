@@ -55,8 +55,6 @@ class FetchTurnoutsJob extends SchedulableJob
                     );
             });
 
-        $bucharestCounty = County::findOrFail(403);
-
         $electionName = $this->scheduledJob->election->getFilamentName();
         $electionId = $this->scheduledJob->election_id;
 
@@ -67,7 +65,7 @@ class FetchTurnoutsJob extends SchedulableJob
             new DeleteTemporaryTableData(Turnout::class, $electionId),
         ])->dispatch();
 
-        Bus::batch([new ImportCountyTurnoutsJob($this->scheduledJob, $bucharestCounty)])
+        Bus::batch([new ImportTurnoutsJob($this->scheduledJob, County::find(403))])
             ->catch($persistAndClean)
             ->then($persistAndClean)
             ->name("$electionName / Prezență / $time")

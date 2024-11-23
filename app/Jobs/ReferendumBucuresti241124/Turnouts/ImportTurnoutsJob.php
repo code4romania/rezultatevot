@@ -16,7 +16,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use League\Csv\Reader;
 
-class ImportCountyTurnoutsJob implements ShouldQueue
+class ImportTurnoutsJob implements ShouldQueue
 {
     use Batchable;
     use Dispatchable;
@@ -37,7 +37,7 @@ class ImportCountyTurnoutsJob implements ShouldQueue
     public function handle(): void
     {
         $disk = $this->scheduledJob->disk();
-        $path = $this->scheduledJob->getSourcePath('B.csv');
+        $path = $this->scheduledJob->getSourcePath("{$this->county->code}.csv");
 
         if (! $disk->exists($path)) {
             throw new MissingSourceFileException($path);
@@ -61,7 +61,7 @@ class ImportCountyTurnoutsJob implements ShouldQueue
                 'initial_permanent' => $record['Înscriși pe liste permanente'],
                 'initial_complement' => 0,
                 'permanent' => $record['LP'],
-                'complement' => 0, // we don't have this vote by correspondence in the referendum for Bucharest
+                'complement' => 0, // no complementary lists for this referendum
                 'supplement' => $record['LS'],
                 'mobile' => $record['UM'],
 
