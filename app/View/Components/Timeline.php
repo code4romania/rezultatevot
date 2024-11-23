@@ -49,4 +49,11 @@ class Timeline extends Component
     {
         return $this->election?->is($election);
     }
+
+    public function isLiveElectionGroup(Collection $elections): bool
+    {
+        return $elections->contains(
+            fn (Election $election) => $election->is_live
+        );
+    }
 }

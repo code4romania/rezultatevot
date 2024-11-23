@@ -71,24 +71,33 @@
                                     :url="$elections->first()->getDefaultUrl()"
                                     :label="$type" />
                             @else
+                                @php
+                                    $isLiveGroup = $isLiveElectionGroup($elections);
+                                @endphp
+
                                 <li x-data="{ open: @js($isActiveElectionType($type)) }">
                                     <button
                                         type="button"
-                                        class="flex items-center justify-between"
-                                        ::class="{ '-rotate-90': open }"
+                                        class="flex gap-1 justify-between text-left w-full"
                                         @@click="open = !open">
-                                        <span>{{ $type }}</span>
 
-                                        <x-ri-arrow-down-s-fill
-                                            class="w-4 h-4 text-slate-500"
+                                        <x-ri-arrow-right-s-fill
+                                            class="w-4 h-6 -ml-5 text-slate-500"
+                                            ::class="{ 'rotate-90': open }"
                                             x-cloak />
+
+                                        <span class="flex-1">{{ $type }}</span>
+
+                                        @if ($isLiveGroup)
+                                            <x-timeline.live />
+                                        @endif
                                     </button>
 
-                                    <ul class="pl-4">
+                                    <ul class="pl-4" x-show="open">
                                         @foreach ($elections as $election)
                                             <x-timeline.item
                                                 :isActive="$isActiveElection($election)"
-                                                :isLive="$election->is_live"
+                                                :isLive="!$isLiveGroup && $election->is_live"
                                                 :election="$election"
                                                 :url="$election->getDefaultUrl()"
                                                 :label="$election->title" />
