@@ -151,16 +151,43 @@ class TurnoutController extends Controller
             aggregate: true,
             toBase: true,
         );
+        $demographics = TurnoutRepository::getDemographicsForLevel(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            toBase: true,
+        )->keyBy('place');
+
+        $areas = TurnoutRepository::getForLevelAndArea(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            toBase: true,
+        )->groupBy('place');
 
         $result->places = TurnoutRepository::getForLevel(
             election: $election,
             level: DataLevel::NATIONAL,
             toBase: true,
-        )->map(function (stdClass $turnout) use ($counties) {
+        )->map(function (stdClass $turnout) use ($counties, $demographics, $areas) {
             $turnout->name = $counties->get($turnout->place);
+
+            $turnout->demographics = $demographics->get($turnout->place);
+            $turnout->areas = $areas->get($turnout->place);
 
             return $turnout;
         });
+        $result->demographics = TurnoutRepository::getDemographicsForLevel(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            aggregate: true,
+            toBase: true,
+        );
+
+        $result->areas = TurnoutRepository::getForLevelAndArea(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            aggregate: true,
+            toBase: true,
+        );
 
         return TurnoutNationalAggregatedResource::make($result);
     }
@@ -189,11 +216,44 @@ class TurnoutController extends Controller
             ->whereIn('id', $places->pluck('place'))
             ->pluck('name', 'id');
 
-        $result->places = $places->map(function (stdClass $turnout) use ($localities) {
+        $demographics = TurnoutRepository::getDemographicsForLevel(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            county: $county->id,
+            toBase: true,
+        )->keyBy('place');
+
+        $areas = TurnoutRepository::getForLevelAndArea(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            county: $county->id,
+            toBase: true,
+        )->groupBy('place');
+
+        $result->places = $places->map(function (stdClass $turnout) use ($localities, $demographics, $areas) {
             $turnout->name = $localities->get($turnout->place);
+
+            $turnout->demographics = $demographics->get($turnout->place);
+            $turnout->areas = $areas->get($turnout->place);
 
             return $turnout;
         });
+
+        $result->demographics = TurnoutRepository::getDemographicsForLevel(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            county: $county->id,
+            aggregate: true,
+            toBase: true,
+        );
+
+        $result->areas = TurnoutRepository::getForLevelAndArea(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            county: $county->id,
+            aggregate: true,
+            toBase: true,
+        );
 
         return TurnoutNationalAggregatedResource::make($result);
     }
