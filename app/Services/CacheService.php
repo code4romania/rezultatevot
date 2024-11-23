@@ -28,10 +28,11 @@ class CacheService
         protected ?int $locality = null,
         protected bool $aggregate = false,
         protected bool $toBase = false,
+        protected array $addSelect = [],
     ) {
         $this->tags = $this->getTags();
 
-        $this->key = "election:{$this->getElectionId()}:{$this->getName()}:{$level?->value}:{$country}:{$county}:{$locality}:{$aggregate}:{$toBase}";
+        $this->key = "election:{$this->getElectionId()}:{$this->getName()}:{$level?->value}:{$country}:{$county}:{$locality}:{$aggregate}:{$toBase}:{$this->getAddSelect()}";
     }
 
     public static function make(
@@ -43,6 +44,7 @@ class CacheService
         ?int $locality = null,
         bool $aggregate = false,
         bool $toBase = false,
+        array $addSelect = [],
     ): static {
         $static = app(static::class, [
             'name' => Arr::wrap($name),
@@ -53,6 +55,7 @@ class CacheService
             'locality' => $locality,
             'aggregate' => $aggregate,
             'toBase' => $toBase,
+            'addSelect' => $addSelect,
         ]);
 
         return $static;
@@ -85,6 +88,11 @@ class CacheService
     protected function getName(): string
     {
         return implode('-', $this->name);
+    }
+
+    protected function getAddSelect(): string
+    {
+        return implode('-', $this->addSelect);
     }
 
     protected function getTags(): array
