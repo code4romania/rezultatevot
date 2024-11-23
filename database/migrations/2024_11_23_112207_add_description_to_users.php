@@ -15,14 +15,4 @@ return new class extends Migration
             $table->text('description')->nullable();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('description');
-        });
-    }
 };
