@@ -13,6 +13,10 @@ class DemographicEmbed extends ElectionTurnouts
     #[Layout('components.layouts.embed')]
     public function render(): View
     {
+        $this->seo(
+            __('app.navigation.turnout') . ' Distribuție după gen și vârstă'
+        );
+
         return view('livewire.embeds.demographic');
     }
 }

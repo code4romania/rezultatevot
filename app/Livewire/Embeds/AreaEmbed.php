@@ -13,6 +13,10 @@ class AreaEmbed extends ElectionTurnouts
     #[Layout('components.layouts.embed')]
     public function render(): View
     {
+        $this->seo(
+            __('app.navigation.turnout') . ' Distribuție după mediu'
+        );
+
         return view('livewire.embeds.area');
     }
 }

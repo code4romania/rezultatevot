@@ -13,8 +13,7 @@ class ContentPage extends Component
 
     public function render()
     {
-        seo()
-            ->title($this->page->title);
+        $this->seo($this->page->title);
 
         return view('livewire.pages.content-page');
     }
