@@ -58,7 +58,8 @@ class Election extends Model implements HasName, HasAvatar
         static::addGlobalScope('latest', function (Builder $query) {
             return $query
                 ->orderByDesc('year')
-                ->orderByDesc('is_live');
+                ->orderByDesc('is_live')
+                ->orderBy('type');
         });
     }
 

@@ -8,16 +8,16 @@ use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\Comparable;
 use Filament\Support\Contracts\HasLabel;
 
-enum ElectionType: string implements HasLabel
+enum ElectionType: int implements HasLabel
 {
     use Arrayable;
     use Comparable;
 
-    case PRESIDENTIAL = 'presidential';
-    case PARLIAMENTARY = 'parliamentary';
-    case EURO = 'euro';
-    case LOCAL = 'local';
-    case REFERENDUM = 'referendum';
+    case PRESIDENTIAL = 1;
+    case REFERENDUM = 2;
+    case PARLIAMENTARY = 3;
+    case LOCAL = 4;
+    case EURO = 5;
 
     public function getLabel(): ?string
     {
