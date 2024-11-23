@@ -46,7 +46,7 @@ class TurnoutController extends Controller
             toBase: true,
         );
 
-        $result->last_update = $election->last_updated;
+        $result->last_updated_at = $election->turnouts_updated_at;
 
         return TurnoutResource::make($result);
     }
@@ -104,7 +104,7 @@ class TurnoutController extends Controller
             toBase: true,
         );
 
-        $result->last_update = $election->last_updated;
+        $result->last_updated_at = $election->turnouts_updated_at;
 
         return TurnoutDiasporaAggregatedResource::make($result);
     }
@@ -139,7 +139,7 @@ class TurnoutController extends Controller
             toBase: true,
         );
 
-        $result->last_update = $election->last_updated;
+        $result->last_updated_at = $election->turnouts_updated_at;
 
         return TurnoutDiasporaResource::make($result);
     }
@@ -195,7 +195,7 @@ class TurnoutController extends Controller
             toBase: true,
         );
 
-        $result->last_update = $election->last_updated;
+        $result->last_updated_at = $election->turnouts_updated_at;
 
         return TurnoutNationalAggregatedResource::make($result);
     }
@@ -263,7 +263,7 @@ class TurnoutController extends Controller
             toBase: true,
         );
 
-        $result->last_update = $election->last_updated;
+        $result->last_updated_at = $election->turnouts_updated_at;
 
         return TurnoutNationalAggregatedResource::make($result);
     }

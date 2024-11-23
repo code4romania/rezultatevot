@@ -7,6 +7,7 @@ namespace App\Jobs\Europarl240609\Records;
 use App\Jobs\DeleteTemporaryTableData;
 use App\Jobs\PersistTemporaryTableData;
 use App\Jobs\SchedulableJob;
+use App\Jobs\UpdateElectionRecordsTimestamp;
 use App\Models\County;
 use App\Models\Record;
 use App\Models\Vote;
@@ -43,6 +44,7 @@ class FetchRecordsJob extends SchedulableJob
         Bus::batch($jobs)
             ->catch($persistAndClean)
             ->then($persistAndClean)
+            ->then(fn () => UpdateElectionRecordsTimestamp::dispatch($electionId))
             ->name("$electionName / Rezultate / $time")
             ->allowFailures()
             ->dispatch();

@@ -18,6 +18,13 @@ class TurnoutResource extends JsonResource
     {
         return [
             /*
+             * Last time the data was updated in Y-m-d H:i:s format.
+             *
+             * @var string
+             */
+            'last_updated_at' => $this->last_updated_at?->toDateTimeString(),
+
+            /*
              * Total number of voters subscribed to the election permanent list .
              * @var integer
              */
@@ -33,7 +40,6 @@ class TurnoutResource extends JsonResource
 
             'areas' => AreaResource::make($this->areas),
 
-            'last_update' => $this->last_update,
         ];
     }
 }

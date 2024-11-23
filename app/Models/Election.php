@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Concerns\HasSlug;
 use App\Enums\ElectionType;
-use Carbon\Carbon;
 use Database\Factories\ElectionFactory;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
@@ -34,6 +33,8 @@ class Election extends Model implements HasName, HasAvatar
         'has_lists',
         'properties',
         'old_id',
+        'turnouts_updated_at',
+        'records_updated_at',
     ];
 
     protected function casts(): array
@@ -47,6 +48,8 @@ class Election extends Model implements HasName, HasAvatar
             'has_lists' => 'boolean',
             'properties' => 'collection',
             'old_id' => 'int',
+            'turnouts_updated_at' => 'datetime',
+            'records_updated_at' => 'datetime',
         ];
     }
 
@@ -92,17 +95,6 @@ class Election extends Model implements HasName, HasAvatar
     public function contributors(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
-    }
-
-    public function getLastUpdatedAttribute(): ?string
-    {
-        //s:10:"electionId";i:89;
-        $key = \sprintf('s:10:"electionId";i:%d', $this->id);
-        $time = \DB::table('job_batches')
-            ->whereLike('options', "%$key%")
-            ->orderByDesc('finished_at')
-            ->first();
-        return $time ? Carbon::createFromTimestamp($time->finished_at)->toDateTimeString() : null;
     }
 
     public function scopeWhereLive(Builder $query): Builder
