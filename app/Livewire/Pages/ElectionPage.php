@@ -19,6 +19,7 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Support\Enums\MaxWidth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -41,6 +42,21 @@ abstract class ElectionPage extends Component implements HasForms
 
     #[Url(as: 'localitate', history: true)]
     public ?int $locality = null;
+
+    public function mount()
+    {
+        $validation = Validator::make([
+            'country' => $this->country,
+            'county' => $this->county,
+            'locality' => $this->locality,
+        ], [
+            'country' => ['nullable', 'exists:countries,id'],
+            'county' => ['nullable', 'exists:counties,id'],
+            'locality' => ['nullable', 'exists:localities,id'],
+        ]);
+
+        abort_if($validation->fails(), 404);
+    }
 
     public function form(Form $form): Form
     {
