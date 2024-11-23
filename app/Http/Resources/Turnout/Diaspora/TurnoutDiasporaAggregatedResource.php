@@ -40,6 +40,8 @@ class TurnoutDiasporaAggregatedResource extends JsonResource
             'demographics' => DemographicsResource::make($this->demographics),
 
             'areas' => AreaResource::make($this->areas),
+            'last_update' => $this->whenHas('last_update', $this->last_update),
+
         ];
     }
 }

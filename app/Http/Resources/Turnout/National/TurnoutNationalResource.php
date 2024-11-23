@@ -54,6 +54,8 @@ class TurnoutNationalResource extends JsonResource
              * @var AreaResource
              */
             'areas' => AreaResource::make($this->areas),
+            'last_update' => $this->whenHas('last_update', $this->last_update),
+
         ];
     }
 }
