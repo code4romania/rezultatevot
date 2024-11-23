@@ -20,6 +20,13 @@ class TurnoutDiasporaResource extends JsonResource
     {
         return [
             /*
+             * Last time the data was updated in Y-m-d H:i:s format.
+             *
+             * @var string|null
+             */
+            'last_updated_at' => data_get($this->resource, 'last_updated_at')?->toDateTimeString(),
+
+            /*
              * Total number of voters subscribed to the election permanent list .
              * @var integer
              */
@@ -46,6 +53,7 @@ class TurnoutDiasporaResource extends JsonResource
             'demographics' => DemographicsResource::make($this->demographics),
 
             'areas' => AreaResource::make($this->areas),
+
         ];
     }
 }

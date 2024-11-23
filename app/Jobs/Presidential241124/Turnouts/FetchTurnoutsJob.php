@@ -7,6 +7,7 @@ namespace App\Jobs\Presidential241124\Turnouts;
 use App\Jobs\DeleteTemporaryTableData;
 use App\Jobs\PersistTemporaryTableData;
 use App\Jobs\SchedulableJob;
+use App\Jobs\UpdateElectionTurnoutsTimestamp;
 use App\Models\County;
 use App\Models\Turnout;
 use Illuminate\Support\Facades\Bus;
@@ -74,6 +75,7 @@ class FetchTurnoutsJob extends SchedulableJob
         Bus::batch($jobs)
             ->catch($persistAndClean)
             ->then($persistAndClean)
+            ->then(fn () => UpdateElectionTurnoutsTimestamp::dispatch($electionId))
             ->name("$electionName / Prezență / $time")
             ->allowFailures()
             ->dispatch();

@@ -33,6 +33,8 @@ class Election extends Model implements HasName, HasAvatar
         'has_lists',
         'properties',
         'old_id',
+        'turnouts_updated_at',
+        'records_updated_at',
     ];
 
     protected function casts(): array
@@ -46,6 +48,8 @@ class Election extends Model implements HasName, HasAvatar
             'has_lists' => 'boolean',
             'properties' => 'collection',
             'old_id' => 'int',
+            'turnouts_updated_at' => 'datetime',
+            'records_updated_at' => 'datetime',
         ];
     }
 
