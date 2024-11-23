@@ -21,19 +21,19 @@ class DemographicsResource extends JsonResource
 
         return [
             'men' => [
-                '18-24' => $data->get('men_18-24'),
-                '25-34' => $data->get('men_25-34'),
-                '35-44' => $data->get('men_35-44'),
-                '45-64' => $data->get('men_45-64'),
-                '65+' => $data->get('men_65'),
+                '18-24' => (int) $data->get('men_18-24'),
+                '25-34' => (int) $data->get('men_25-34'),
+                '35-44' => (int) $data->get('men_35-44'),
+                '45-64' => (int) $data->get('men_45-64'),
+                '65+' => (int) $data->get('men_65'),
             ],
 
             'women' => [
-                '18-24' => $data->get('women_18-24'),
-                '25-34' => $data->get('women_25-34'),
-                '35-44' => $data->get('women_35-44'),
-                '45-64' => $data->get('women_45-64'),
-                '65+' => $data->get('women_65'),
+                '18-24' => (int) $data->get('women_18-24'),
+                '25-34' => (int) $data->get('women_25-34'),
+                '35-44' => (int) $data->get('women_35-44'),
+                '45-64' => (int) $data->get('women_45-64'),
+                '65+' => (int) $data->get('women_65'),
             ],
         ];
     }

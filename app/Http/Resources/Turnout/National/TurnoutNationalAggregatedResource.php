@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Turnout\National;
 
+use App\Http\Resources\Turnout\AreaResource;
+use App\Http\Resources\Turnout\DemographicsResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -34,6 +36,18 @@ class TurnoutNationalAggregatedResource extends JsonResource
              * @var TurnoutNationalResource[]
              */
             'places' => TurnoutNationalResource::collection($this->places),
+
+            /*
+             * Demographics data.
+             * @var DemographicsResource
+             */
+            'demographics' => DemographicsResource::make($this->demographics),
+
+            /*
+             * Areas data.
+             * @var AreaResource
+             */
+            'areas' => AreaResource::make($this->areas),
 
         ];
     }
