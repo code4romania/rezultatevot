@@ -21,7 +21,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
@@ -35,7 +34,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     use HasFactory;
     use InteractsWithMedia;
     use Notifiable;
-    use TwoFactorAuthenticatable;
 
     protected static string $factory = UserFactory::class;
 

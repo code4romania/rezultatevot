@@ -7,9 +7,11 @@ namespace App\Models;
 use App\Concerns\BelongsToElection;
 use App\Concerns\CanGroupByDataLevel;
 use App\Concerns\HasTemporaryTable;
+use App\Contracts\ClearsCache;
 use App\Contracts\TemporaryTable;
 use App\Enums\Area;
 use App\Enums\DataLevel;
+use App\Repositories\TurnoutRepository;
 use Database\Factories\TurnoutFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +21,7 @@ use Illuminate\Support\Collection;
 use Tpetry\QueryExpressions\Function\Aggregate\Sum;
 use Tpetry\QueryExpressions\Language\Alias;
 
-class Turnout extends Model implements TemporaryTable
+class Turnout extends Model implements TemporaryTable, ClearsCache
 {
     use BelongsToElection;
     use CanGroupByDataLevel;
@@ -187,5 +189,10 @@ class Turnout extends Model implements TemporaryTable
         if ($this->hasAttribute('country_id') && $this->country_id) {
             return $this->loadMissing('country')->country->name;
         }
+    }
+
+    public function clearCache(int $electionId): bool
+    {
+        return TurnoutRepository::clearCache($electionId);
     }
 }

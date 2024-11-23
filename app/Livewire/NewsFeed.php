@@ -35,6 +35,6 @@ class NewsFeed extends Component
             ->with('author.media', 'media')
             ->onlyPublished()
             ->orderByDesc('published_at')
-            ->paginate();
+            ->paginate(50);
     }
 }

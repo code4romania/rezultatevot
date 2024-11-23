@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\Auth\Login;
 use App\Filament\Admin\Resources\ElectionResource;
 use App\Filament\Admin\Resources\MenuResource;
-use App\Filament\Contributor\Pages\Auth\Login;
 use App\Models\Election;
 use App\Models\Page;
 use Datlechin\FilamentMenuBuilder\FilamentMenuBuilderPlugin;
@@ -63,8 +63,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 BreezyCore::make()
-                    ->myProfile(slug: 'profile')
-                    ->enableTwoFactorAuthentication(),
+                    ->myProfile(slug: 'profile'),
 
                 FilamentMenuBuilderPlugin::make()
                     ->usingResource(MenuResource::class)
