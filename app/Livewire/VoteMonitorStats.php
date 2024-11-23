@@ -29,7 +29,7 @@ class VoteMonitorStats extends Component
     #[Computed]
     protected function count(): int
     {
-        return \count($this->stats());
+        return \count($this->stats);
     }
 
     public function gridColumns(): string

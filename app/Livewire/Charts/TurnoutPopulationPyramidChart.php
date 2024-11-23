@@ -29,6 +29,8 @@ class TurnoutPopulationPyramidChart extends ChartWidget
 
     protected static ?string $maxHeight = '300px';
 
+    protected static ?string $pollingInterval = null;
+
     public function getHeading(): Htmlable
     {
         return new HtmlString(view('components.chart-heading', [
