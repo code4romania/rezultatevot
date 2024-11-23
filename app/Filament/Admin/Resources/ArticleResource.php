@@ -20,6 +20,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 
 class ArticleResource extends Resource
 {
@@ -61,7 +62,7 @@ class ArticleResource extends Resource
                             ->label(__('app.article.published_at'))
                             ->nullable(),
 
-                        RichEditor::make('content')
+                        TiptapEditor::make('content')
                             ->required()
                             ->label(__('app.article.content'))
                             ->columnSpanFull(),

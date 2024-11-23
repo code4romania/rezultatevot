@@ -8,6 +8,7 @@ use App\Enums\User\Role;
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -23,6 +24,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
+use Str;
 
 class UserResource extends Resource
 {
@@ -71,6 +74,26 @@ class UserResource extends Resource
                                 ->required()
                                 ->unique(ignoreRecord: true),
 
+                            Forms\Components\Toggle::make('change_password')
+                                ->label(__('app.field.change_password'))
+                                ->default(false)
+                                ->live()
+                                ->hidden(fn (?User $record) => ! filled($record)),
+
+                            TextInput::make('password')
+                                ->label(__('app.field.source_password'))
+                                ->password()
+                                ->hidden(fn (Get $get, ?User $record) => filled($record) && ! $get('change_password'))
+                                ->hintAction(Action::make('generate-password')
+                                    ->label(__('app.generate'))
+                                    ->action(fn (TextInput $component) => $component->state(Str::password(12))))
+                                ->autocomplete('new-password')
+                                ->suffixAction(Action::make('show-password')
+                                    ->icon('heroicon-o-eye')
+                                    ->label(fn (Get $get) => $get('password') ? __('app.hide') : __('app.show'))
+                                    ->action(fn (TextInput $component) => $component->password(! $component->isPassword())))
+                                ->required(),
+
                             Select::make('role')
                                 ->label(__('app.field.role'))
                                 ->options(Role::options())
@@ -84,6 +107,10 @@ class UserResource extends Resource
                                 ->hidden(fn (Get $get) => filled($get('role')) ? Role::from($get('role')) !== Role::CONTRIBUTOR : true)
                                 ->multiple()
                                 ->preload(),
+                            TiptapEditor::make('description')
+                                ->label(__('app.field.description'))
+                                ->nullable(),
+
                         ]),
                 ])->from('md'),
             ]);
@@ -116,6 +143,10 @@ class UserResource extends Resource
 
                             TextEntry::make('articles.title')
                                 ->label(__('app.article.plural')),
+
+                            TextEntry::make('description')
+                                ->html()
+                                ->label(__('app.field.description')),
                         ]),
                 ]),
             ]);
