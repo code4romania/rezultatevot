@@ -26,7 +26,7 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use FilamentTiptapEditor\TiptapEditor;
-use Str;
+use Illuminate\Support\Str;
 
 class UserResource extends Resource
 {
