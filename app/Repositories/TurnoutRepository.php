@@ -26,8 +26,9 @@ class TurnoutRepository
         ?int $locality = null,
         bool $aggregate = false,
         bool $toBase = false,
+        array $addSelect = [],
     ) {
-        return CacheService::make('turnout', $election, $level, $country, $county, $locality, $aggregate, $toBase)
+        return CacheService::make('turnout', $election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect)
             ->remember(
                 fn () => Turnout::query()
                     ->whereBelongsTo($election)
@@ -38,6 +39,7 @@ class TurnoutRepository
                         locality: $locality,
                         aggregate: $aggregate,
                     )
+                    ->when($addSelect, fn (EloquentBuilder $query) => $query->addSelect($addSelect))
                     ->when($toBase, fn (EloquentBuilder $query) => $query->toBase())
                     ->when(
                         $aggregate,
@@ -55,8 +57,9 @@ class TurnoutRepository
         ?int $locality = null,
         bool $aggregate = false,
         bool $toBase = false,
+        array $addSelect = [],
     ) {
-        return CacheService::make(['turnout', 'area'], $election, $level, $country, $county, $locality, $aggregate, $toBase)
+        return CacheService::make(['turnout', 'area'], $election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect)
             ->remember(
                 fn () => Turnout::query()
                     ->whereBelongsTo($election)
@@ -67,6 +70,7 @@ class TurnoutRepository
                         locality: $locality,
                         aggregate: $aggregate,
                     )
+                    ->when($addSelect, fn (EloquentBuilder $query) => $query->addSelect($addSelect))
                     ->when($toBase, fn (EloquentBuilder $query) => $query->toBase())
                     ->get()
             );
@@ -80,8 +84,9 @@ class TurnoutRepository
         ?int $locality = null,
         bool $aggregate = false,
         bool $toBase = false,
+        array $addSelect = [],
     ) {
-        return CacheService::make(['turnout', 'demographics'], $election, $level, $country, $county, $locality, $aggregate, $toBase)
+        return CacheService::make(['turnout', 'demographics'], $election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect)
             ->remember(
                 fn () => Turnout::query()
                     ->whereBelongsTo($election)
@@ -92,6 +97,7 @@ class TurnoutRepository
                         locality: $locality,
                         aggregate: $aggregate,
                     )
+                    ->when($addSelect, fn (EloquentBuilder $query) => $query->addSelect($addSelect))
                     ->when($toBase, fn (EloquentBuilder $query) => $query->toBase())
                     ->when(
                         $aggregate,

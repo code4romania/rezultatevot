@@ -13,8 +13,10 @@ use App\Http\Resources\Turnout\TurnoutResource;
 use App\Models\Country;
 use App\Models\County;
 use App\Models\Election;
-use App\Models\Turnout;
+use App\Models\Locality;
+use App\Repositories\TurnoutRepository;
 use Illuminate\Http\Resources\Json\JsonResource;
+use stdClass;
 
 class TurnoutController extends Controller
 {
@@ -23,12 +25,11 @@ class TurnoutController extends Controller
      */
     public function total(Election $election): JsonResource
     {
-        $result = Turnout::query()
-            ->whereBelongsTo($election)
-            ->forLevel(
-                level: DataLevel::TOTAL,
-            )
-            ->first();
+        $result = TurnoutRepository::getForLevel(
+            election: $election,
+            level: DataLevel::TOTAL,
+            aggregate: true,
+        );
 
         return TurnoutResource::make($result);
     }
@@ -38,24 +39,26 @@ class TurnoutController extends Controller
      */
     public function diaspora(Election $election): JsonResource
     {
-        $general = Turnout::query()
-            ->whereBelongsTo($election)
-            ->forLevel(
-                level: DataLevel::DIASPORA,
-                aggregate: true,
-            )
-            ->first();
+        $countries = Country::pluck('name', 'id');
 
-        $general->places = Turnout::query()
-            ->whereBelongsTo($election)
-            ->forLevel(
-                level: DataLevel::DIASPORA,
-            )
-            ->addSelect('country_id')
-            ->get()
-            ->append('name');
+        $result = TurnoutRepository::getForLevel(
+            election: $election,
+            level: DataLevel::DIASPORA,
+            toBase: true,
+            aggregate: true,
+        );
 
-        return TurnoutDiasporaAggregatedResource::make($general);
+        $result->places = TurnoutRepository::getForLevel(
+            election: $election,
+            level: DataLevel::DIASPORA,
+            toBase: true,
+        )->map(function (stdClass $turnout) use ($countries) {
+            $turnout->name = $countries->get($turnout->place);
+
+            return $turnout;
+        });
+
+        return TurnoutDiasporaAggregatedResource::make($result);
     }
 
     /**
@@ -63,16 +66,16 @@ class TurnoutController extends Controller
      */
     public function country(Election $election, Country $country): JsonResource
     {
-        return TurnoutDiasporaResource::make(
-            Turnout::query()
-                ->whereBelongsTo($election)
-                ->forLevel(
-                    level: DataLevel::DIASPORA,
-                    country: $country->id,
-                )
-                ->addSelect('country_id')
-                ->first()
-        );
+        $result = TurnoutRepository::getForLevel(
+            election: $election,
+            level: DataLevel::DIASPORA,
+            country: $country->id,
+            toBase: true,
+        )->first();
+
+        $result->name = $country->name;
+
+        return TurnoutDiasporaResource::make($result);
     }
 
     /**
@@ -80,20 +83,24 @@ class TurnoutController extends Controller
      */
     public function national(Election $election): JsonResource
     {
-        $result = Turnout::query()
-            ->whereBelongsTo($election)
-            ->forLevel(
-                level: DataLevel::NATIONAL,
-                aggregate: true,
-            )
-            ->first();
+        $counties = County::pluck('name', 'id');
 
-        $result->places = Turnout::query()->whereBelongsTo($election)
-            ->forLevel(
-                level: DataLevel::NATIONAL,
-            )
-            ->addSelect('county_id')
-            ->get();
+        $result = TurnoutRepository::getForLevel(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            aggregate: true,
+            toBase: true,
+        );
+
+        $result->places = TurnoutRepository::getForLevel(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            toBase: true,
+        )->map(function (stdClass $turnout) use ($counties) {
+            $turnout->name = $counties->get($turnout->place);
+
+            return $turnout;
+        });
 
         return TurnoutNationalAggregatedResource::make($result);
     }
@@ -103,25 +110,31 @@ class TurnoutController extends Controller
      */
     public function county(Election $election, County $county): JsonResource
     {
-        $countyData = Turnout::query()
-            ->whereBelongsTo($election)
-            ->forLevel(
-                level: DataLevel::NATIONAL,
-                county: $county->id,
-                aggregate: true
-            )
-            ->first();
+        $result = TurnoutRepository::getForLevel(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            county: $county->id,
+            aggregate: true,
+            toBase: true,
+        );
 
-        $countyData->places = Turnout::query()
-            ->whereBelongsTo($election)
-            ->forLevel(
-                level: DataLevel::NATIONAL,
-                county: $county->id,
-            )
-            ->addSelect('locality_id')
-            ->get()
-            ->append('name');
+        $places = TurnoutRepository::getForLevel(
+            election: $election,
+            level: DataLevel::NATIONAL,
+            county: $county->id,
+            toBase: true,
+        );
 
-        return TurnoutNationalAggregatedResource::make($countyData);
+        $localities = Locality::query()
+            ->whereIn('id', $places->pluck('place'))
+            ->pluck('name', 'id');
+
+        $result->places = $places->map(function (stdClass $turnout) use ($localities) {
+            $turnout->name = $localities->get($turnout->place);
+
+            return $turnout;
+        });
+
+        return TurnoutNationalAggregatedResource::make($result);
     }
 }
