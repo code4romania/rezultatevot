@@ -23,12 +23,20 @@ class TurnoutController extends Controller
     /**
      * @operationId Total
      */
-    public function total(Election $election): JsonResource
+    public function total(Election $election)//: JsonResource
     {
         $result = TurnoutRepository::getForLevel(
             election: $election,
             level: DataLevel::TOTAL,
             aggregate: true,
+            toBase: true,
+        );
+
+        $result->demographics = TurnoutRepository::getDemographicsForLevel(
+            election: $election,
+            level: DataLevel::TOTAL,
+            aggregate: true,
+            toBase: true,
         );
 
         return TurnoutResource::make($result);
@@ -48,15 +56,30 @@ class TurnoutController extends Controller
             aggregate: true,
         );
 
+        $demographics = TurnoutRepository::getDemographicsForLevel(
+            election: $election,
+            level: DataLevel::DIASPORA,
+            toBase: true,
+        )->keyBy('place');
+
         $result->places = TurnoutRepository::getForLevel(
             election: $election,
             level: DataLevel::DIASPORA,
             toBase: true,
-        )->map(function (stdClass $turnout) use ($countries) {
+        )->map(function (stdClass $turnout) use ($countries, $demographics) {
             $turnout->name = $countries->get($turnout->place);
+
+            $turnout->demographics = $demographics->get($turnout->place);
 
             return $turnout;
         });
+
+        $result->demographics = TurnoutRepository::getDemographicsForLevel(
+            election: $election,
+            level: DataLevel::DIASPORA,
+            aggregate: true,
+            toBase: true,
+        );
 
         return TurnoutDiasporaAggregatedResource::make($result);
     }
@@ -74,6 +97,14 @@ class TurnoutController extends Controller
         )->first();
 
         $result->name = $country->name;
+
+        $result->demographics = TurnoutRepository::getDemographicsForLevel(
+            election: $election,
+            level: DataLevel::DIASPORA,
+            country: $country->id,
+            aggregate: true,
+            toBase: true,
+        );
 
         return TurnoutDiasporaResource::make($result);
     }

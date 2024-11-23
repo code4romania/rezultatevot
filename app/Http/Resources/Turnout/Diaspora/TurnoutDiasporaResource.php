@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Turnout\Diaspora;
 
+use App\Http\Resources\Turnout\DemographicsResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -40,6 +41,8 @@ class TurnoutDiasporaResource extends JsonResource
              * @var string
              */
             'name' => $this->name,
+
+            'demographics' => DemographicsResource::make($this->demographics),
         ];
     }
 }

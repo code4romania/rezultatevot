@@ -28,6 +28,8 @@ class TurnoutResource extends JsonResource
              * @var integer
              */
             'total' => $this->total,
+
+            'demographics' => DemographicsResource::make($this->demographics),
         ];
     }
 }
