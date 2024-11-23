@@ -201,7 +201,7 @@ return [
         'plural' => 'Articole',
         'title' => 'Titlu',
         'author' => 'Autor',
-        'election' => 'Rună electorală',
+        'election' => 'Rundă electorală',
         'published_at' => 'Publicat la',
         'content' => 'Conținut',
         'embeds' => 'Embeduri',
