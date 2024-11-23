@@ -46,7 +46,6 @@ class TurnoutNationalResource extends JsonResource
             /*
              * Demographics data.
              * @var DemographicsResource
-             *
              */
             'demographics' => DemographicsResource::make($this->demographics),
 

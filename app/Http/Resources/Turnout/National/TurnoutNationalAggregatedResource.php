@@ -37,8 +37,16 @@ class TurnoutNationalAggregatedResource extends JsonResource
              */
             'places' => TurnoutNationalResource::collection($this->places),
 
+            /*
+             * Demographics data.
+             * @var DemographicsResource
+             */
             'demographics' => DemographicsResource::make($this->demographics),
 
+            /*
+             * Areas data.
+             * @var AreaResource
+             */
             'areas' => AreaResource::make($this->areas),
 
         ];
