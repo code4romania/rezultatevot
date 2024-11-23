@@ -75,7 +75,7 @@
                                     $isLiveGroup = $isLiveElectionGroup($elections);
                                 @endphp
 
-                                <li x-data="{ open: @js($isActiveElectionType($type)) }">
+                                <li x-data="{ open: @js($isActiveElectionType($type) || $isLiveGroup) }">
                                     <button
                                         type="button"
                                         class="flex gap-1 justify-between text-left w-full"

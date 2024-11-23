@@ -24,10 +24,9 @@
                 {{ $item['name'] }}
             </x-table.td>
 
-            <x-table.td align="left" class="w-1">
+            <x-table.td align="left">
                 {{ $item['party'] }}
             </x-table.td>
-
         </x-table.row>
     @endforeach
 
@@ -43,5 +42,4 @@
             </x-table.row>
         @endif
     </x-slot>
-
 </x-table>
