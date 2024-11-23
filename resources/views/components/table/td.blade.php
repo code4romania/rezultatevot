@@ -2,7 +2,7 @@
 
 <td
     {{ $attributes->class([
-        'px-3 py-4 text-sm font-semibold text-gray-500 whitespace-nowrap',
+        'px-3 py-4 text-sm font-semibold text-gray-500',
         match ($align) {
             'left' => 'text-left',
             'right' => 'text-right',
