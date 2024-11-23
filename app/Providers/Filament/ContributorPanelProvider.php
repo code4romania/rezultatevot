@@ -18,6 +18,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 
 class ContributorPanelProvider extends PanelProvider
 {
@@ -31,6 +32,10 @@ class ContributorPanelProvider extends PanelProvider
             ->brandLogoHeight('3rem')
             ->colors([
                 'primary' => Color::Sky,
+            ])
+            ->plugins([
+                BreezyCore::make()
+                    ->myProfile(slug: 'profile'),
             ])
             ->discoverResources(in: app_path('Filament/Contributor/Resources'), for: 'App\\Filament\\Contributor\\Resources')
             ->discoverPages(in: app_path('Filament/Contributor/Pages'), for: 'App\\Filament\\Contributor\\Pages')
