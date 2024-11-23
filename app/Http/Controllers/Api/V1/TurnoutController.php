@@ -39,6 +39,13 @@ class TurnoutController extends Controller
             toBase: true,
         );
 
+        $result->areas = TurnoutRepository::getForLevelAndArea(
+            election: $election,
+            level: DataLevel::TOTAL,
+            aggregate: true,
+            toBase: true,
+        );
+
         return TurnoutResource::make($result);
     }
 
@@ -62,19 +69,33 @@ class TurnoutController extends Controller
             toBase: true,
         )->keyBy('place');
 
+        $areas = TurnoutRepository::getForLevelAndArea(
+            election: $election,
+            level: DataLevel::DIASPORA,
+            toBase: true,
+        )->groupBy('place');
+
         $result->places = TurnoutRepository::getForLevel(
             election: $election,
             level: DataLevel::DIASPORA,
             toBase: true,
-        )->map(function (stdClass $turnout) use ($countries, $demographics) {
+        )->map(function (stdClass $turnout) use ($countries, $demographics, $areas) {
             $turnout->name = $countries->get($turnout->place);
 
             $turnout->demographics = $demographics->get($turnout->place);
+            $turnout->areas = $areas->get($turnout->place);
 
             return $turnout;
         });
 
         $result->demographics = TurnoutRepository::getDemographicsForLevel(
+            election: $election,
+            level: DataLevel::DIASPORA,
+            aggregate: true,
+            toBase: true,
+        );
+
+        $result->areas = TurnoutRepository::getForLevelAndArea(
             election: $election,
             level: DataLevel::DIASPORA,
             aggregate: true,
@@ -99,6 +120,14 @@ class TurnoutController extends Controller
         $result->name = $country->name;
 
         $result->demographics = TurnoutRepository::getDemographicsForLevel(
+            election: $election,
+            level: DataLevel::DIASPORA,
+            country: $country->id,
+            aggregate: true,
+            toBase: true,
+        );
+
+        $result->areas = TurnoutRepository::getForLevelAndArea(
             election: $election,
             level: DataLevel::DIASPORA,
             country: $country->id,

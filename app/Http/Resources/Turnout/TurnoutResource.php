@@ -30,6 +30,8 @@ class TurnoutResource extends JsonResource
             'total' => $this->total,
 
             'demographics' => DemographicsResource::make($this->demographics),
+
+            'areas' => AreaResource::make($this->areas),
         ];
     }
 }
