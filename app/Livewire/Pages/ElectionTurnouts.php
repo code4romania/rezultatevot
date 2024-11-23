@@ -8,7 +8,7 @@ use App\DataTransferObjects\ProgressData;
 use App\Enums\Area;
 use App\Enums\DataLevel;
 use App\Models\Candidate;
-use App\Models\Turnout;
+use App\Repositories\TurnoutRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Number;
 use Illuminate\View\View;
@@ -30,7 +30,7 @@ class ElectionTurnouts extends ElectionPage
     public function candidates(): Collection
     {
         return $this->election->candidates()
-            ->with('party.media')
+            ->with('media', 'party.media')
             ->get()
             ->map(fn (Candidate $candidate) => [
                 'name' => $candidate->name,
@@ -42,17 +42,14 @@ class ElectionTurnouts extends ElectionPage
     #[Computed]
     public function aggregate(): ?ProgressData
     {
-        $result = Turnout::query()
-            ->whereBelongsTo($this->election)
-            ->forLevel(
-                level: $this->level,
-                country: $this->country,
-                county: $this->county,
-                locality: $this->locality,
-                aggregate: true,
-            )
-            ->toBase()
-            ->first();
+        $result = TurnoutRepository::getForLevel(
+            election: $this->election,
+            level: $this->level,
+            country: $this->country,
+            county: $this->county,
+            locality: $this->locality,
+            aggregate: true,
+        );
 
         if (blank($result) || blank($result->total)) {
             return null;
@@ -67,18 +64,15 @@ class ElectionTurnouts extends ElectionPage
     #[Computed]
     public function areas(): Collection
     {
-        $result = Turnout::query()
-            ->whereBelongsTo($this->election)
-            ->groupByLevelAndArea(
-                level: $this->level,
-                country: $this->country,
-                county: $this->county,
-                locality: $this->locality,
-                aggregate: true,
-            )
-            ->toBase()
-            ->get()
-            ->pluck('total', 'area');
+        $result = TurnoutRepository::getForLevelAndArea(
+            election: $this->election,
+            level: $this->level,
+            country: $this->country,
+            county: $this->county,
+            locality: $this->locality,
+            aggregate: true,
+            toBase: true,
+        )->pluck('total', 'area');
 
         return collect(Area::cases())
             ->map(fn (Area $area) => [
@@ -90,17 +84,15 @@ class ElectionTurnouts extends ElectionPage
     #[Computed]
     public function demographics(): Collection
     {
-        $result = Turnout::query()
-            ->whereBelongsTo($this->election)
-            ->groupByDemographics(
-                level: $this->level,
-                country: $this->country,
-                county: $this->county,
-                locality: $this->locality,
-                aggregate: true,
-            )
-            ->toBase()
-            ->first();
+        $result = TurnoutRepository::getDemographicsForLevel(
+            election: $this->election,
+            level: $this->level,
+            country: $this->country,
+            county: $this->county,
+            locality: $this->locality,
+            aggregate: true,
+            toBase: true,
+        );
 
         $demographics = collect();
 
@@ -125,32 +117,27 @@ class ElectionTurnouts extends ElectionPage
     #[Computed]
     public function data(): Collection
     {
-        return Turnout::query()
-            ->whereBelongsTo($this->election)
-            ->forLevel(
-                level: $this->level,
-                country: null,
-                county: $this->county,
-                locality: null,
-            )
-            ->toBase()
-            ->get()
-            ->mapWithKeys(function (stdClass $turnout) {
-                if ($this->level->is(DataLevel::DIASPORA)) {
-                    $value = Number::format(ensureNumeric($turnout->total));
-                    $class = 'fill-purple-900';
-                } else {
-                    $value = percent($turnout->total, $turnout->initial_total, formatted: true);
-                    $class = $this->getFill($turnout->total, $turnout->initial_total);
-                }
+        return TurnoutRepository::getForLevel(
+            election: $this->election,
+            level: $this->level,
+            county: $this->county,
+            toBase: true,
+        )->mapWithKeys(function (stdClass $turnout) {
+            if ($this->level->is(DataLevel::DIASPORA)) {
+                $value = Number::format(ensureNumeric($turnout->total));
+                $class = 'fill-purple-900';
+            } else {
+                $value = percent($turnout->total, $turnout->initial_total, formatted: true);
+                $class = $this->getFill($turnout->total, $turnout->initial_total);
+            }
 
-                return [
-                    $turnout->place => [
-                        'value' => $value,
-                        'class' => $class,
-                    ],
-                ];
-            });
+            return [
+                $turnout->place => [
+                    'value' => $value,
+                    'class' => $class,
+                ],
+            ];
+        });
     }
 
     protected function getFill(int|float|string|null $value, int|float|string|null $max): string

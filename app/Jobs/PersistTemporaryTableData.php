@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Contracts\ClearsCache;
 use App\Contracts\TemporaryTable;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,12 +17,12 @@ class PersistTemporaryTableData implements ShouldQueue
 
     public string $model;
 
-    public int $electionId;
+    public ?int $electionId;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(string $model, int $electionId)
+    public function __construct(string $model, ?int $electionId = null)
     {
         $this->model = $model;
         $this->electionId = $electionId;
@@ -50,10 +51,22 @@ class PersistTemporaryTableData implements ShouldQueue
             ->map(fn (string $column) => "`$column` = `{$model->getTemporaryTable()}`.`$column`")
             ->implode(', ');
 
-        DB::unprepared(<<<"SQL"
-            INSERT INTO `{$model->getTable()}` ({$selectColumns})
-            SELECT {$selectColumns} FROM `{$model->getTemporaryTable()}` WHERE `election_id` = {$this->electionId}
-            ON DUPLICATE KEY UPDATE {$updateColumns};
-        SQL);
+        if (filled($this->electionId)) {
+            DB::unprepared(<<<"SQL"
+                INSERT INTO `{$model->getTable()}` ({$selectColumns})
+                SELECT {$selectColumns} FROM `{$model->getTemporaryTable()}` WHERE `election_id` = {$this->electionId}
+                ON DUPLICATE KEY UPDATE {$updateColumns};
+            SQL);
+        } else {
+            DB::unprepared(<<<"SQL"
+                INSERT INTO `{$model->getTable()}` ({$selectColumns})
+                SELECT {$selectColumns} FROM `{$model->getTemporaryTable()}` ORDER BY `election_id`
+                ON DUPLICATE KEY UPDATE {$updateColumns};
+            SQL);
+        }
+
+        if ($model instanceof ClearsCache) {
+            $model->clearCache($this->electionId);
+        }
     }
 }
