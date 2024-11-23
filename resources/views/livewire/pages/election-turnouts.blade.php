@@ -1,3 +1,4 @@
+@use('App\Enums\ElectionType')
 @use('App\Livewire\Charts')
 @use('Filament\Support\Colors\Color')
 
@@ -66,7 +67,9 @@
             :election="$election"
             show-embed />
 
-        <x-candidates.turnouts-table :items="$this->candidates" />
+        @if ($election->type->isNot(ElectionType::REFERENDUM))
+            <x-candidates.turnouts-table :items="$this->candidates" />
+        @endif
 
         <livewire:news-feed :election="$election" />
     </section>

@@ -20,8 +20,7 @@ class Timeline extends Component
 
     public function __construct()
     {
-        $this->years = Election::query()
-            ->get()
+        $this->years = Election::all()
             ->groupBy([
                 'year',
                 fn (Election $election) => $election->type->getLabel(),
