@@ -6,15 +6,14 @@
     x-transition:leave="transition-opacity ease-linear duration-300"
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
-    class="fixed inset-0 bg-gray-900/80 z-40 md:hidden"
+    class="fixed inset-0 z-40 bg-gray-900/80 md:hidden"
     aria-hidden="true"
     x-cloak></div>
 
 <div
     @keydown.window.escape="sidebarOpen = false"
-    class="fixed inset-y-0 flex flex-row-reverse w-full z-50 md:w-80 items-stretch md:translate-x-0 md:relative transition ease-in-out duration-300 transform"
+    class="fixed inset-y-0 z-50 flex flex-row-reverse items-stretch w-full transition duration-300 ease-in-out transform -translate-x-full md:w-80 md:translate-x-0 md:relative"
     x-bind:class="{
-        '-translate-x-full': !sidebarOpen,
         'translate-x-0': sidebarOpen
     }">
 
@@ -27,7 +26,8 @@
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
         @@click="sidebarOpen = false"
-        class="relative flex w-16 justify-center items-start pt-5">
+        class="relative flex items-start justify-center w-16 pt-5"
+        x-cloak>
         <button type="button" class="-m-2.5 p-2.5" @@click="sidebarOpen = false">
             <span class="sr-only">Close sidebar</span>
             <x-ri-close-line class="w-6 h-6 text-white" />
@@ -35,7 +35,7 @@
     </div>
 
     <nav
-        class="px-6 py-8 bg-white border-r border-gray-200 sm:py-10 gap-y-5 grow flex-1 overflow-y-auto" wire:scroll>
+        class="flex-1 px-6 py-8 overflow-y-auto bg-white border-r border-gray-200 sm:py-10 gap-y-5 grow" wire:scroll>
         <ul class="flex flex-col flex-1">
             @foreach ($years as $year => $electionTypes)
                 <li class="relative pb-8 pl-8 group">
