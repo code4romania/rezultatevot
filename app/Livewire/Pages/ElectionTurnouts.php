@@ -21,6 +21,8 @@ class ElectionTurnouts extends ElectionPage
     #[Layout('components.layouts.election')]
     public function render(): View
     {
+        $this->seo(__('app.navigation.turnout'));
+
         return view('livewire.pages.election-turnouts');
     }
 

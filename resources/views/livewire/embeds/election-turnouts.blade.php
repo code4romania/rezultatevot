@@ -17,7 +17,7 @@
     @endif
 
     <livewire:map
-        :key="$this->mapKey()"
+        :key="$this->componentKey('map', level: $level, county: $county)"
         :country="$country"
         :county="$county"
         :level="$level"

@@ -9,6 +9,7 @@ use App\Models\Country;
 use App\Models\County;
 use App\Models\Election;
 use App\Models\Locality;
+use ArchTech\SEO\SEOManager;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -127,13 +128,29 @@ abstract class ElectionPage extends Component implements HasForms
             ]);
     }
 
-    /**
-     * Used to refresh the map when the country or county changes.
-     */
-    #[Computed]
-    public function mapKey(): string
+    public function componentKey(string $name, ?DataLevel $level = null, ?string $country = null, ?int $county = null, ?int $locality = null): string
     {
-        return hash('xxh128', "map-{$this->level->value}-{$this->county}");
+        $key = collect([
+            "component-{$name}",
+        ]);
+
+        if (filled($level)) {
+            $key->push("level-{$level->value}");
+        }
+
+        if (filled($country)) {
+            $key->push("country-{$country}");
+        }
+
+        if (filled($county)) {
+            $key->push("county-{$county}");
+        }
+
+        if (filled($locality)) {
+            $key->push("locality-{$locality}");
+        }
+
+        return hash('xxh128', $key->join('|'));
     }
 
     /**
@@ -172,5 +189,16 @@ abstract class ElectionPage extends Component implements HasForms
         ])
             ->filter(fn ($value) => filled($value) && $value !== DataLevel::TOTAL->value)
             ->toArray();
+    }
+
+    public function seo(string $title): SEOManager
+    {
+        return seo()
+            ->title(\sprintf(
+                '%s | %s %s',
+                $title,
+                $this->election->type->getLabel(),
+                $this->election->year
+            ));
     }
 }
