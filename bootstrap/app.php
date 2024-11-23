@@ -37,9 +37,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $schedule
             ->command(PruneBatchesCommand::class, [
-                'hours' => 24 * 7,
-                'unfinished' => 24 * 7,
-                'cancelled' => 24 * 7,
+                '--hours' => 24 * 7,
+                '--unfinished' => 24 * 7,
+                '--cancelled' => 24 * 7,
             ])
             ->daily();
     })
