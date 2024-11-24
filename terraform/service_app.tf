@@ -122,6 +122,10 @@ module "ecs_app" {
       name  = "SCOUT_DRIVER",
       value = "typesense"
     },
+    {
+      name  = "PHP_PM_MAX_CHILDREN",
+      value = 128
+    },
   ]
 
   secrets = [
