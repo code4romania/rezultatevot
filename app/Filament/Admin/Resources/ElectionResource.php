@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\DataLevel;
 use App\Enums\DefaultElectionPage;
 use App\Enums\ElectionType;
 use App\Filament\Admin\Resources\ElectionResource\Pages;
 use App\Filament\Admin\Resources\ElectionResource\RelationManagers\ScheduledJobRelationManager;
+use App\Models\Country;
+use App\Models\County;
 use App\Models\Election;
+use App\Models\Locality;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\KeyValue;
@@ -16,6 +20,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Infolists;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -102,12 +107,46 @@ class ElectionResource extends Resource
                             ->label(__('app.field.has_lists'))
                             ->default(false),
 
+
+
                         Select::make('properties.default_tab')
                             ->label(__('app.field.default_tab'))
                             ->options(DefaultElectionPage::options())
                             ->enum(DefaultElectionPage::class)
                             ->selectablePlaceholder(false)
                             ->nullable(),
+
+                        Forms\Components\Section::make(__('app.field.default_place'))
+                            ->columnSpanFull()
+                            ->statePath('properties.default_place')
+                            ->columns(2)
+                            ->schema([
+                                Select::make('level')
+                                    ->label(__('app.field.level'))
+                                    ->options(DataLevel::options())
+                                    ->enum(DataLevel::class)
+                                    ->live()
+                                    ->nullable(),
+                                Select::make('country')
+                                    ->label(__('app.field.country'))
+                                    ->options(Country::pluck('name', 'id'))
+                                    ->hidden(fn (Get $get) => ! DataLevel::isValue($get('level'), DataLevel::DIASPORA))
+                                    ->nullable(),
+
+                                Forms\Components\Group::make([
+                                    Select::make('county')
+                                        ->label(__('app.field.county'))
+                                        ->options(County::pluck('name', 'id'))
+                                        ->hidden(fn (Get $get) => ! DataLevel::isValue($get('level'), DataLevel::NATIONAL))
+                                        ->live()
+                                        ->nullable(),
+                                    Select::make('locality')
+                                        ->label(__('app.field.locality'))
+                                        ->options(fn (Get $get) => $get('county') ? Locality::where('county_id', $get('county'))->pluck('name', 'id') : [])
+                                        ->hidden(fn (Get $get) => ! $get('county'))
+                                        ->nullable(),
+                                ]),
+                            ]),
 
                         KeyValue::make('properties.tabs')
                             ->label(__('app.field.tabs'))

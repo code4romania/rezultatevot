@@ -40,6 +40,7 @@ return [
         'source_part' => 'Parte',
         'source_password' => 'Parolă',
         'change_password' => 'Schimbă parola',
+        'default_place' => 'Locație implicită',
         'source_url' => 'URL sursă',
         'source_username' => 'Utilizator',
         'subtitle' => 'Subtitlu',

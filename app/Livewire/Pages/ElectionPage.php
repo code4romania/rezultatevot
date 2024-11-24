@@ -45,6 +45,7 @@ abstract class ElectionPage extends Component implements HasForms
 
     public function mount()
     {
+        $this->checkDefaultPage();
         $validation = Validator::make([
             'country' => $this->country,
             'county' => $this->county,
@@ -216,5 +217,29 @@ abstract class ElectionPage extends Component implements HasForms
                 $this->election->type->getLabel(),
                 $this->election->year
             ));
+    }
+
+    private function checkDefaultPage(): void
+    {
+        if (data_get($this->election, 'properties.default_place')) {
+            $level = DataLevel::from(data_get($this->election, 'properties.default_place.level', DataLevel::TOTAL->value));
+            $country = data_get($this->election, 'properties.default_place.country', null);
+            $county = data_get($this->election, 'properties.default_place.county', null);
+            $locality = data_get($this->election, 'properties.default_place.locality', null);
+
+            if (blank($this->country) && $country) {
+                $this->country = $country;
+            }
+
+            if (blank($this->county) && $county) {
+                $this->county = (int) $county;
+            }
+
+            if (blank($this->locality) && $locality) {
+                $this->locality = (int) $locality;
+            }
+
+            dd($this->level, $this->country, $this->county, $this->locality);
+        }
     }
 }
