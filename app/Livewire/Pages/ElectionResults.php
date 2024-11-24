@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Pages;
 
+use App\Enums\Time;
 use App\Models\Candidate;
 use App\Models\Party;
 use App\Models\Vote;
@@ -11,6 +12,7 @@ use App\Repositories\RecordsRepository;
 use App\Repositories\VotesRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Number;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -29,28 +31,32 @@ class ElectionResults extends ElectionPage
         return view('livewire.pages.election-results');
     }
 
-    #[Computed(cache: true)]
+    #[Computed]
     public function parties(): Collection
     {
-        return Party::query()
-            ->whereBelongsTo($this->election)
-            // ->whereHas('votes', function (Builder $query) {
+        return Cache::remember("parties:{$this->election->id}", Time::DAY_IN_SECONDS->value, function () {
+            return Party::query()
+                ->whereBelongsTo($this->election)
+                // ->whereHas('votes', function (Builder $query) {
                 //     $query->whereBelongsTo($this->election);
-            // })
-            ->with('media')
-            ->get();
+                // })
+                ->with('media')
+                ->get();
+        });
     }
 
-    #[Computed(cache: true)]
+    #[Computed]
     public function candidates(): Collection
     {
-        return Candidate::query()
-            ->whereBelongsTo($this->election)
-            // ->whereHas('votes', function (Builder $query) {
+        return Cache::remember("candidates:{$this->election->id}", Time::DAY_IN_SECONDS->value, function () {
+            return Candidate::query()
+                ->whereBelongsTo($this->election)
+                // ->whereHas('votes', function (Builder $query) {
                 //     $query->whereBelongsTo($this->election);
-            // })
-            ->with('media')
-            ->get();
+                // })
+                ->with('media')
+                ->get();
+        });
     }
 
     #[Computed]
