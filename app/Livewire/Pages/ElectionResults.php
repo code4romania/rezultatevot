@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Pages;
 
+use App\Enums\Time;
 use App\Models\Candidate;
 use App\Models\Party;
 use App\Models\Vote;
@@ -11,6 +12,7 @@ use App\Repositories\RecordsRepository;
 use App\Repositories\VotesRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Number;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -32,25 +34,29 @@ class ElectionResults extends ElectionPage
     #[Computed()]
     public function parties(): Collection
     {
-        return Party::query()
-            ->whereBelongsTo($this->election)
-            ->whereHas('votes', function (Builder $query) {
-                $query->whereBelongsTo($this->election);
-            })
-            ->with('media')
-            ->get();
+        return Cache::remember("parties-with-votes:{$this->election->id}", Time::DAY_IN_SECONDS, function () {
+            return Party::query()
+                ->whereBelongsTo($this->election)
+                ->whereHas('votes', function (Builder $query) {
+                    $query->whereBelongsTo($this->election);
+                })
+                ->with('media')
+                ->get();
+        });
     }
 
     #[Computed()]
     public function candidates(): Collection
     {
-        return Candidate::query()
-            ->whereBelongsTo($this->election)
-            ->whereHas('votes', function (Builder $query) {
-                $query->whereBelongsTo($this->election);
-            })
-            ->with('media')
-            ->get();
+        return Cache::remember("candidates-with-votes:{$this->election->id}", Time::DAY_IN_SECONDS, function () {
+            return Candidate::query()
+                ->whereBelongsTo($this->election)
+                ->whereHas('votes', function (Builder $query) {
+                    $query->whereBelongsTo($this->election);
+                })
+                ->with('media')
+                ->get();
+        });
     }
 
     #[Computed]
