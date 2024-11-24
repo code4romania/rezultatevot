@@ -3,7 +3,7 @@ resource "aws_db_proxy" "main" {
   debug_logging          = false
   engine_family          = "MYSQL"
   idle_client_timeout    = 1800
-  require_tls            = true
+  require_tls            = false
   role_arn               = aws_iam_role.db_proxy_secrets.arn
   vpc_security_group_ids = [aws_security_group.database.id]
   vpc_subnet_ids         = aws_subnet.private.*.id
