@@ -6,20 +6,16 @@ namespace App\Livewire\Pages;
 
 use App\Models\Candidate;
 use App\Models\Party;
-use App\Models\Record;
 use App\Models\Vote;
+use App\Repositories\RecordsRepository;
+use App\Repositories\VotesRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use stdClass;
-use Tpetry\QueryExpressions\Function\Aggregate\Max;
-use Tpetry\QueryExpressions\Function\Aggregate\Min;
-use Tpetry\QueryExpressions\Function\Aggregate\Sum;
-use Tpetry\QueryExpressions\Language\Alias;
 
 class ElectionResults extends ElectionPage
 {
@@ -60,16 +56,14 @@ class ElectionResults extends ElectionPage
     #[Computed]
     public function aggregate(): Collection
     {
-        $result = Vote::query()
-            ->whereBelongsTo($this->election)
-            ->forLevel(
-                level: $this->level,
-                country: $this->country,
-                county: $this->county,
-                locality: $this->locality,
-                aggregate: true,
-            )
-            ->get();
+        $result = VotesRepository::getForLevel(
+            election: $this->election,
+            level: $this->level,
+            country: $this->country,
+            county: $this->county,
+            locality: $this->locality,
+            aggregate: true,
+        );
 
         $total = $result->sum('votes');
 
@@ -89,17 +83,15 @@ class ElectionResults extends ElectionPage
     #[Computed]
     public function recordStats(): Collection
     {
-        $record = Record::query()
-            ->whereBelongsTo($this->election)
-            ->forLevel(
-                level: $this->level,
-                country: $this->country,
-                county: $this->county,
-                locality: $this->locality,
-                aggregate: true,
-            )
-            ->toBase()
-            ->first();
+        $record = RecordsRepository::getForLevel(
+            election: $this->election,
+            level: $this->level,
+            country: $this->country,
+            county: $this->county,
+            locality: $this->locality,
+            aggregate: true,
+            toBase: true,
+        );
 
         return collect($record)
             ->forget('place')
@@ -112,40 +104,23 @@ class ElectionResults extends ElectionPage
     #[Computed]
     public function data(): Collection
     {
-        return DB::query()
-            ->select([
-                new Alias(DB::raw('ANY_VALUE(votable_id)'), 'votable_id'),
-                new Alias(DB::raw('ANY_VALUE(votable_type)'), 'votable_type'),
-                new Alias(new Max('votes'), 'votes'),
-                new Alias(new Sum('votes'), 'total_votes'),
-                new Alias(new Min('part'), 'part'),
-                'place',
-            ])
-            ->groupBy('place')
-            ->fromSub(
-                Vote::query()
-                    ->whereBelongsTo($this->election)
-                    ->forLevel(
-                        level: $this->level,
-                        country: null,
-                        county: $this->county,
-                        locality: null,
-                    )
-                    ->toBase(),
-                'votes'
-            )
-            ->get()
-            ->mapWithKeys(function (stdClass $vote) {
-                $votable = $this->getVotable($vote->votable_type, $vote->votable_id);
+        return VotesRepository::getMapDataForLevel(
+            election: $this->election,
+            level: $this->level,
+            country: null,
+            county: $this->county,
+            locality: null,
+        )->mapWithKeys(function (stdClass $vote) {
+            $votable = $this->getVotable($vote->votable_type, $vote->votable_id);
 
-                return [
-                    $vote->place => [
-                        'value' => percent($vote->votes, $vote->total_votes, formatted: true),
-                        'color' => $votable->color,
-                        'label' => $votable->getDisplayName(),
-                    ],
-                ];
-            });
+            return [
+                $vote->place => [
+                    'value' => percent($vote->votes, $vote->total_votes, formatted: true),
+                    'color' => $votable->color,
+                    'label' => $votable->getDisplayName(),
+                ],
+            ];
+        });
     }
 
     protected function getVotable(string $type, int $id): Party|Candidate

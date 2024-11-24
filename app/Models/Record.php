@@ -7,9 +7,11 @@ namespace App\Models;
 use App\Concerns\BelongsToElection;
 use App\Concerns\CanGroupByDataLevel;
 use App\Concerns\HasTemporaryTable;
+use App\Contracts\ClearsCache;
 use App\Contracts\TemporaryTable;
 use App\Enums\DataLevel;
 use App\Enums\Part;
+use App\Repositories\RecordsRepository;
 use Database\Factories\RecordFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Tpetry\QueryExpressions\Function\Aggregate\Sum;
 use Tpetry\QueryExpressions\Language\Alias;
 
-class Record extends Model implements TemporaryTable
+class Record extends Model implements TemporaryTable, ClearsCache
 {
     use BelongsToElection;
     use CanGroupByDataLevel;
@@ -111,5 +113,10 @@ class Record extends Model implements TemporaryTable
     public function getTemporaryTableUniqueColumns(): array
     {
         return ['election_id', 'county_id', 'country_id', 'section'];
+    }
+
+    public function clearCache(int $electionId): bool
+    {
+        return RecordsRepository::clearCache($electionId);
     }
 }
