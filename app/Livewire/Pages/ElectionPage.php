@@ -221,7 +221,7 @@ abstract class ElectionPage extends Component implements HasForms
 
     private function checkDefaultPage(): void
     {
-        if (blank($this->getQueryParameters) && data_get($this->election, 'properties.default_place')) {
+        if (blank($this->getQueryParameters()) && data_get($this->election, 'properties.default_place')) {
             $level = data_get($this->election, 'properties.default_place.level', 'total');
             $country = data_get($this->election, 'properties.default_place.country', null);
             $county = data_get($this->election, 'properties.default_place.county', null);

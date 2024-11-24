@@ -21,6 +21,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Infolists;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -107,8 +108,6 @@ class ElectionResource extends Resource
                             ->label(__('app.field.has_lists'))
                             ->default(false),
 
-
-
                         Select::make('properties.default_tab')
                             ->label(__('app.field.default_tab'))
                             ->options(DefaultElectionPage::options())
@@ -124,6 +123,7 @@ class ElectionResource extends Resource
                                 Select::make('level')
                                     ->label(__('app.field.level'))
                                     ->options(DataLevel::options())
+                                    ->afterStateUpdated(fn (Set $set) => $set('country', null))
                                     ->enum(DataLevel::class)
                                     ->live()
                                     ->nullable(),
@@ -138,7 +138,7 @@ class ElectionResource extends Resource
                                         ->label(__('app.field.county'))
                                         ->options(County::pluck('name', 'id'))
                                         ->hidden(fn (Get $get) => ! DataLevel::isValue($get('level'), DataLevel::NATIONAL))
-                                        ->afterStateUpdated(fn(Forms\Set $set) => $set('locality', null))
+                                        ->afterStateUpdated(fn (Set $set) => $set('locality', null))
                                         ->live()
                                         ->nullable(),
                                     Select::make('locality')
@@ -190,9 +190,31 @@ class ElectionResource extends Resource
                             ->label(__('app.field.is_live'))
                             ->boolean(),
 
+                        IconEntry::make('has_lists')
+                            ->label(__('app.field.has_lists'))
+                            ->boolean(),
+
                         IconEntry::make('is_visible')
                             ->label(__('app.field.is_visible'))
                             ->boolean(),
+
+                        Infolists\Components\Section::make(__('app.field.default_place'))
+                            ->columnSpanFull()
+                            ->statePath('properties.default_place')
+                            ->columns(2)
+                            ->schema([
+                                TextEntry::make('level')
+                                    ->label(__('app.field.level')),
+
+                                TextEntry::make('country')
+                                    ->label(__('app.field.country')),
+
+                                TextEntry::make('county')
+                                    ->label(__('app.field.county')),
+
+                                TextEntry::make('locality')
+                                    ->label(__('app.field.locality')),
+                            ]),
                     ]),
 
                 Infolists\Components\Section::make()

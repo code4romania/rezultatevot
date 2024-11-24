@@ -16,6 +16,7 @@ return [
         'country' => 'Țară',
         'county' => 'Județ',
         'level' => 'Nivel',
+        'has_lists' => 'Are liste',
         'created_at' => 'Creat la',
         'cron' => 'Interval',
         'date' => 'Dată',
