@@ -15,6 +15,7 @@ return [
         'color' => 'Culoare',
         'country' => 'Țară',
         'county' => 'Județ',
+        'level' => 'Nivel',
         'created_at' => 'Creat la',
         'cron' => 'Interval',
         'date' => 'Dată',
