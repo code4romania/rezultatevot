@@ -211,7 +211,7 @@ abstract class ElectionPage extends Component implements HasForms
     public function seo(string $title): SEOManager
     {
         return seo()
-            ->image(\Vite::asset('resources/images/banner-social.png'))
+//            ->image(\Vite::asset('resources/images/banner-social.png'))
             ->title(\sprintf(
                 '%s | %s %s',
                 $title,
