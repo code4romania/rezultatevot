@@ -125,6 +125,8 @@ class AppServiceProvider extends ServiceProvider
             // ->description(default: '')
             ->locale(app()->getLocale())
             ->favicon()
+            //TODO: Add a default image
+            ->image('https://d31wjq819xkxeg.cloudfront.net/Logo--Rezultate-Vot.png')
             ->twitter();
     }
 
