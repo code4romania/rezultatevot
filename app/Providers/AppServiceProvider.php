@@ -16,6 +16,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -124,6 +125,7 @@ class AppServiceProvider extends ServiceProvider
             // TODO: Add a default description
             // ->description(default: '')
             ->locale(app()->getLocale())
+            ->image(Vite::asset('resources/images/banner-social.png'))
             ->favicon()
             ->twitter();
     }
