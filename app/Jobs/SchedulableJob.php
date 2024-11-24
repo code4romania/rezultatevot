@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Jobs\Middleware\RateLimitSchedulableJobMiddleware;
 use App\Models\ScheduledJob;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -48,6 +49,13 @@ abstract class SchedulableJob implements ShouldQueue, ShouldBeUnique
         $this->execute();
 
         $this->scheduledJob->touch('last_run_at');
+    }
+
+    public function middleware(): array
+    {
+        return [
+            new RateLimitSchedulableJobMiddleware('schedulable-job'),
+        ];
     }
 
     public function uniqueId(): string
