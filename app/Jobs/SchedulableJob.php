@@ -42,4 +42,9 @@ abstract class SchedulableJob implements ShouldQueue, ShouldBeUnique
 
         $this->scheduledJob->touch('last_run_at');
     }
+
+    public function uniqueId(): string
+    {
+        return "scheduled-job:{$this->scheduledJob->id}";
+    }
 }

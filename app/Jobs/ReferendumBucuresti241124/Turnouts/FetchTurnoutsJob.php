@@ -68,6 +68,7 @@ class FetchTurnoutsJob extends SchedulableJob
 
         Bus::batch([new ImportTurnoutsJob($this->scheduledJob, County::find(403))])
             ->catch($persistAndClean)
+            ->then($persistAndClean)
             ->then(fn () => UpdateElectionTurnoutsTimestamp::dispatch($electionId))
             ->name("$electionName / Prezență / $time")
             ->allowFailures()
