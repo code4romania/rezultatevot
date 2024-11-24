@@ -124,7 +124,7 @@ module "ecs_app" {
     },
     {
       name  = "PHP_PM_MAX_CHILDREN",
-      value = 128
+      value = 256
     },
   ]
 
