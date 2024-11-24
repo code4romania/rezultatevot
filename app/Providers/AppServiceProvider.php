@@ -16,7 +16,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -66,8 +65,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->resolveSchedule();
 
-        $this->setSeoDefaults();
-
         Scramble::registerApi('v1', [
             'api_path' => 'api/v1',
         ]);
@@ -112,22 +109,6 @@ class AppServiceProvider extends ServiceProvider
             'user' => \App\Models\User::class,
             'vote' => \App\Models\Vote::class,
         ]);
-    }
-
-    protected function setSeoDefaults(): void
-    {
-        seo()
-            ->withUrl()
-            ->title(
-                default: config('app.name'),
-                modifier: fn (string $title) => $title . ' — ' . config('app.name')
-            )
-            // TODO: Add a default description
-            // ->description(default: '')
-            ->locale(app()->getLocale())
-            ->image(Vite::asset('resources/images/banner-social.png'))
-            ->favicon()
-            ->twitter();
     }
 
     protected function resolveSchedule(): void
