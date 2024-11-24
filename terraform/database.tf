@@ -1,7 +1,7 @@
 resource "aws_db_instance" "main" {
   identifier          = local.namespace
   db_name             = "rezultatevot"
-  instance_class      = var.env == "production" ? "db.m7g.xlarge" : "db.t4g.micro"
+  instance_class      = var.env == "production" ? "db.m7g.4xlarge" : "db.t4g.micro"
   publicly_accessible = false
   multi_az            = true
   deletion_protection = true
