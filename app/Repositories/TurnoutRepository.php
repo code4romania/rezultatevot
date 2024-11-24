@@ -9,7 +9,6 @@ use App\Models\Election;
 use App\Models\Turnout;
 use App\Services\CacheService;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class TurnoutRepository
 {
@@ -29,8 +28,8 @@ class TurnoutRepository
         array $addSelect = [],
     ) {
         return CacheService::make('turnout', $election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect)
-            ->remember(
-                fn () => Turnout::query()
+            ->remember(function () use ($election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect) {
+                $query = Turnout::query()
                     ->whereBelongsTo($election)
                     ->forLevel(
                         level: $level,
@@ -40,13 +39,10 @@ class TurnoutRepository
                         aggregate: $aggregate,
                     )
                     ->when($addSelect, fn (EloquentBuilder $query) => $query->addSelect($addSelect))
-                    ->when($toBase, fn (EloquentBuilder $query) => $query->toBase())
-                    ->when(
-                        $aggregate,
-                        fn (EloquentBuilder|QueryBuilder $query) => $query->first(),
-                        fn (EloquentBuilder|QueryBuilder $query) => $query->get()
-                    )
-            );
+                    ->when($toBase, fn (EloquentBuilder $query) => $query->toBase());
+
+                return $aggregate ? $query->first() : $query->get();
+            });
     }
 
     public static function getForLevelAndArea(
@@ -87,8 +83,8 @@ class TurnoutRepository
         array $addSelect = [],
     ) {
         return CacheService::make(['turnout', 'demographics'], $election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect)
-            ->remember(
-                fn () => Turnout::query()
+            ->remember(function () use ($election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect) {
+                $query = Turnout::query()
                     ->whereBelongsTo($election)
                     ->groupByDemographics(
                         level: $level,
@@ -98,12 +94,9 @@ class TurnoutRepository
                         aggregate: $aggregate,
                     )
                     ->when($addSelect, fn (EloquentBuilder $query) => $query->addSelect($addSelect))
-                    ->when($toBase, fn (EloquentBuilder $query) => $query->toBase())
-                    ->when(
-                        $aggregate,
-                        fn (EloquentBuilder|QueryBuilder $query) => $query->first(),
-                        fn (EloquentBuilder|QueryBuilder $query) => $query->get()
-                    )
-            );
+                    ->when($toBase, fn (EloquentBuilder $query) => $query->toBase());
+
+                return $aggregate ? $query->first() : $query->get();
+            });
     }
 }
