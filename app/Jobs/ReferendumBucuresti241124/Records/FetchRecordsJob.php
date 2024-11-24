@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Presidential241124\Records;
+namespace App\Jobs\ReferendumBucuresti241124\Records;
 
 use App\Jobs\DeleteTemporaryTableData;
 use App\Jobs\PersistTemporaryTableData;
@@ -20,7 +20,7 @@ class FetchRecordsJob extends SchedulableJob
 {
     public static function name(): string
     {
-        return 'Prezidențiale 24.11.2024 / Procese Verbale';
+        return 'Referendum Bucuresti 24.11.2024 / Procese Verbale';
     }
 
     public function execute(): void
@@ -57,66 +57,17 @@ class FetchRecordsJob extends SchedulableJob
                     );
             });
 
-
         $electionName = $this->scheduledJob->election->getFilamentName();
         $electionId = $this->scheduledJob->election_id;
 
-        $time = now()->toDateTimeString();
-
         $sourceFiles = collect([
-            '1' => 'AB',
-            '2' => 'AR',
-            '3' => 'AG',
-            '4' => 'BC',
-            '5' => 'BH',
-            '6' => 'BN',
-            '7' => 'BT',
-            '8' => 'BV',
-            '9' => 'BR',
-            '10' => 'BZ',
-            '11' => 'CS',
-            '12' => 'CL',
-            '13' => 'CJ',
-            '14' => 'CT',
-            '15' => 'CV',
-            '16' => 'DB',
-            '17' => 'DJ',
-            '18' => 'GL',
-            '19' => 'GR',
-            '20' => 'GJ',
-            '21' => 'HR',
-            '22' => 'HD',
-            '23' => 'IL',
-            '24' => 'IS',
-            '25' => 'IF',
-            '26' => 'MM',
-            '27' => 'MH',
-            '28' => 'MS',
-            '29' => 'NT',
-            '30' => 'OT',
-            '31' => 'PH',
-            '32' => 'SM',
-            '33' => 'SJ',
-            '34' => 'SB',
-            '35' => 'SV',
-            '36' => 'TR',
-            '37' => 'TM',
-            '38' => 'TL',
-            '39' => 'VS',
-            '40' => 'VL',
-            '41' => 'VN',
-
-            '44' => 'B',
-            '45' => 'B',
-            '46' => 'B',
-            '47' => 'B',
-            '48' => 'B',
-            '49' => 'B',
+            '42' => 'B',
         ]);
 
         $jobs = $sourceFiles
-            ->map(fn (string $countyCode, string $filename) => new ImportCountyRecordsJob($this->scheduledJob, $countyCode, $filename))
-            ->push(new ImportAbroadRecordsJob($this->scheduledJob));
+            ->map(fn (string $countyCode, string $filename) => new ImportRecordsJob($this->scheduledJob, $countyCode, $filename));
+
+        $time = now()->toDateTimeString();
 
         $persistAndClean = fn () => Bus::chain([
             new PersistTemporaryTableData(Record::class, $electionId),
