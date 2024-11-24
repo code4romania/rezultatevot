@@ -46,6 +46,23 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
+  # Embed
+  ordered_cache_behavior {
+    path_pattern             = "/embed/*"
+    allowed_methods          = ["GET", "HEAD", "OPTIONS"]
+    cached_methods           = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id         = aws_lb.main.dns_name
+    cache_policy_id          = aws_cloudfront_cache_policy.default.id
+    origin_request_policy_id = aws_cloudfront_origin_request_policy.default.id
+    viewer_protocol_policy   = "redirect-to-https"
+    compress                 = true
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.www_redirect.arn
+    }
+  }
+
   # Media
   ordered_cache_behavior {
     path_pattern     = "/media/*"
@@ -97,9 +114,9 @@ resource "aws_cloudfront_distribution" "main" {
 
 resource "aws_cloudfront_cache_policy" "default" {
   name        = "${local.namespace}-cache-policy"
-  min_ttl     = 300
-  default_ttl = 300
-  max_ttl     = 300
+  min_ttl     = 60
+  default_ttl = 60
+  max_ttl     = 60
 
   parameters_in_cache_key_and_forwarded_to_origin {
     enable_accept_encoding_brotli = true
