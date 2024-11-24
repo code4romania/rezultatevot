@@ -85,7 +85,6 @@ class ImportCorrespondenceRecordsJob extends SchedulableJob
 
                 Vote::saveToTemporaryTable($votes->all());
             } catch (CountryCodeNotFoundException $th) {
-                logger()->error($th->getMessage());
                 CountryCodeNotFound::dispatch($row['uat_name'], $this->scheduledJob->election);
             }
         }
@@ -97,10 +96,6 @@ class ImportCorrespondenceRecordsJob extends SchedulableJob
     {
         $country = Country::search($name)->first();
 
-        logger()->debug('Country search', [
-            'name' => $name,
-            'country' => $country?->id,
-        ]);
         if (! $country) {
             throw new CountryCodeNotFoundException($name);
         }
