@@ -7,11 +7,11 @@ module "ecs_app" {
 
   name         = "${local.namespace}-app"
   cluster_name = module.ecs_cluster.cluster_name
-  min_capacity = 3
+  min_capacity = 6
   max_capacity = 9
 
-  deployment_minimum_healthy_percent = 33
-  deployment_maximum_percent         = 166
+  deployment_minimum_healthy_percent = 50
+  deployment_maximum_percent         = 200
 
   image_repo = local.image.repo
   image_tag  = local.image.tag
