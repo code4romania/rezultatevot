@@ -66,8 +66,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->resolveSchedule();
 
-        $this->setSeoDefaults();
-
         Scramble::registerApi('v1', [
             'api_path' => 'api/v1',
         ]);
@@ -112,22 +110,6 @@ class AppServiceProvider extends ServiceProvider
             'user' => \App\Models\User::class,
             'vote' => \App\Models\Vote::class,
         ]);
-    }
-
-    protected function setSeoDefaults(): void
-    {
-        seo()
-            ->withUrl()
-            ->title(
-                default: config('app.name'),
-                modifier: fn (string $title) => $title . ' — ' . config('app.name')
-            )
-            // TODO: Add a default description
-            // ->description(default: '')
-            ->locale(app()->getLocale())
-            ->image(Vite::asset('resources/images/banner-social.png'))
-            ->favicon()
-            ->twitter();
     }
 
     protected function resolveSchedule(): void
