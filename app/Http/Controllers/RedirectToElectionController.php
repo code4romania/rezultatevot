@@ -13,6 +13,7 @@ class RedirectToElectionController extends Controller
     {
         $election ??= Election::query()
             ->where('is_visible', true)
+            ->orderBy('type')
             ->latest()
             ->first();
 
