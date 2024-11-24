@@ -57,6 +57,10 @@ return [
         'voters_total' => 'Total votanți',
         'year' => 'An',
         'description' => 'Descriere',
+        'eligible_voters_total' => 'Total alegători înscriși în liste',
+        'present_voters_total' => 'Total alegători prezenți la urne',
+        'votes_valid' => 'Total voturi valabil exprimate',
+        'votes_null' => 'Total voturi nule',
     ],
 
     'navigation' => [
