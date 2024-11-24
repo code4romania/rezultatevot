@@ -138,6 +138,7 @@ class ElectionResource extends Resource
                                         ->label(__('app.field.county'))
                                         ->options(County::pluck('name', 'id'))
                                         ->hidden(fn (Get $get) => ! DataLevel::isValue($get('level'), DataLevel::NATIONAL))
+                                        ->afterStateUpdated(fn(Forms\Set $set) => $set('locality', null))
                                         ->live()
                                         ->nullable(),
                                     Select::make('locality')
