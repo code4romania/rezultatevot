@@ -108,7 +108,7 @@ class ScheduledJob extends Model
     public function fetchSource(array $map = []): Response
     {
         // Jitter to prevent rate limiting
-        usleep(1000 * rand(1, 256));
+        usleep(1000 * rand(50, 256));
 
         return Http::createPendingRequest()
             ->when($this->requiresAuthentication(), function (PendingRequest $request) {
