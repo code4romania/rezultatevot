@@ -39,6 +39,7 @@ class Record extends Model implements TemporaryTable, ClearsCache
      */
     protected $fillable = [
         'election_id',
+        'country_id',
         'county_id',
         'locality_id',
         'section',
