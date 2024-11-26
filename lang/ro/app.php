@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
 
-    'banner' => 'O soluție Commit Global.',
+    'banner' => 'O soluție Code for Romania.',
     'skip' => 'Sari la conținut',
     'all' => 'Toate',
     'generate' => 'Generează',
