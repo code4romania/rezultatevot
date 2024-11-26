@@ -90,7 +90,8 @@ resource "aws_cloudfront_distribution" "main" {
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
 
-    cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" #Managed-CachingDisabled
+    # cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" #Managed-CachingDisabled
+    cache_policy_id          = aws_cloudfront_cache_policy.default.id
     origin_request_policy_id = aws_cloudfront_origin_request_policy.admin.id
 
     function_association {
@@ -114,8 +115,8 @@ resource "aws_cloudfront_distribution" "main" {
 
 resource "aws_cloudfront_cache_policy" "default" {
   name        = "${local.namespace}-cache-policy"
-  min_ttl     = 60
-  default_ttl = 60
+  min_ttl     = 30
+  default_ttl = 30
   max_ttl     = 60
 
   parameters_in_cache_key_and_forwarded_to_origin {
