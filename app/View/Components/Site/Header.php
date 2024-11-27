@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\View\Components\Site;
 
-use App\Enums\Time;
-use Datlechin\FilamentMenuBuilder\Models\Menu;
+use App\Models\Menu;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -26,15 +25,8 @@ class Header extends Component
 
     protected function getMenuItems(): Collection
     {
-        return Cache::remember('header-menu', Time::DAY_IN_SECONDS, function () {
-            $menu = Menu::location('header');
-
-            if (blank($menu)) {
-                return collect();
-            }
-
-            return $menu->menuItems;
-        });
+        return Cache::tags('menus')
+            ->rememberForever('header-menu', fn () => Menu::location('header')?->menuItems);
     }
 
     public function render(): View

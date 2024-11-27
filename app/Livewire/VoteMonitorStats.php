@@ -6,6 +6,7 @@ namespace App\Livewire;
 
 use App\Models\Election;
 use App\Models\VoteMonitorStat;
+use App\Services\CacheService;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -18,12 +19,15 @@ class VoteMonitorStats extends Component
     #[Computed]
     public function stats(): array
     {
-        return VoteMonitorStat::query()
-            ->whereBelongsTo($this->election)
-            ->where('enabled', true)
-            ->orderBy('order')
-            ->get()
-            ->toArray();
+        return CacheService::make('vote-monitor-stats', $this->election)
+            ->remember(
+                fn () => VoteMonitorStat::query()
+                    ->whereBelongsTo($this->election)
+                    ->where('enabled', true)
+                    ->orderBy('order')
+                    ->get()
+                    ->toArray()
+            );
     }
 
     #[Computed]

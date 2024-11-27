@@ -7,6 +7,7 @@ namespace App\View\Components;
 use App\Models\Election;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Component;
 
 class Timeline extends Component
@@ -20,11 +21,15 @@ class Timeline extends Component
 
     public function __construct()
     {
-        $this->years = Election::all()
-            ->groupBy([
-                'year',
-                fn (Election $election) => $election->type->getLabel(),
-            ]);
+        $this->years = Cache::tags(['elections'])
+            ->rememberForever(
+                'elections-timeline',
+                fn () => Election::all()
+                    ->groupBy([
+                        'year',
+                        fn (Election $election) => $election->type->getLabel(),
+                    ])
+            );
 
         $this->election = request()->election;
     }

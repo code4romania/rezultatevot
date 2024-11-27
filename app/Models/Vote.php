@@ -7,11 +7,9 @@ namespace App\Models;
 use App\Concerns\BelongsToElection;
 use App\Concerns\CanGroupByDataLevel;
 use App\Concerns\HasTemporaryTable;
-use App\Contracts\ClearsCache;
 use App\Contracts\TemporaryTable;
 use App\Enums\DataLevel;
 use App\Enums\Part;
-use App\Repositories\VotesRepository;
 use Database\Factories\VoteFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,7 +19,7 @@ use Tpetry\QueryExpressions\Function\Aggregate\Min;
 use Tpetry\QueryExpressions\Function\Aggregate\Sum;
 use Tpetry\QueryExpressions\Language\Alias;
 
-class Vote extends Model implements TemporaryTable, ClearsCache
+class Vote extends Model implements TemporaryTable
 {
     use BelongsToElection;
     use CanGroupByDataLevel;
@@ -95,10 +93,5 @@ class Vote extends Model implements TemporaryTable, ClearsCache
     public function getTemporaryTableUniqueColumns(): array
     {
         return ['election_id', 'county_id', 'country_id', 'section', 'votable_type', 'votable_id'];
-    }
-
-    public function clearCache(int $electionId): bool
-    {
-        return VotesRepository::clearCache($electionId);
     }
 }

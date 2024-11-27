@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Pages;
 
-use App\Enums\Time;
 use App\Models\Candidate;
 use App\Models\Party;
 use App\Models\Vote;
@@ -34,7 +33,7 @@ class ElectionResults extends ElectionPage
     #[Computed]
     public function parties(): Collection
     {
-        return Cache::remember("parties:{$this->election->id}", Time::DAY_IN_SECONDS->value, function () {
+        return Cache::remember("parties:{$this->election->id}", now()->addDay(), function () {
             return Party::query()
                 ->whereBelongsTo($this->election)
                 // ->whereHas('votes', function (Builder $query) {
@@ -48,7 +47,7 @@ class ElectionResults extends ElectionPage
     #[Computed]
     public function candidates(): Collection
     {
-        return Cache::remember("candidates:{$this->election->id}", Time::DAY_IN_SECONDS->value, function () {
+        return Cache::remember("candidates:{$this->election->id}", now()->addDay(), function () {
             return Candidate::query()
                 ->whereBelongsTo($this->election)
                 // ->whereHas('votes', function (Builder $query) {

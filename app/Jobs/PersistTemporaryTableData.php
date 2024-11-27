@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Contracts\ClearsCache;
 use App\Contracts\TemporaryTable;
 use App\Jobs\Middleware\RateLimitSchedulableJobMiddleware;
 use Exception;
@@ -64,10 +63,6 @@ class PersistTemporaryTableData implements ShouldQueue
                 SELECT {$selectColumns} FROM `{$model->getTemporaryTable()}` ORDER BY `election_id`
                 ON DUPLICATE KEY UPDATE {$updateColumns};
             SQL);
-        }
-
-        if ($model instanceof ClearsCache) {
-            $model->clearCache($this->electionId);
         }
     }
 
