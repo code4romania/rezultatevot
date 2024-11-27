@@ -8,6 +8,9 @@ use App\Filament\Admin\Pages\Auth\Login;
 use App\Filament\Admin\Resources\ElectionResource;
 use App\Filament\Admin\Resources\MenuResource;
 use App\Models\Election;
+use App\Models\Menu;
+use App\Models\MenuItem;
+use App\Models\MenuLocation;
 use App\Models\Page;
 use Datlechin\FilamentMenuBuilder\FilamentMenuBuilderPlugin;
 use Datlechin\FilamentMenuBuilder\MenuPanel\ModelMenuPanel;
@@ -67,6 +70,9 @@ class AdminPanelProvider extends PanelProvider
 
                 FilamentMenuBuilderPlugin::make()
                     ->usingResource(MenuResource::class)
+                    ->usingMenuModel(Menu::class)
+                    ->usingMenuItemModel(MenuItem::class)
+                    ->usingMenuLocationModel(MenuLocation::class)
                     ->addLocations([
                         'header' => 'Header',
                         'footer' => 'Footer',

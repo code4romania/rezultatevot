@@ -9,6 +9,7 @@ use App\Models\Country;
 use App\Models\County;
 use App\Models\Election;
 use App\Models\Locality;
+use App\Services\CacheService;
 use ArchTech\SEO\SEOManager;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
@@ -46,6 +47,7 @@ abstract class ElectionPage extends Component implements HasForms
     public function mount()
     {
         $this->checkDefaultPage();
+
         $validation = Validator::make([
             'country' => $this->country,
             'county' => $this->county,
@@ -91,13 +93,17 @@ abstract class ElectionPage extends Component implements HasForms
                             ->label(__('app.field.country'))
                             ->placeholder(__('app.field.country'))
                             ->hiddenLabel()
-                            ->options(
-                                fn () => Country::query()
-                                    ->whereHas($whereHasKey, function (Builder $query) {
-                                        $query->whereBelongsTo($this->election);
-                                    })
-                                    ->pluck('name', 'id')
-                            )
+                            ->options(function () use ($whereHasKey) {
+                                return CacheService::make(['countries', $whereHasKey], $this->election)
+                                    ->remember(
+                                        fn () => Country::query()
+                                            ->whereHas($whereHasKey, function (Builder $query) {
+                                                $query->whereBelongsTo($this->election)
+                                                    ->whereNotNull('country_id');
+                                            })
+                                            ->pluck('name', 'id')
+                                    );
+                            })
                             ->afterStateUpdated(function (Set $set) {
                                 $set('county', null);
                                 $set('locality', null);
@@ -110,13 +116,17 @@ abstract class ElectionPage extends Component implements HasForms
                             ->label(__('app.field.county'))
                             ->placeholder(__('app.field.county'))
                             ->hiddenLabel()
-                            ->options(
-                                fn () => County::query()
-                                    ->whereHas($whereHasKey, function (Builder $query) {
-                                        $query->whereBelongsTo($this->election);
-                                    })
-                                    ->pluck('name', 'id')
-                            )
+                            ->options(function () use ($whereHasKey) {
+                                return CacheService::make(['counties', $whereHasKey], $this->election)
+                                    ->remember(
+                                        fn () => County::query()
+                                            ->whereHas($whereHasKey, function (Builder $query) use ($whereHasKey) {
+                                                $query->whereBelongsTo($this->election)
+                                                    ->whereNotNull("{$whereHasKey}.county_id");
+                                            })
+                                            ->pluck('name', 'id')
+                                    );
+                            })
                             ->afterStateUpdated(function (Set $set) {
                                 $set('locality', null);
                             })
@@ -128,15 +138,24 @@ abstract class ElectionPage extends Component implements HasForms
                             ->label(__('app.field.locality'))
                             ->hiddenLabel()
                             ->placeholder(__('app.field.locality'))
-                            ->options(
-                                fn (Get $get) => Locality::query()
-                                    ->where('county_id', $get('county'))
-                                    ->whereHas($whereHasKey, function (Builder $query) {
-                                        $query->whereBelongsTo($this->election);
-                                    })
-                                    ->limit(1000)
-                                    ->pluck('name', 'id')
-                            )
+                            ->options(function (Get $get) use ($whereHasKey) {
+                                $county_id = $get('county');
+
+                                return CacheService::make(['localities', $whereHasKey], $this->election, county: $county_id)
+                                    ->remember(
+                                        fn () => Locality::query()
+                                            ->where('county_id', $county_id)
+                                            ->whereHas($whereHasKey, function (Builder $query) use ($county_id) {
+                                                $query->whereBelongsTo($this->election);
+
+                                                if ($county_id !== 403) {
+                                                    $query->whereNull('parent_id');
+                                                }
+                                            })
+                                            ->limit(150)
+                                            ->pluck('name', 'id')
+                                    );
+                            })
                             ->visible(fn (Get $get) => DataLevel::isValue($get('level'), DataLevel::NATIONAL) &&
                             ! \is_null($get('county')))
                             ->searchable()

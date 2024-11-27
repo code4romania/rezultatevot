@@ -13,13 +13,9 @@ class RedirectToElectionController extends Controller
     {
         $election ??= Election::query()
             ->where('is_visible', true)
-            ->orderBy('type')
-            ->latest()
             ->first();
 
-        if (blank($election)) {
-            abort(404);
-        }
+        abort_unless($election, 404);
 
         return redirect()->to($election->getDefaultUrl());
     }

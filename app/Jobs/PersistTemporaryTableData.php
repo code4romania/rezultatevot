@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Contracts\ClearsCache;
 use App\Contracts\TemporaryTable;
+use App\Jobs\Middleware\RateLimitSchedulableJobMiddleware;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -64,9 +64,12 @@ class PersistTemporaryTableData implements ShouldQueue
                 ON DUPLICATE KEY UPDATE {$updateColumns};
             SQL);
         }
+    }
 
-        if ($model instanceof ClearsCache) {
-            $model->clearCache($this->electionId);
-        }
+    public function middleware(): array
+    {
+        return [
+            new RateLimitSchedulableJobMiddleware('persist-temporary-table-data'),
+        ];
     }
 }

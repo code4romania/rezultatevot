@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
 
-    'banner' => 'O soluție Commit Global.',
+    'banner' => 'O soluție Code for Romania.',
     'skip' => 'Sari la conținut',
     'all' => 'Toate',
     'generate' => 'Generează',
@@ -57,6 +57,10 @@ return [
         'voters_total' => 'Total votanți',
         'year' => 'An',
         'description' => 'Descriere',
+        'eligible_voters_total' => 'Numărătoare: total alegători înscriși pe liste',
+        'present_voters_total' => 'Numărătoare: total alegători prezenți la urne',
+        'votes_valid' => 'Total voturi valabil exprimate',
+        'votes_null' => 'Total voturi nule',
     ],
 
     'navigation' => [

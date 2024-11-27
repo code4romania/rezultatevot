@@ -2,7 +2,7 @@ locals {
   namespace = "rezultatevot-v2-${var.env}"
   image = {
     repo = "code4romania/rezultatevot",
-    tag  = "0.5.13"
+    tag  = "0.9.0"
   }
 
   domains = [

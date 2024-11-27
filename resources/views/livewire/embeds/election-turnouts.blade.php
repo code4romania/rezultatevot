@@ -21,6 +21,10 @@
         :country="$country"
         :county="$county"
         :level="$level"
+        :total-value="percent($this->aggregate?->value, $this->aggregate?->max)"
+        :total-value-formatted="percent($this->aggregate?->value, $this->aggregate?->max, formatted: true)"
+        :total-label="__('app.navigation.turnout')"
         :data="$this->data->toArray()"
+        :legend="$this->getLegend()"
         embed />
 </div>

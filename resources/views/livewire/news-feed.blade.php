@@ -12,12 +12,9 @@
                 </div>
 
                 <div x-on:refresh-feed="$wire.reload()" class="relative grid gap-4 mt-10 sm:gap-8">
-                    {{ $this->articles->links(data: ['scrollTo' => false]) }}
                     @foreach ($this->articles as $article)
                         <x-news-feed-item :article="$article" />
                     @endforeach
-
-                    {{ $this->articles->links(data: ['scrollTo' => '#newsfeed']) }}
                 </div>
             </div>
 

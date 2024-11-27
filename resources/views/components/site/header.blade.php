@@ -8,7 +8,7 @@
         <div class="flex items-center gap-4 sm:relative">
             <div class="items-center hidden gap-2 md:flex">
                 @foreach ($menuItems as $item)
-                    <x-navigation-item :item="$item" />
+                    <x-navigation-item :item="$item" primary />
                 @endforeach
             </div>
 

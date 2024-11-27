@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enums\DataLevel;
-use App\Enums\Time;
 use App\Models\Election;
 use Closure;
 use Illuminate\Support\Arr;
@@ -13,7 +12,14 @@ use Illuminate\Support\Facades\Cache;
 
 class CacheService
 {
-    protected int $ttl = Time::DAY_IN_SECONDS->value;
+    /**
+     * TTLs for stale-while-revalidate cache.
+     * Fresh for 45s, revalidate up to 24h.
+     * @var array
+     */
+    protected array $ttl = [
+        45, 86400,
+    ];
 
     protected array $tags = [];
 
@@ -32,7 +38,7 @@ class CacheService
     ) {
         $this->tags = $this->getTags();
 
-        $this->key = "election:{$this->getElectionId()}:{$this->getName()}:{$level?->value}:{$country}:{$county}:{$locality}:{$aggregate}:{$toBase}:{$this->getAddSelect()}";
+        $this->key = $this->getKey();
     }
 
     public static function make(
@@ -70,10 +76,7 @@ class CacheService
 
     public function remember(Closure $callback): mixed
     {
-        return match (Cache::supportsTags() && filled($this->tags)) {
-            true => Cache::tags($this->tags)->remember($this->key, $this->ttl, $callback),
-            default => Cache::remember($this->key, $this->ttl, $callback)
-        };
+        return Cache::tags($this->tags)->flexible($this->key, $this->ttl, $callback);
     }
 
     protected function getElectionId(): int
@@ -93,6 +96,22 @@ class CacheService
     protected function getAddSelect(): string
     {
         return implode('-', $this->addSelect);
+    }
+
+    protected function getKey(): string
+    {
+        return collect([
+            'election',
+            $this->getElectionId(),
+            $this->getName(),
+            $this->level?->value,
+            $this->country,
+            $this->county,
+            $this->locality,
+            $this->aggregate,
+            $this->toBase,
+            $this->getAddSelect(),
+        ])->join(':');
     }
 
     protected function getTags(): array

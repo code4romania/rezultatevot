@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\BelongsToElection;
+use App\Concerns\ClearsCache;
 use App\Concerns\Publishable;
 use App\Enums\User\Role;
 use Database\Factories\ArticleFactory;
@@ -18,6 +19,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Article extends Model implements HasMedia
 {
+    use ClearsCache;
     use HasFactory;
     use BelongsToElection;
     use InteractsWithMedia;
@@ -73,5 +75,12 @@ class Article extends Model implements HasMedia
                     ->keepOriginalImageFormat()
                     ->optimize();
             });
+    }
+
+    public function getCacheTags(): array
+    {
+        return [
+            "election:{$this->election_id}:articles",
+        ];
     }
 }

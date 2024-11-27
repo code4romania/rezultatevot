@@ -37,6 +37,7 @@ class Record extends Model implements TemporaryTable
      */
     protected $fillable = [
         'election_id',
+        'country_id',
         'county_id',
         'locality_id',
         'section',
@@ -49,6 +50,7 @@ class Record extends Model implements TemporaryTable
         'present_voters_permanent', // b1
         'present_voters_special', // b2
         'present_voters_supliment', // b3
+        'present_voters_mail', // b4
         'papers_received', // c >= d + e + f
         'papers_unused', // d
         'votes_valid', // e <= b - f
@@ -72,6 +74,7 @@ class Record extends Model implements TemporaryTable
             'present_voters_permanent' => 'integer',
             'present_voters_special' => 'integer',
             'present_voters_supliment' => 'integer',
+            'present_voters_mail' => 'integer',
             'papers_received' => 'integer',
             'papers_unused' => 'integer',
             'votes_valid' => 'integer',

@@ -16,7 +16,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Encryption\MissingAppKeyException;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -103,6 +102,9 @@ class AppServiceProvider extends ServiceProvider
             'county' => \App\Models\County::class,
             'election' => \App\Models\Election::class,
             'locality' => \App\Models\Locality::class,
+            'menu_item' => \App\Models\MenuItem::class,
+            'menu_location' => \App\Models\MenuLocation::class,
+            'menu' => \App\Models\Menu::class,
             'page' => \App\Models\Page::class,
             'party' => \App\Models\Party::class,
             'record' => \App\Models\Record::class,

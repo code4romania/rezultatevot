@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\View\Components\Election;
 
 use App\Enums\DataLevel;
-use App\Enums\Time;
 use App\Models\Country;
 use App\Models\County;
 use App\Models\Locality;
@@ -60,7 +59,7 @@ class Title extends Component
 
         return Cache::remember(
             "country-{$id}",
-            Time::DAY_IN_SECONDS,
+            now()->addDay(),
             fn () => Country::find($id)
         );
     }
@@ -73,7 +72,7 @@ class Title extends Component
 
         return Cache::remember(
             "county-{$id}",
-            Time::DAY_IN_SECONDS,
+            now()->addDay(),
             fn () => County::find($id)
         );
     }
@@ -86,7 +85,7 @@ class Title extends Component
 
         return Cache::remember(
             "locality-{$id}",
-            Time::DAY_IN_SECONDS,
+            now()->addDay(),
             fn () => Locality::find($id)
         );
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\ClearsCache;
 use App\Concerns\HasSlug;
 use App\Enums\ElectionType;
 use Database\Factories\ElectionFactory;
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Election extends Model implements HasName, HasAvatar
 {
+    use ClearsCache;
     /** @use HasFactory<ElectionFactory> */
     use HasFactory;
     use HasSlug;
@@ -126,5 +128,10 @@ class Election extends Model implements HasName, HasAvatar
         }
 
         return 'https://ui-avatars.com/api/?name=E';
+    }
+
+    public function getCacheTags(): array
+    {
+        return ['elections'];
     }
 }

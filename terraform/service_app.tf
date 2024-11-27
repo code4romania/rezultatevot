@@ -7,8 +7,8 @@ module "ecs_app" {
 
   name         = "${local.namespace}-app"
   cluster_name = module.ecs_cluster.cluster_name
-  min_capacity = 6
-  max_capacity = 9
+  min_capacity = 2
+  max_capacity = 18
 
   deployment_minimum_healthy_percent = 50
   deployment_maximum_percent         = 200
@@ -122,6 +122,14 @@ module "ecs_app" {
       name  = "SCOUT_DRIVER",
       value = "typesense"
     },
+    {
+      name  = "PHP_PM_MAX_CHILDREN",
+      value = 256
+    },
+    {
+      name  = "DB_HOST",
+      value = aws_db_proxy.main.endpoint
+    }
   ]
 
   secrets = [
@@ -133,10 +141,10 @@ module "ecs_app" {
       name      = "DB_CONNECTION"
       valueFrom = "${aws_secretsmanager_secret.rds.arn}:engine::"
     },
-    {
-      name      = "DB_HOST"
-      valueFrom = "${aws_secretsmanager_secret.rds.arn}:host::"
-    },
+    # {
+    #   name      = "DB_HOST"
+    #   valueFrom = "${aws_secretsmanager_secret.rds.arn}:host::"
+    # },
     {
       name      = "DB_PORT"
       valueFrom = "${aws_secretsmanager_secret.rds.arn}:port::"
