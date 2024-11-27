@@ -6,7 +6,8 @@ namespace App\Livewire;
 
 use App\Models\Article;
 use App\Models\Election;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Services\CacheService;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -28,13 +29,16 @@ class NewsFeed extends Component
     }
 
     #[Computed]
-    protected function articles(): LengthAwarePaginator
+    protected function articles(): Collection
     {
-        return Article::query()
-            ->whereBelongsTo($this->election)
-            ->with('author.media', 'media')
-            ->onlyPublished()
-            ->orderByDesc('published_at')
-            ->paginate(50);
+        return CacheService::make('articles', $this->election)
+            ->remember(
+                fn () => Article::query()
+                    ->whereBelongsTo($this->election)
+                    ->with('author.media', 'media')
+                    ->onlyPublished()
+                    ->orderByDesc('published_at')
+                    ->get()
+            );
     }
 }

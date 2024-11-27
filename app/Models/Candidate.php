@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\BelongsToElection;
+use App\Concerns\ClearsCache;
 use App\Contracts\HasDisplayName;
 use Database\Factories\CandidateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Candidate extends Model implements HasMedia, HasDisplayName
 {
     use BelongsToElection;
+    use ClearsCache;
     /** @use HasFactory<CandidateFactory> */
     use HasFactory;
     use InteractsWithMedia;
@@ -73,5 +75,12 @@ class Candidate extends Model implements HasMedia, HasDisplayName
     public function getDisplayName(): string
     {
         return $this->display_name ?? $this->name;
+    }
+
+    public function getCacheTags(): array
+    {
+        return [
+            "candidates:{$this->election_id}",
+        ];
     }
 }
