@@ -82,6 +82,7 @@ resource "aws_cloudfront_distribution" "main" {
       function_arn = aws_cloudfront_function.www_redirect.arn
     }
   }
+
   # Errors
   ordered_cache_behavior {
     path_pattern     = "/errors/*"
@@ -123,41 +124,41 @@ resource "aws_cloudfront_distribution" "main" {
     error_code            = 403
     response_code         = 403
     response_page_path    = "/errors/404.html"
-    error_caching_min_ttl = 10
+    error_caching_min_ttl = 30
   }
   custom_error_response {
     error_code            = 404
     response_code         = 404
     response_page_path    = "/errors/404.html"
-    error_caching_min_ttl = 10
+    error_caching_min_ttl = 30
   }
 
   custom_error_response {
     error_code            = 500
     response_code         = 500
     response_page_path    = "/errors/500.html"
-    error_caching_min_ttl = 10
+    error_caching_min_ttl = 30
   }
 
   custom_error_response {
     error_code            = 502
     response_code         = 502
     response_page_path    = "/errors/500.html"
-    error_caching_min_ttl = 10
+    error_caching_min_ttl = 30
   }
 
   custom_error_response {
     error_code            = 503
     response_code         = 503
     response_page_path    = "/errors/500.html"
-    error_caching_min_ttl = 10
+    error_caching_min_ttl = 30
   }
 
   custom_error_response {
     error_code            = 504
     response_code         = 504
     response_page_path    = "/errors/500.html"
-    error_caching_min_ttl = 10
+    error_caching_min_ttl = 30
   }
 
   restrictions {
@@ -175,9 +176,9 @@ resource "aws_cloudfront_distribution" "main" {
 
 resource "aws_cloudfront_cache_policy" "default" {
   name        = "${local.namespace}-cache-policy"
-  min_ttl     = 3600
-  default_ttl = 3600
-  max_ttl     = 3600
+  min_ttl     = 15
+  default_ttl = 30
+  max_ttl     = 45
 
   parameters_in_cache_key_and_forwarded_to_origin {
     enable_accept_encoding_brotli = true
