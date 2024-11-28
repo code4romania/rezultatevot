@@ -259,9 +259,10 @@ resource "aws_cloudfront_function" "www_redirect" {
 }
 
 resource "aws_s3_object" "error_pages" {
-  for_each = fileset("${path.module}/errors", "*.html")
-  bucket   = module.s3_public.bucket
-  key      = "errors/${each.value}"
-  source   = "${path.module}/errors/${each.value}"
-  etag     = filemd5("${path.module}/errors/${each.value}")
+  for_each     = fileset("${path.module}/errors", "*.html")
+  bucket       = module.s3_public.bucket
+  key          = "errors/${each.value}"
+  source       = "${path.module}/errors/${each.value}"
+  etag         = filemd5("${path.module}/errors/${each.value}")
+  content_type = "text/html"
 }
