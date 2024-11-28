@@ -11,4 +11,6 @@
             {{ $election->subtitle }}
         @endif
     </span>
+
+    <x-last-updated-at :$election :$page />
 </header>

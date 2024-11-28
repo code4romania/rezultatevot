@@ -6,6 +6,8 @@
         :county="$county"
         :locality="$locality" />
 
+    <x-last-updated-at :$election page="turnout" class="-mt-8" />
+
     <livewire:charts.turnout-population-pyramid-chart
         :parameters="$this->getQueryParameters()"
         :election="$election"
