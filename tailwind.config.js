@@ -1,7 +1,6 @@
 export default {
     darkMode: 'selector',
     content: [
-        //,
         './app/Filament/**/*.php',
         './app/Livewire/**/*.php',
         './app/View/Components/**/*.php',
