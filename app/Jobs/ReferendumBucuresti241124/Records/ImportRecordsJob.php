@@ -29,10 +29,10 @@ class ImportRecordsJob implements ShouldQueue
     public ScheduledJob $scheduledJob;
 
     public County $county;
+
     private string $filename;
 
-
-    public function __construct(ScheduledJob $scheduledJob,  $countyCode, $filename)
+    public function __construct(ScheduledJob $scheduledJob, $countyCode, $filename)
     {
         $this->scheduledJob = $scheduledJob;
         $this->county = County::where('code', $countyCode)->first();
@@ -41,7 +41,7 @@ class ImportRecordsJob implements ShouldQueue
 
     public function handle(): void
     {
-        $disk = $this->scheduledJob->disk();;
+        $disk = $this->scheduledJob->disk();
         $path = $this->scheduledJob->getSourcePath("{$this->filename}.csv");
 
         if (! $disk->exists($path)) {
@@ -76,7 +76,7 @@ class ImportRecordsJob implements ShouldQueue
                 'present_voters_supliment' => 0,
                 'present_voters_mail' => 0, //$row['b4'],
 
-                'votes_valid' => (int)$row['a5'] + (int)$row['a6'],
+                'votes_valid' => (int) $row['a5'] + (int) $row['a6'],
                 'votes_null' => $row['a7'],
 
                 'papers_received' => $row['a3'],

@@ -16,7 +16,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class NomenclatureController extends Controller
 {
     /**
-     * @operationId Elections
+     * @operationId Nomenclature/Elections
      */
     public function elections(): JsonResource
     {
@@ -29,7 +29,7 @@ class NomenclatureController extends Controller
     }
 
     /**
-     * @operationId Countries
+     * @operationId Nomenclature/Countries
      */
     public function countries(): JsonResource
     {
@@ -37,7 +37,7 @@ class NomenclatureController extends Controller
     }
 
     /**
-     * @operationId Counties
+     * @operationId Nomenclature/Counties
      */
     public function counties(): JsonResource
     {
@@ -45,7 +45,7 @@ class NomenclatureController extends Controller
     }
 
     /**
-     * @operationId County
+     * @operationId Nomenclature/County
      */
     public function county(County $county): JsonResource
     {

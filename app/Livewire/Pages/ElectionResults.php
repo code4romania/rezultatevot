@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\Pages;
 
-use App\Models\Candidate;
-use App\Models\Party;
-use App\Models\Vote;
 use App\Repositories\RecordsRepository;
 use App\Repositories\VotesRepository;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Number;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
-use stdClass;
 
 class ElectionResults extends ElectionPage
 {
@@ -31,37 +25,9 @@ class ElectionResults extends ElectionPage
     }
 
     #[Computed]
-    public function parties(): Collection
-    {
-        return Cache::remember("parties:{$this->election->id}", now()->addDay(), function () {
-            return Party::query()
-                ->whereBelongsTo($this->election)
-                // ->whereHas('votes', function (Builder $query) {
-                //     $query->whereBelongsTo($this->election);
-                // })
-                ->with('media')
-                ->get();
-        });
-    }
-
-    #[Computed]
-    public function candidates(): Collection
-    {
-        return Cache::remember("candidates:{$this->election->id}", now()->addDay(), function () {
-            return Candidate::query()
-                ->whereBelongsTo($this->election)
-                // ->whereHas('votes', function (Builder $query) {
-                //     $query->whereBelongsTo($this->election);
-                // })
-                ->with('media')
-                ->get();
-        });
-    }
-
-    #[Computed]
     public function aggregate(): Collection
     {
-        $result = VotesRepository::getForLevel(
+        return VotesRepository::getForLevel(
             election: $this->election,
             level: $this->level,
             country: $this->country,
@@ -69,20 +35,6 @@ class ElectionResults extends ElectionPage
             locality: $this->locality,
             aggregate: true,
         );
-
-        $total = $result->sum('votes');
-
-        return $result->map(function (Vote $vote) use ($total) {
-            $votable = $this->getVotable($vote->votable_type, $vote->votable_id);
-
-            return [
-                'name' => $votable->acronym ?? $votable->name,
-                'image' => $votable->getFirstMediaUrl(),
-                'votes' => ensureNumeric($vote->votes),
-                'percent' => percent($vote->votes, $total),
-                'color' => hex2rgb($votable->color ?? $this->fallbackColor),
-            ];
-        });
     }
 
     #[Computed]
@@ -115,25 +67,7 @@ class ElectionResults extends ElectionPage
             country: null,
             county: $this->county,
             locality: null,
-        )->mapWithKeys(function (stdClass $vote) {
-            $votable = $this->getVotable($vote->votable_type, $vote->votable_id);
-
-            return [
-                $vote->place => [
-                    'value' => percent($vote->votes, $vote->total_votes, formatted: true),
-                    'color' => $votable->color,
-                    'label' => $votable->getDisplayName(),
-                ],
-            ];
-        });
-    }
-
-    protected function getVotable(string $type, int $id): Party|Candidate
-    {
-        return match ($type) {
-            (new Party)->getMorphClass() => $this->parties->find($id),
-            (new Candidate)->getMorphClass() => $this->candidates->find($id),
-        };
+        );
     }
 
     public function getEmbedUrl(): ?string

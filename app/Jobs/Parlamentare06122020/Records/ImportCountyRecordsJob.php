@@ -68,7 +68,7 @@ class ImportCountyRecordsJob implements ShouldQueue
                 'section' => $row['precinct_nr'],
                 'part' => $part,
 
-                'eligible_voters_permanent' => $row ['a'],
+                'eligible_voters_permanent' => $row['a'],
                 'eligible_voters_special' => 0,
 
                 'present_voters_permanent' => $row['b1'],

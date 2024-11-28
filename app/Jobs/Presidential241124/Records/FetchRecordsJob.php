@@ -57,7 +57,6 @@ class FetchRecordsJob extends SchedulableJob
                     );
             });
 
-
         $electionName = $this->scheduledJob->election->getFilamentName();
         $electionId = $this->scheduledJob->election_id;
 
