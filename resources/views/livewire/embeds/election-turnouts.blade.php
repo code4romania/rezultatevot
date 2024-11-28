@@ -8,6 +8,8 @@
         :county="$county"
         :locality="$locality" />
 
+    <x-last-updated-at :$election page="turnout" class="-mt-8" />
+
     @if (filled($this->aggregate))
         @if ($this->aggregate->max)
             <x-turnout-bar :value="$this->aggregate->value" :max="$this->aggregate->max" />

@@ -6,6 +6,8 @@
         :county="$county"
         :locality="$locality" />
 
+    <x-last-updated-at :$election page="results" class="-mt-8" />
+
     @if (filled($this->aggregate))
         <x-stacked-bar
             :show-threshold="data_get($election, 'properties.show_threshold', false)"
