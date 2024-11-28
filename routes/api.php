@@ -52,6 +52,7 @@ Route::group([
 
             Route::get('/national', 'national')->name('national');
             Route::get('/national/{county}', 'county')->name('national.county');
+            Route::get('/national/{county}/{locality}', 'locality')->name('national.locality');
         });
     });
 });

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\Result;
 
 use Illuminate\Http\Request;
@@ -15,43 +17,41 @@ class ResultResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            /**
+
+            /*
+             *  @var  \DateTime $last_updated_at
+             */
+            'last_updated_at' => data_get($this->resource, 'last_updated_at')?->toDateTimeString(),
+
+            /*
+             *  @var  string $name
+             */
+
+            'name' => $this->name,
+
+            /*
              *  @var  int $eligible_voters_total
              */
-//            'eligible_voters_total' => 0,
-//            'eligible_voters_permanent' => 0,
-//            'eligible_voters_special' => 0,
-//            'present_voters_total' => 0,
-//            'present_voters_permanent' => 0,
-//            'present_voters_special' => 0,
-//            'present_voters_supliment' => 0,
-//            'papers_received' => 0,
-//            'papers_unused' => 0,
-//
+            'eligible_voters_total' => (int) $this->eligible_voters_total,
 
-            /**
-         * @var  int $votes_valid
-         * Number of valid votes
-         */
-            'votes_valid' => 0,
+            /*
+             *  @var  int $present_voters_total
+             */
+            'present_voters_total' => (int) $this->present_voters_total,
 
-            /**
+            /*
+             * @var  int $votes_valid
+             * Number of valid votes
+             */
+            'votes_valid' => (int) $this->votes_valid,
+
+            /*
              * @var  int $votes_null
              * Number of null votes
              */
-            'votes_null' => 0,
+            'votes_null' => (int) $this->votes_null,
 
-            /**
-             * @var  int $votes_total
-             * Total number of votes null + valid
-             */
-            'votes_total' => 0,
-
-            /**
-             * @var  int $votes_total
-             * Candidates list with votes and percentage
-             */
-            'candidates' => CandidatesResource::collection([]),
+            'candidates' => CandidatesResource::collection($this->votes),
         ];
     }
 }

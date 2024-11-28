@@ -21,17 +21,13 @@ class CandidatesResource extends JsonResource
              *  @var  string $name
              * Name of the candidate
              */
-            'name' => 'Candidate Name',
+            'name' => $this['name'],
             /*
              *  @var  int $votes
              * Number of votes the candidate received
              */
-            'votes' => 0,
-            /*
-             *  @var  float $percentage
-             * Percentage of votes the candidate received (candidate_votes/total_votes )*100
-             */
-            'percentage' => 0,
+            'votes' => (int) $this['votes'],
+
         ];
     }
 }
