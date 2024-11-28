@@ -83,6 +83,26 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
+  # Errors
+  ordered_cache_behavior {
+    path_pattern     = "/errors/*"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id = module.s3_public.id
+
+    cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6" #Managed-CachingOptimized
+    origin_request_policy_id   = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf" #Managed-CORS-S3Origin
+    response_headers_policy_id = "eaab4381-ed33-4a86-88ca-d9558dc6cd63" #Managed-CORS-with-preflight-and-SecurityHeadersPolicy
+
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.www_redirect.arn
+    }
+  }
+
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
@@ -100,6 +120,47 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
+  custom_error_response {
+    error_code            = 403
+    response_code         = 403
+    response_page_path    = "/errors/404.html"
+    error_caching_min_ttl = 30
+  }
+  custom_error_response {
+    error_code            = 404
+    response_code         = 404
+    response_page_path    = "/errors/404.html"
+    error_caching_min_ttl = 30
+  }
+
+  custom_error_response {
+    error_code            = 500
+    response_code         = 500
+    response_page_path    = "/errors/500.html"
+    error_caching_min_ttl = 30
+  }
+
+  custom_error_response {
+    error_code            = 502
+    response_code         = 502
+    response_page_path    = "/errors/500.html"
+    error_caching_min_ttl = 30
+  }
+
+  custom_error_response {
+    error_code            = 503
+    response_code         = 503
+    response_page_path    = "/errors/500.html"
+    error_caching_min_ttl = 30
+  }
+
+  custom_error_response {
+    error_code            = 504
+    response_code         = 504
+    response_page_path    = "/errors/500.html"
+    error_caching_min_ttl = 30
+  }
+
   restrictions {
     geo_restriction {
       restriction_type = "none"
@@ -115,9 +176,9 @@ resource "aws_cloudfront_distribution" "main" {
 
 resource "aws_cloudfront_cache_policy" "default" {
   name        = "${local.namespace}-cache-policy"
-  min_ttl     = 3600
-  default_ttl = 3600
-  max_ttl     = 3600
+  min_ttl     = 15
+  default_ttl = 30
+  max_ttl     = 45
 
   parameters_in_cache_key_and_forwarded_to_origin {
     enable_accept_encoding_brotli = true
@@ -195,4 +256,12 @@ resource "aws_cloudfront_function" "www_redirect" {
   comment = "Redirects ${var.domain_name} to www.${var.domain_name}"
   publish = true
   code    = file("${path.module}/functions/www-redirect.js")
+}
+
+resource "aws_s3_object" "error_pages" {
+  for_each = fileset("${path.module}/errors", "*.html")
+  bucket   = module.s3_public.bucket
+  key      = "errors/${each.value}"
+  source   = "${path.module}/errors/${each.value}"
+  etag     = filemd5("${path.module}/errors/${each.value}")
 }

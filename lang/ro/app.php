@@ -6,6 +6,7 @@ return [
 
     'banner' => 'O soluție Code for Romania.',
     'skip' => 'Sari la conținut',
+    'backHome' => 'Înapoi la pagina principală',
     'all' => 'Toate',
     'generate' => 'Generează',
 
