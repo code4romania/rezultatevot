@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Enums\DataLevel;
+use App\Models\Candidate;
 use App\Models\Election;
+use App\Models\Party;
 use App\Models\Vote;
 use App\Services\CacheService;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 use Tpetry\QueryExpressions\Function\Aggregate\Max;
 use Tpetry\QueryExpressions\Function\Aggregate\Min;
 use Tpetry\QueryExpressions\Function\Aggregate\Sum;
@@ -34,7 +38,7 @@ class VotesRepository
     ) {
         return CacheService::make('votes', $election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect)
             ->remember(function () use ($election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect) {
-                $query = Vote::query()
+                $result = Vote::query()
                     ->whereBelongsTo($election)
                     ->forLevel(
                         level: $level,
@@ -44,9 +48,24 @@ class VotesRepository
                         aggregate: $aggregate,
                     )
                     ->when($addSelect, fn (EloquentBuilder $query) => $query->addSelect($addSelect))
-                    ->when($toBase, fn (EloquentBuilder $query) => $query->toBase());
+                    ->when($toBase, fn (EloquentBuilder $query) => $query->toBase())
+                    ->get();
 
-                return $query->get();
+                $votables = self::getVotables($result, $election);
+
+                $total = $result->sum('votes');
+
+                return $result->map(function (stdClass|Vote $vote) use ($votables, $total) {
+                    $votable = $votables->get($vote->votable_type)->get($vote->votable_id);
+
+                    return [
+                        'name' => $votable->acronym ?? $votable->name,
+                        'image' => $votable->getFirstMediaUrl(),
+                        'votes' => (int) ensureNumeric($vote->votes),
+                        'percent' => percent($vote->votes, $total),
+                        'color' => hex2rgb($votable->color ?? '#DDD'),
+                    ];
+                });
             });
     }
 
@@ -62,7 +81,7 @@ class VotesRepository
     ) {
         return CacheService::make(['votes', 'map-data'], $election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect)
             ->remember(function () use ($election, $level, $country, $county, $locality, $aggregate, $toBase, $addSelect) {
-                $query = DB::query()
+                $result = DB::query()
                     ->select([
                         new Alias(DB::raw('ANY_VALUE(votable_id)'), 'votable_id'),
                         new Alias(DB::raw('ANY_VALUE(votable_type)'), 'votable_type'),
@@ -86,9 +105,42 @@ class VotesRepository
                         'votes'
                     )
                     ->when($addSelect, fn (EloquentBuilder $query) => $query->addSelect($addSelect))
-                    ->when($toBase, fn (EloquentBuilder $query) => $query->toBase());
+                    ->when($toBase, fn (EloquentBuilder $query) => $query->toBase())
+                    ->get();
 
-                return $query->get();
+                $votables = self::getVotables($result, $election);
+
+                return $result->mapWithKeys(function (stdClass|Vote $vote) use ($votables) {
+                    $votable = $votables->get($vote->votable_type)->get($vote->votable_id);
+
+                    return [
+                        $vote->place => [
+                            'value' => percent($vote->votes, $vote->total_votes, formatted: true),
+                            'color' => $votable->color,
+                            'label' => $votable->getDisplayName(),
+                        ],
+                    ];
+                });
+            });
+    }
+
+    protected static function getVotables(Collection $result, Election $election): Collection
+    {
+        return $result
+            ->groupBy('votable_type')
+            ->map(function (Collection $items, string $type) use ($election) {
+                $query = match ($type) {
+                    (new Party)->getMorphClass() => Party::query(),
+                    (new Candidate)->getMorphClass() => Candidate::query()
+                        ->with('party.media'),
+                };
+
+                return $query
+                    ->whereBelongsTo($election)
+                    ->with('media')
+                    ->whereIn('id', $items->pluck('votable_id'))
+                    ->get()
+                    ->keyBy('id');
             });
     }
 }

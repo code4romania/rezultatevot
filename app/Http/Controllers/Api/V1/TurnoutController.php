@@ -23,7 +23,7 @@ class TurnoutController extends Controller
     /**
      * @operationId Total
      */
-    public function total(Election $election)//: JsonResource
+    public function total(Election $election): JsonResource
     {
         $result = TurnoutRepository::getForLevel(
             election: $election,
