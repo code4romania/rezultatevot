@@ -15,10 +15,10 @@ use App\Repositories\RecordsRepository;
 use App\Repositories\VotesRepository;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ResultController extends Controller
+class ResultsController extends Controller
 {
     /**
-     * @operationId ResultTotal
+     * @operationId Results/Total
      */
     public function total(Election $election): JsonResource
     {
@@ -44,7 +44,7 @@ class ResultController extends Controller
     }
 
     /**
-     * @operationId ResultDiaspora
+     * @operationId Results/Diaspora
      */
     public function diaspora(Election $election): JsonResource
     {
@@ -70,7 +70,7 @@ class ResultController extends Controller
     }
 
     /**
-     * @operationId ResultCountry
+     * @operationId Results/Diaspora/Country
      */
     public function country(Election $election, Country $country): JsonResource
     {
@@ -98,7 +98,7 @@ class ResultController extends Controller
     }
 
     /**
-     * @operationId ResultNational
+     * @operationId Results/National
      */
     public function national(Election $election): JsonResource
     {
@@ -124,7 +124,7 @@ class ResultController extends Controller
     }
 
     /**
-     * @operationId ResultCounty
+     * @operationId Results/National/County
      */
     public function county(Election $election, County $county): JsonResource
     {
@@ -152,10 +152,12 @@ class ResultController extends Controller
     }
 
     /**
-     * @operationId ResultLocality
+     * @operationId Results/National/County/Locality
      */
     public function locality(Election $election, County $county, Locality $locality): JsonResource
     {
+        abort_unless($locality->county_id === $county->id, 404);
+
         $result = RecordsRepository::getForLevel(
             election: $election,
             level: DataLevel::NATIONAL,
@@ -176,8 +178,7 @@ class ResultController extends Controller
 
         $result->last_updated_at = $election->records_updated_at;
 
-        $result->level = DataLevel::NATIONAL;
-        $result->name = $county->name . ' / ' . $locality->name;
+        $result->name = "{$locality->name}, {$county->name}";
 
         return ResultResource::make($result);
     }

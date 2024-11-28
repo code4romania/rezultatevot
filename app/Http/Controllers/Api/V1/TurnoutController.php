@@ -21,7 +21,7 @@ use stdClass;
 class TurnoutController extends Controller
 {
     /**
-     * @operationId Total
+     * @operationId Turnout/Total
      */
     public function total(Election $election): JsonResource
     {
@@ -52,7 +52,7 @@ class TurnoutController extends Controller
     }
 
     /**
-     * @operationId Diaspora
+     * @operationId Turnout/Diaspora
      */
     public function diaspora(Election $election): JsonResource
     {
@@ -110,7 +110,7 @@ class TurnoutController extends Controller
     }
 
     /**
-     * @operationId DiasporaCountry
+     * @operationId Turnout/Diaspora/Country
      */
     public function country(Election $election, Country $country): JsonResource
     {
@@ -145,7 +145,7 @@ class TurnoutController extends Controller
     }
 
     /**
-     * @operationId National
+     * @operationId Turnout/National
      */
     public function national(Election $election): JsonResource
     {
@@ -201,7 +201,7 @@ class TurnoutController extends Controller
     }
 
     /**
-     * @operationId NationalCounty
+     * @operationId Turnout/National/County
      */
     public function county(Election $election, County $county): JsonResource
     {

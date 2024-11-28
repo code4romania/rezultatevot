@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\V1\NomenclatureController;
-use App\Http\Controllers\Api\V1\ResultController;
+use App\Http\Controllers\Api\V1\ResultsController;
 use App\Http\Controllers\Api\V1\TurnoutController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,7 +43,7 @@ Route::group([
         Route::group([
             'as' => 'result.',
             'prefix' => 'result',
-            'controller' => ResultController::class,
+            'controller' => ResultsController::class,
         ], function () {
             Route::get('/', 'total')->name('total');
 
