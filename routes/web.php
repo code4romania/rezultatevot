@@ -32,7 +32,5 @@ Route::group([
 
     Route::get('/embed/articol/{article}', Embeds\ArticleEmbed::class)->name('articles.embed');
 
-    Route::get('/test/a70e0f38-0e7b-43fe-9589-e82ef05f330b', Pages\TestPage::class)->name('test');
-
     Route::get('{page:slug}', Pages\ContentPage::class)->name('pages.show');
 });

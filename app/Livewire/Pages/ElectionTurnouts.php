@@ -49,6 +49,7 @@ class ElectionTurnouts extends ElectionPage
             county: $this->county,
             locality: $this->locality,
             aggregate: true,
+            toBase: true,
         );
 
         if (blank($result) || blank($result->total)) {
