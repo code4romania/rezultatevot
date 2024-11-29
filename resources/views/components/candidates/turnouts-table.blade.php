@@ -25,7 +25,7 @@
             </x-table.td>
 
             <x-table.td align="left">
-                {{ $item['party'] }}
+                {{ $item['party']??'Independent' }}
             </x-table.td>
         </x-table.row>
     @endforeach
