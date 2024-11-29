@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\CandidateResource\Pages;
+use App\Filament\Imports\SimpleCandidateImporter;
 use App\Models\Candidate;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -13,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -86,6 +89,14 @@ class CandidateResource extends Resource
             ])
             ->filters([
                 //
+            ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(SimpleCandidateImporter::class)
+                    ->options([
+                        'election_id' => Filament::getTenant()->id,
+                        'candidate_list' => true,
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -37,7 +37,9 @@ class Party extends Model implements HasMedia, HasDisplayName
     public static function booted(): void
     {
         static::creating(function (Party $party) {
-            if (blank($party->acronym)) {
+
+            if (empty($party->acronym)) {
+                dd('here', $party);
                 $party->acronym = Str::initials($party->name);
             }
         });
