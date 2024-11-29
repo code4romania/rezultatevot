@@ -37,7 +37,7 @@ class SimpleCandidateImporter extends Importer
     public function resolveRecord(): Candidate|Party
     {
         static::$model = Party::class;
-        if (RecordService::isIndependentCandidate($this->data['name']) || $this->options['candidate_list']) {
+        if (RecordService::isIndependentCandidate($this->data['name']) || isset($this->options['candidate_list'])) {
             static::$model = Candidate::class;
         }
 
