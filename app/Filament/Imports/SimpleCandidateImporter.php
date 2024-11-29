@@ -21,6 +21,9 @@ class SimpleCandidateImporter extends Importer
                 ->requiredMapping()
                 ->rules(['required', 'string', 'max:255']),
 
+            ImportColumn::make('acronym')
+                ->rules(['nullable', 'string', 'max:255']),
+
             ImportColumn::make('color')
                 ->rules(['nullable', 'string', 'hex_color']),
         ];
@@ -33,9 +36,10 @@ class SimpleCandidateImporter extends Importer
 
     public function resolveRecord(): Candidate|Party
     {
-        static::$model = RecordService::isIndependentCandidate($this->data['name'])
-            ? Candidate::class
-            : Party::class;
+        static::$model = Party::class;
+        if (RecordService::isIndependentCandidate($this->data['name']) || $this->options['candidate_list']) {
+            static::$model = Candidate::class;
+        }
 
         return static::getModel()::firstOrNew([
             'name' => $this->data['name'],

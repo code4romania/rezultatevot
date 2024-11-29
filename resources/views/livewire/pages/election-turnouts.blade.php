@@ -70,7 +70,7 @@
             :election="$election"
             show-embed />
 
-        @if ($election->type->isNot(ElectionType::REFERENDUM))
+        @if ($election->type->isNot(ElectionType::REFERENDUM) && $this->candidates->isNotEmpty())
             <x-candidates.turnouts-table :items="$this->candidates" />
         @endif
 
