@@ -25,43 +25,59 @@ class LocationFilter extends BaseFilter
 
     public function setUp(): void
     {
-        $this->form([
-            Select::make('country')
-                ->label(__('app.field.country'))
-                ->relationship('country', 'name')
-                ->searchable()
-                ->preload()
-                ->visible($this->withCountry),
+        $this->form(function () {
+            $form = [];
 
-            Select::make('county')
-                ->label(__('app.field.county'))
-                ->relationship('county', 'name')
-                ->searchable()
-                ->preload()
-                ->visible($this->withCounty),
+            if ($this->withCountry) {
+                $form[] = Select::make('country')
+                    ->label(__('app.field.country'))
+                    ->relationship('country', 'name')
+                    ->searchable()
+                    ->preload();
+            }
 
-            Select::make('locality')
-                ->label(__('app.field.locality'))
-                ->relationship('locality', 'name', function (Builder $query, Get $get) {
-                    debug($get('county'));
+            if ($this->withCounty) {
+                $form[] = Select::make('county')
+                    ->label(__('app.field.county'))
+                    ->relationship('county', 'name')
+                    ->searchable()
+                    ->preload();
 
-                    return $query->orderBy('name');
-                })
-                ->getSearchResultsUsing(function (string $search, Get $get) {
-                    $countyId = (int) $get('county');
+                if ($this->withLocality) {
+                    $form[] = Select::make('locality')
+                        ->label(__('app.field.locality'))
+                        ->relationship('locality', 'name', function (Builder $query, Get $get) {
+                            return $query->orderBy('name');
+                        })
+                        ->getSearchResultsUsing(function (string $search, Get $get) {
+                            $countyId = (int) $get('county');
 
-                    if (! $countyId) {
-                        return [];
-                    }
+                            if (! $countyId) {
+                                return [];
+                            }
 
-                    return Locality::search($search)
-                        ->where('county_id', $countyId)
-                        ->get();
-                })
-                ->searchable()
-                ->visible($this->withCounty && $this->withLocality),
+                            return Locality::search($search)
+                                ->where('county_id', $countyId)
+                                ->get();
+                        })
+                        ->searchable();
+                }
+            }
 
-        ]);
+            return $form;
+        })->query(function (Builder $query, array $data) {
+            if ($this->withCountry && isset($data['country'])) {
+                $query->where('country_id', $data['country']);
+            }
+
+            if ($this->withCounty && isset($data['county'])) {
+                $query->where('county_id', $data['county']);
+
+                if ($this->withLocality && isset($data['locality'])) {
+                    $query->where('locality_id', $data['locality']);
+                }
+            }
+        });
     }
 
     public function withoutCountry(): self

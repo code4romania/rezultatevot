@@ -95,6 +95,11 @@ class Election extends Model implements HasName, HasAvatar
         return $this->hasMany(Vote::class);
     }
 
+    public function mandates(): HasMany
+    {
+        return $this->hasMany(Mandate::class);
+    }
+
     public function contributors(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
