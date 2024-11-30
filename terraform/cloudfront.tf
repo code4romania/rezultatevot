@@ -112,7 +112,7 @@ resource "aws_cloudfront_distribution" "main" {
 
     # cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" #Managed-CachingDisabled
     cache_policy_id          = aws_cloudfront_cache_policy.default.id
-    origin_request_policy_id = aws_cloudfront_origin_request_policy.admin.id
+    origin_request_policy_id = aws_cloudfront_origin_request_policy.default.id
 
     function_association {
       event_type   = "viewer-request"
@@ -185,7 +185,7 @@ resource "aws_cloudfront_cache_policy" "default" {
     enable_accept_encoding_gzip   = true
 
     cookies_config {
-      cookie_behavior = "none"
+      cookie_behavior = "all"
     }
 
     headers_config {
@@ -200,28 +200,6 @@ resource "aws_cloudfront_cache_policy" "default" {
 
 resource "aws_cloudfront_origin_request_policy" "default" {
   name = "${local.namespace}-origin-request-policy"
-
-  cookies_config {
-    cookie_behavior = "none"
-  }
-
-  headers_config {
-    header_behavior = "allViewerAndWhitelistCloudFront"
-
-    headers {
-      items = [
-        "CloudFront-Forwarded-Proto",
-      ]
-    }
-  }
-
-  query_strings_config {
-    query_string_behavior = "all"
-  }
-}
-
-resource "aws_cloudfront_origin_request_policy" "admin" {
-  name = "${local.namespace}-admin-origin-request-policy"
 
   cookies_config {
     cookie_behavior = "all"
