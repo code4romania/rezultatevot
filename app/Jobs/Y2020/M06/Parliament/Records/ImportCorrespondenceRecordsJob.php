@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Parlamentare06122020\Records;
+namespace App\Jobs\Y2020\M06\Parliament\Records;
 
 use App\Events\CountryCodeNotFound;
 use App\Exceptions\CountryCodeNotFoundException;
@@ -20,7 +20,7 @@ class ImportCorrespondenceRecordsJob extends SchedulableJob
 
     public static function name(): string
     {
-        return 'Parlamentare 06.12.2020/ Procese Verbale Corespondență';
+        return '2020-12-06 / Parlamentare / Procese Verbale Corespondență';
     }
 
     public function execute(): void

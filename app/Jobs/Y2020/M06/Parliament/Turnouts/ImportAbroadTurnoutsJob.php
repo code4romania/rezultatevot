@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Parlamentare06122020\Turnouts;
+namespace App\Jobs\Y2020\M06\Parliament\Turnouts;
 
 use App\Events\CountryCodeNotFound;
 use App\Exceptions\CountryCodeNotFoundException;
