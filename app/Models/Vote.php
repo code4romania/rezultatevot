@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\BelongsToCountry;
+use App\Concerns\BelongsToCounty;
 use App\Concerns\BelongsToElection;
+use App\Concerns\BelongsToLocality;
 use App\Concerns\CanGroupByDataLevel;
 use App\Concerns\HasTemporaryTable;
 use App\Contracts\TemporaryTable;
@@ -22,6 +25,9 @@ use Tpetry\QueryExpressions\Language\Alias;
 class Vote extends Model implements TemporaryTable
 {
     use BelongsToElection;
+    use BelongsToCountry;
+    use BelongsToCounty;
+    use BelongsToLocality;
     use CanGroupByDataLevel;
     /** @use HasFactory<VoteFactory> */
     use HasFactory;
@@ -35,10 +41,6 @@ class Vote extends Model implements TemporaryTable
      * @var array<int, string>
      */
     protected $fillable = [
-        'election_id',
-        'country_id',
-        'county_id',
-        'locality_id',
         'section',
         'part',
         'votable_type',

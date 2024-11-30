@@ -31,7 +31,6 @@ class Candidate extends Model implements HasMedia, HasDisplayName
         'name',
         'display_name',
         'color',
-        'election_id',
         'party_id',
     ];
 

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\BelongsToCountry;
+use App\Concerns\BelongsToCounty;
 use App\Concerns\BelongsToElection;
+use App\Concerns\BelongsToLocality;
 use App\Concerns\CanGroupByDataLevel;
 use App\Concerns\HasTemporaryTable;
 use App\Contracts\TemporaryTable;
@@ -14,7 +17,6 @@ use Database\Factories\TurnoutFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 use Tpetry\QueryExpressions\Function\Aggregate\Sum;
 use Tpetry\QueryExpressions\Language\Alias;
@@ -22,6 +24,9 @@ use Tpetry\QueryExpressions\Language\Alias;
 class Turnout extends Model implements TemporaryTable
 {
     use BelongsToElection;
+    use BelongsToCountry;
+    use BelongsToCounty;
+    use BelongsToLocality;
     use CanGroupByDataLevel;
     /** @use HasFactory<TurnoutFactory> */
     use HasFactory;
@@ -44,10 +49,6 @@ class Turnout extends Model implements TemporaryTable
         'supplement',
         'mobile',
         'has_issues',
-        'country_id',
-        'county_id',
-        'locality_id',
-        'election_id',
         'section',
         'area',
         'men_18-24',
@@ -90,21 +91,6 @@ class Turnout extends Model implements TemporaryTable
             'women_45-64' => 'integer',
             'women_65' => 'integer',
         ];
-    }
-
-    public function country(): BelongsTo
-    {
-        return $this->belongsTo(Country::class);
-    }
-
-    public function county(): BelongsTo
-    {
-        return $this->belongsTo(County::class);
-    }
-
-    public function locality(): BelongsTo
-    {
-        return $this->belongsTo(Locality::class);
     }
 
     public function scopeForLevel(Builder $query, DataLevel $level, ?string $country = null, ?int $county = null, ?int $locality = null, bool $aggregate = false): Builder

@@ -13,7 +13,7 @@ trait BelongsToElection
 {
     public function initializeBelongsToElection(): void
     {
-        //
+        $this->fillable[] = 'election_id';
     }
 
     protected static function bootBelongsToElection(): void
