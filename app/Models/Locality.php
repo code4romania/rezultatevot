@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\BelongsToCounty;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,7 @@ use Laravel\Scout\Searchable;
 
 class Locality extends Model
 {
+    use BelongsToCounty;
     use Searchable;
 
     public $timestamps = false;
@@ -19,7 +21,6 @@ class Locality extends Model
     protected $fillable = [
         'id',
         'name',
-        'county_id',
         'level',
         'type',
         'parent_id',
@@ -36,11 +37,6 @@ class Locality extends Model
         return [
             'old_ids' => 'array',
         ];
-    }
-
-    public function county(): BelongsTo
-    {
-        return $this->belongsTo(County::class);
     }
 
     public function parent(): BelongsTo

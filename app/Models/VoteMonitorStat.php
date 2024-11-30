@@ -20,7 +20,6 @@ class VoteMonitorStat extends Model
     protected static string $factory = VoteMonitorStatFactory::class;
 
     protected $fillable = [
-        'election_id',
         'key',
         'value',
         'enabled',

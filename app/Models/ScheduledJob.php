@@ -38,7 +38,6 @@ class ScheduledJob extends Model
         'source_url',
         'source_username',
         'source_password',
-        'election_id',
         'last_run_at',
     ];
 

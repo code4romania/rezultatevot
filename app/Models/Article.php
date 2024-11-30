@@ -29,7 +29,6 @@ class Article extends Model implements HasMedia
     protected $fillable = [
         'title',
         'author_id',
-        'election_id',
         'content',
     ];
 
@@ -54,11 +53,6 @@ class Article extends Model implements HasMedia
     {
         return $this->belongsTo(User::class)
             ->where('role', Role::CONTRIBUTOR);
-    }
-
-    public function election(): BelongsTo
-    {
-        return $this->belongsTo(Election::class);
     }
 
     public function registerMediaCollections(): void
