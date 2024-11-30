@@ -121,13 +121,13 @@ class AppServiceProvider extends ServiceProvider
                 ScheduledJob::query()
                     ->with('election')
                     ->where('is_enabled', true)
-                    ->each(
-                        fn (ScheduledJob $job) => $schedule
+                    ->each(fn (ScheduledJob $job) => rescue(
+                        fn () => $schedule
                             ->job(new $job->job($job))
                             ->cron($job->cron->value)
                             ->withoutOverlapping()
                             ->onOneServer()
-                    );
+                    ));
             } catch (QueryException|MissingAppKeyException $th) {
                 // fix for composer install
             }

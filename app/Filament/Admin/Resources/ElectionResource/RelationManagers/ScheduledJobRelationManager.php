@@ -37,7 +37,10 @@ class ScheduledJobRelationManager extends RelationManager
                             ->mapWithKeys(fn (string $job) => [
                                 $job => $job::name(),
                             ]);
-                    }),
+                    })
+                    ->searchable()
+                    ->preload()
+                    ->required(),
 
                 Select::make('cron')
                     ->label(__('app.field.cron'))
@@ -47,23 +50,18 @@ class ScheduledJobRelationManager extends RelationManager
 
                 Fieldset::make('source')
                     ->label('Source')
-                    ->columns(4)
+                    ->columns(2)
                     ->schema([
                         TextInput::make('source_url')
                             ->label(__('app.field.source_url'))
-                            ->columnSpan(3),
-
-                        TextInput::make('source_part')
-                            ->label(__('app.field.source_part')),
+                            ->columnSpanFull(),
 
                         TextInput::make('source_username')
-                            ->label(__('app.field.source_username'))
-                            ->columnSpan(2),
+                            ->label(__('app.field.source_username')),
 
                         TextInput::make('source_password')
                             ->label(__('app.field.source_password'))
-                            ->password()
-                            ->columnSpan(2),
+                            ->password(),
                     ]),
             ]);
     }
@@ -80,7 +78,7 @@ class ScheduledJobRelationManager extends RelationManager
                 TextColumn::make('job')
                     ->label(__('app.field.job'))
                     ->description(fn (string $state) => $state, 'above')
-                    ->formatStateUsing(fn (string $state) => $state::name()),
+                    ->formatStateUsing(fn (string $state) => rescue(fn () => $state::name())),
 
                 TextColumn::make('cron')
                     ->label(__('app.field.cron')),
