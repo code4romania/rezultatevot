@@ -38,7 +38,7 @@ class LocationColumn extends TextColumn
         });
 
         $this->icon(function (Model $record) {
-            if ($record->has_issues) {
+            if (data_get($record, 'has_issues', false)) {
                 return 'heroicon-s-exclamation-triangle';
             }
 
@@ -46,7 +46,7 @@ class LocationColumn extends TextColumn
         });
 
         $this->iconColor(function (Model $record) {
-            if ($record->has_issues) {
+            if (data_get($record, 'has_issues', false)) {
                 return 'warning';
             }
 

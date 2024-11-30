@@ -14,6 +14,7 @@ return [
         'acronym' => 'Acronim',
         'aliases' => 'Aliasuri',
         'color' => 'Culoare',
+        'candidate' => 'Partid / Alianță / Candidat independent',
         'country' => 'Țară',
         'county' => 'Județ',
         'level' => 'Nivel',
@@ -38,6 +39,7 @@ return [
         'name' => 'Nume',
         'party' => 'Partid',
         'role' => 'Rol',
+        'section' => 'Secție',
         'siruta' => 'ID SIRUTA',
         'slug' => 'Slug',
         'source_part' => 'Parte',
@@ -123,6 +125,12 @@ return [
         ],
     ],
 
+    'part' => [
+        'prov' => 'Provizorii',
+        'part' => 'Parțiale',
+        'final' => 'Finale',
+    ],
+
     'party' => [
         'label' => [
             'singular' => 'partid',
@@ -139,6 +147,24 @@ return [
 
     'turnout' => [
         'label' => 'prezență',
+    ],
+
+    'vote' => [
+        'label' => [
+            'singular' => 'vot',
+            'plural' => 'voturi',
+        ],
+    ],
+
+    'mandate' => [
+        'label' => [
+            'singular' => 'mandat',
+            'plural' => 'mandate',
+        ],
+
+        'action' => [
+            'generate' => 'Generează mandate',
+        ],
     ],
 
     'scheduled_job' => [

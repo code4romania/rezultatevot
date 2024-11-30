@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\TurnoutResource\Pages;
+use App\Filament\Filters\LocationFilter;
 use App\Models\Turnout;
 use App\Tables\Columns\LocationColumn;
 use Filament\Resources\Resource;
@@ -91,7 +92,7 @@ class TurnoutResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                LocationFilter::make(),
             ])
             ->paginated([10, 25, 50, 100])
             ->deferLoading();

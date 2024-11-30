@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\BelongsToCounty;
 use App\Concerns\BelongsToElection;
-use App\Concerns\HasTemporaryTable;
-use App\Contracts\TemporaryTable;
+use App\Concerns\BelongsToLocality;
 use Database\Factories\MandateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Mandate extends Model implements TemporaryTable
+class Mandate extends Model
 {
     use BelongsToElection;
+    use BelongsToCounty;
+    use BelongsToLocality;
     /** @use HasFactory<MandateFactory> */
     use HasFactory;
-    use HasTemporaryTable;
 
     public $timestamps = false;
 
@@ -29,11 +30,10 @@ class Mandate extends Model implements TemporaryTable
      * @var array<int, string>
      */
     protected $fillable = [
-        'election_id',
-        'county_id',
-
-        'party_id',
-        'mandates',
+        'votable_type',
+        'votable_id',
+        'initial',
+        'redistributed',
     ];
 
     /**
@@ -44,17 +44,13 @@ class Mandate extends Model implements TemporaryTable
     protected function casts(): array
     {
         return [
-            'mandates' => 'integer',
+            'initial' => 'integer',
+            'redistributed' => 'integer',
         ];
     }
 
-    public function party(): BelongsTo
+    public function votable(): MorphTo
     {
-        return $this->belongsTo(Party::class);
-    }
-
-    public function getTemporaryTableUniqueColumns(): array
-    {
-        return ['election_id', 'county_id', 'party_id'];
+        return $this->morphTo();
     }
 }

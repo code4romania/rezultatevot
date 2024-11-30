@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Models\Election;
-use App\Models\Party;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -30,29 +29,20 @@ return new class extends Migration
                 ->references('id')
                 ->on('counties');
 
-            $table->foreignIdFor(Party::class)
-                ->constrained()
-                ->cascadeOnDelete();
-
-            $table->mediumInteger('mandates')->unsigned()->default(0);
-
-            $table->unique(['election_id', 'county_id', 'party_id']);
-        });
-
-        Schema::create('_temp_mandates', function (Blueprint $table) {
-            $table->bigInteger('election_id')
+            $table->mediumInteger('locality_id')
                 ->unsigned()
                 ->nullable();
 
-            $table->smallInteger('county_id')
-                ->unsigned()
-                ->nullable();
+            $table->foreign('locality_id')
+                ->references('id')
+                ->on('localities');
 
-            $table->bigInteger('party_id')
-                ->constrained()
-                ->cascadeOnDelete();
+            $table->morphs('votable');
 
-            $table->mediumInteger('mandates')->unsigned();
+            $table->tinyInteger('initial')->unsigned()->default(0);
+            $table->tinyInteger('redistributed')->unsigned()->default(0);
+
+            $table->unique(['election_id', 'county_id', 'locality_id', 'votable_type', 'votable_id'], 'votes_unique_county_locality_index');
         });
     }
 };
