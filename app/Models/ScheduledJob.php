@@ -35,7 +35,6 @@ class ScheduledJob extends Model
         'job',
         'cron',
         'is_enabled',
-        'source_part',
         'source_url',
         'source_username',
         'source_password',
@@ -85,10 +84,6 @@ class ScheduledJob extends Model
         if (blank($this->source_url)) {
             throw new MissingSourceUrlException;
         }
-
-        $map = array_merge($map, [
-            '{{part}}' => $this->source_part,
-        ]);
 
         $search = array_keys($map);
         $replace = array_values($map);
