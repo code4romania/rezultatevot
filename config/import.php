@@ -6,7 +6,7 @@ return [
 
     'awk_path' => env('AWK_PATH', '/usr/bin/awk'),
 
-    'disk' => env('IMPORT_DISK', 'local'),
+    'disk' => env('IMPORT_DISK', env('FILESYSTEM_DISK', 'local')),
 
     'independent_candidate_prefix' => env('IMPORT_INDEPENDENT_CANDIDATE_PREFIX', 'CANDIDAT INDEPENDENT - '),
     'candidate_votes_suffix' => env('IMPORT_CANDIDATE_VOTES_SUFFIX', '-voturi'),
