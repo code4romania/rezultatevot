@@ -30,7 +30,9 @@ class VoteMonitorStatResource extends Resource
                 Select::make('key')
                     ->options(VoteMonitorStatKey::options())
                     ->enum(VoteMonitorStatKey::class)
-                    ->unique(ignoreRecord:true)
+                    ->unique('vote_monitor_stats', 'key', null, true, function($rule){
+                        return $rule->where('election_id', filament()->getTenant()->id);
+                    })
                     ->required(),
 
                 TextInput::make('value')
