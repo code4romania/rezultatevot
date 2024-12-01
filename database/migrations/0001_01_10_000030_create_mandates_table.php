@@ -39,8 +39,7 @@ return new class extends Migration
 
             $table->morphs('votable');
 
-            $table->tinyInteger('initial')->unsigned()->default(0);
-            $table->tinyInteger('redistributed')->unsigned()->default(0);
+            $table->tinyInteger('mandates')->unsigned()->default(0);
 
             $table->unique(['election_id', 'county_id', 'locality_id', 'votable_type', 'votable_id'], 'votes_unique_county_locality_index');
         });

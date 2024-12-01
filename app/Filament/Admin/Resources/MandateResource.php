@@ -74,19 +74,13 @@ class MandateResource extends Resource
                     ->required()
                     ->columnSpanFull(),
 
-                TextInput::make('initial')
+                TextInput::make('mandates')
                     ->required()
                     ->numeric()
                     ->default(0)
                     ->minValue(0)
-                    ->maxValue(255),
-
-                TextInput::make('redistributed')
-                    ->required()
-                    ->numeric()
-                    ->default(0)
-                    ->minValue(0)
-                    ->maxValue(255),
+                    ->maxValue(255)
+                    ->columnSpanFull(),
             ]);
     }
 
