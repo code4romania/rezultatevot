@@ -20,7 +20,7 @@ class ImportCorrespondenceRecordsJob extends SchedulableJob
 
     public static function name(): string
     {
-        return 'Prezidențiale 24.11.2024 / Procese Verbale Corespondență';
+        return '2024-11-24 / Prezidențiale / Procese Verbale Corespondență';
     }
 
     public function execute(): void
