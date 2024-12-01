@@ -41,6 +41,8 @@
             <x-stats.records :stats="$this->recordStats" />
         @endif
 
+        <x-seats-chart :election="$election" :level="$level" />
+
         @if (filled($this->aggregate))
             <x-candidates.results-table :items="$this->aggregate" />
         @endif
