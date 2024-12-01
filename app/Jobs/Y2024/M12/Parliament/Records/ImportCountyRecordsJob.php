@@ -45,7 +45,10 @@ class ImportCountyRecordsJob implements ShouldQueue
         $path = $this->scheduledJob->getSourcePath("{$this->filename}.csv");
 
         if (! $disk->exists($path)) {
-            throw new MissingSourceFileException($path);
+            // throw new MissingSourceFileException($path);
+            logger()->warning('Missing source file', ['path' => $path]);
+
+            return;
         }
 
         $reader = Reader::createFromStream($disk->readStream($path));
