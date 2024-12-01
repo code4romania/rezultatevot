@@ -74,11 +74,11 @@ class ImportAbroadRecordsJob implements ShouldQueue
                     'present_voters_supliment' => $row['b3'],
                     'present_voters_mail' => 0, //$row['b4'],
 
-                    'votes_valid' => $row['c'],
-                    'votes_null' => $row['d'],
+                    'votes_valid' => $row['e'],
+                    'votes_null' => $row['f'],
 
-                    'papers_received' => $row['e'],
-                    'papers_unused' => $row['f'],
+                    'papers_received' => $row['c'],
+                    'papers_unused' => $row['d'],
 
                     'has_issues' => false,
                 ]);
