@@ -38,6 +38,11 @@ RUN set -ex; \
 
 FROM vendor
 
+ARG VERSION
+ARG REVISION
+
+RUN echo "$VERSION (${REVISION:0:7})" > /var/www/.version
+
 # Needed for splitting CSVs
 RUN set -ex; \
     apk add --no-cache \
