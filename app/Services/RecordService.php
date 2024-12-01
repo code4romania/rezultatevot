@@ -63,12 +63,16 @@ class RecordService
 
     public static function isIndependentCandidate(string $name): bool
     {
-        return Str::startsWith($name, config('import.independent_candidate_prefix'));
+        return Str::contains($name, config('import.independent_candidate_designation'), ignoreCase: true);
     }
 
     public static function getName(string $name): string
     {
-        return Str::afterLast($name, config('import.independent_candidate_prefix'));
+        return Str::of($name)
+            ->remove(config('import.independent_candidate_designation'), caseSensitive: false)
+            ->trim('-')
+            ->trim()
+            ->value();
     }
 
     public static function generateVotables(array $header, int $electionId): Collection
@@ -86,7 +90,7 @@ class RecordService
                         ->where('election_id', $electionId)
                         ->firstOr(
                             fn () => Candidate::query()
-                                ->where('name', $name)
+                                ->where('name', static::getName($name))
                                 ->where('election_id', $electionId)
                                 ->first()
                         );
