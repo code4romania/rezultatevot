@@ -70,18 +70,21 @@ class MandateResource extends Resource
                         MorphToSelect\Type::make(Candidate::class)
                             ->titleAttribute('name'),
                     ])
+                    ->searchable()
                     ->required()
                     ->columnSpanFull(),
 
                 TextInput::make('initial')
                     ->required()
                     ->numeric()
+                    ->default(0)
                     ->minValue(0)
                     ->maxValue(255),
 
                 TextInput::make('redistributed')
                     ->required()
                     ->numeric()
+                    ->default(0)
                     ->minValue(0)
                     ->maxValue(255),
             ]);
