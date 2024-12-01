@@ -7,17 +7,25 @@ namespace App\Jobs;
 use App\Contracts\TemporaryTable;
 use App\Jobs\Middleware\RateLimitSchedulableJobMiddleware;
 use Exception;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB;
 
-class PersistTemporaryTableData implements ShouldQueue
+class PersistTemporaryTableData implements ShouldQueue, ShouldBeUnique
 {
     use Queueable;
 
     public string $model;
 
     public ?int $electionId;
+
+    /**
+     * The number of seconds after which the job's unique lock will be released.
+     *
+     * @var int
+     */
+    public $uniqueFor = 45;
 
     /**
      * Create a new job instance.
@@ -71,5 +79,10 @@ class PersistTemporaryTableData implements ShouldQueue
         return [
             new RateLimitSchedulableJobMiddleware('persist-temporary-table-data'),
         ];
+    }
+
+    public function uniqueId(): string
+    {
+        return "persist-temporary-table-data:{$this->model}";
     }
 }
