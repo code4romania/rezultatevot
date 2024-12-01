@@ -110,7 +110,6 @@ class TopCountiesChart extends ChartWidget
 
         return RawJs::make(<<<'JS'
             {
-                maintainAspectRatio: false,
                 aspectRatio: 0.15,
                 indexAxis: 'y',
                 scales: {
@@ -127,7 +126,7 @@ class TopCountiesChart extends ChartWidget
                         callbacks: {
                             label: (context) => {
                                 let label =  context.dataset.label;
-                                console.log(context);
+
                                 if (label) {
                                     label += ': ';
                                 }

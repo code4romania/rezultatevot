@@ -129,6 +129,7 @@ class TopLocalitiesChart extends ChartWidget
 
         return RawJs::make(<<<'JS'
             {
+                aspectRatio: 1,
                 indexAxis: 'y',
                 scales: {
                     y: {
