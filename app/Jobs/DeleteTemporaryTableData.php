@@ -6,17 +6,25 @@ namespace App\Jobs;
 
 use App\Contracts\TemporaryTable;
 use Exception;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB;
 
-class DeleteTemporaryTableData implements ShouldQueue
+class DeleteTemporaryTableData implements ShouldQueue, ShouldBeUnique
 {
     use Queueable;
 
     public string $model;
 
     public int $electionId;
+
+    /**
+     * The number of seconds after which the job's unique lock will be released.
+     *
+     * @var int
+     */
+    public $uniqueFor = 45;
 
     /**
      * Create a new job instance.
@@ -41,5 +49,10 @@ class DeleteTemporaryTableData implements ShouldQueue
         DB::table($model->getTemporaryTable())
             ->where('election_id', $this->electionId)
             ->delete();
+    }
+
+    public function uniqueId(): string
+    {
+        return "delete-temporary-table-data:{$this->model}";
     }
 }
