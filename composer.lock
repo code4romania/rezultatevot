@@ -190,16 +190,16 @@
         },
         {
             "name": "awcodes/filament-tiptap-editor",
-            "version": "v3.4.21",
+            "version": "v3.4.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/awcodes/filament-tiptap-editor.git",
-                "reference": "0d29282292ba6447306d8431b5227534a30e16ee"
+                "reference": "397a58ce1cc43f6ce2e01becaf8e0e621df6270c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/awcodes/filament-tiptap-editor/zipball/0d29282292ba6447306d8431b5227534a30e16ee",
-                "reference": "0d29282292ba6447306d8431b5227534a30e16ee",
+                "url": "https://api.github.com/repos/awcodes/filament-tiptap-editor/zipball/397a58ce1cc43f6ce2e01becaf8e0e621df6270c",
+                "reference": "397a58ce1cc43f6ce2e01becaf8e0e621df6270c",
                 "shasum": ""
             },
             "require": {
@@ -219,13 +219,13 @@
             },
             "type": "package",
             "extra": {
+                "aliases": {
+                    "TiptapConverter": "FilamentTiptapEditor\\Facades\\TiptapConverter"
+                },
                 "laravel": {
                     "providers": [
                         "FilamentTiptapEditor\\FilamentTiptapEditorServiceProvider"
                     ]
-                },
-                "aliases": {
-                    "TiptapConverter": "FilamentTiptapEditor\\Facades\\TiptapConverter"
                 }
             },
             "autoload": {
@@ -260,7 +260,7 @@
             ],
             "support": {
                 "issues": "https://github.com/awcodes/filament-tiptap-editor/issues",
-                "source": "https://github.com/awcodes/filament-tiptap-editor/tree/v3.4.21"
+                "source": "https://github.com/awcodes/filament-tiptap-editor/tree/v3.4.22"
             },
             "funding": [
                 {
@@ -268,7 +268,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-26T16:23:37+00:00"
+            "time": "2024-11-29T17:35:11+00:00"
         },
         {
             "name": "aws/aws-crt-php",
