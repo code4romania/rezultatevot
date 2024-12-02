@@ -21,6 +21,13 @@ class PersistTemporaryTableData implements ShouldQueue, ShouldBeUnique
     public ?int $electionId;
 
     /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = 240;
+
+    /**
      * Create a new job instance.
      */
     public function __construct(string $model, ?int $electionId = null)
