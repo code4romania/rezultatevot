@@ -25,7 +25,7 @@ class PersistTemporaryTableData implements ShouldQueue, ShouldBeUnique
      *
      * @var int
      */
-    public $timeout = 240;
+    public $timeout = 900;
 
     /**
      * Create a new job instance.
