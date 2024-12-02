@@ -7,6 +7,7 @@ namespace App\Repositories;
 use App\Enums\DataLevel;
 use App\Models\Candidate;
 use App\Models\Election;
+use App\Models\Mandate;
 use App\Models\Party;
 use App\Models\Vote;
 use App\Services\CacheService;
@@ -53,18 +54,45 @@ class VotesRepository
 
                 $votables = self::getVotables($result, $election);
 
+                if (
+                    $election->has_lists &&
+                    filled($election->properties->get('total_seats'))
+                ) {
+                    $mandates = Mandate::query()
+                        ->whereBelongsTo($election)
+                        ->forLevel(
+                            level: $level,
+                            county: $county,
+                            // locality: $locality,
+                            aggregate: $aggregate,
+                        )
+                        ->toBase()
+                        ->get();
+                } else {
+                    $mandates = null;
+                }
+
                 $total = $result->sum('votes');
 
-                return $result->map(function (stdClass|Vote $vote) use ($votables, $total) {
+                return $result->map(function (stdClass|Vote $vote) use ($votables, $total, $mandates) {
                     $votable = $votables->get($vote->votable_type)->get($vote->votable_id);
 
-                    return [
+                    $data = [
                         'name' => $votable->acronym ?? $votable->name,
                         'image' => $votable->getFirstMediaUrl(),
                         'votes' => (int) ensureNumeric($vote->votes),
                         'percent' => percent($vote->votes, $total),
-                        'color' => hex2rgb($votable->color ?? '#DDD'),
+                        'color' => hex2rgb($votable->color),
                     ];
+
+                    if (filled($mandates)) {
+                        $data['mandates'] = (int) $mandates
+                            ->where('votable_type', $vote->votable_type)
+                            ->where('votable_id', $vote->votable_id)
+                            ->first()?->mandates;
+                    }
+
+                    return $data;
                 });
             });
     }

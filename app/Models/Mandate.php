@@ -61,14 +61,47 @@ class Mandate extends Model
 
     public function scopeForLevel(Builder $query, DataLevel $level, ?string $country = null, ?int $county = null, ?int $locality = null, bool $aggregate = false): Builder
     {
-        return $query
+        $query
             ->select([
                 'votable_type',
                 'votable_id',
                 new Alias(new Sum('mandates'), 'mandates'),
             ])
-            ->groupBy('votable_type', 'votable_id')
-            ->forDataLevel($level, $country, $county, $locality, $aggregate)
-            ->orderByDesc('mandates');
+            ->groupBy('votable_type', 'votable_id');
+
+        if ($level->is(DataLevel::TOTAL)) {
+            $query->groupByTotal();
+        }
+
+        if ($level->is(DataLevel::DIASPORA)) {
+            $query->whereNull('county_id')
+                ->groupBy('county_id');
+        }
+
+        if ($level->is(DataLevel::NATIONAL)) {
+            if (filled($locality)) {
+                $query->where('locality_id', $locality)
+                    ->groupByLocality();
+            } elseif (filled($county)) {
+                $query->where('county_id', $county);
+
+                if ($aggregate) {
+                    $query->groupByCounty();
+                } else {
+                    $query->groupByLocality();
+                }
+            } else {
+                $query->whereNotNull('county_id');
+
+                if ($aggregate) {
+                    $query->groupByTotal();
+                } else {
+                    $query->groupByCounty();
+                }
+            }
+        }
+        // ->forDataLevel($level, $country, $county, $locality, $aggregate)
+
+        return $query->orderByDesc('mandates');
     }
 }

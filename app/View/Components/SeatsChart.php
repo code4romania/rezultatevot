@@ -6,6 +6,7 @@ namespace App\View\Components;
 
 use App\Enums\DataLevel;
 use App\Models\Election;
+use Filament\Support\Colors\Color;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
@@ -24,7 +25,7 @@ class SeatsChart extends Component
 
     public float $spacing = 2.3;
 
-    public Collection $dots;
+    public array $dots;
 
     public Collection $votables;
 
@@ -32,12 +33,14 @@ class SeatsChart extends Component
     {
         $this->election = $election;
         $this->level = $level;
-        $this->totalSeats = (int) $election->properties?->get('total_seats');
+        $this->totalSeats = abs((int) $election->properties?->get('total_seats'));
 
-        $this->r = 45.345892868 / sqrt($this->totalSeats);
+        if ($this->totalSeats > 0) {
+            $this->r = 45.345892868 / sqrt($this->totalSeats);
 
-        $this->votables = $votables;
-        $this->dots = $this->generateDots();
+            $this->votables = $votables;
+            $this->dots = $this->generateDots();
+        }
     }
 
     public function shouldRender(): bool
@@ -52,7 +55,7 @@ class SeatsChart extends Component
         return view('components.seats-chart');
     }
 
-    protected function generateDots(): Collection
+    protected function generateDots(): array
     {
         // Determine how many dots fit in each row
         $R = 100 - $this->r;
@@ -85,11 +88,6 @@ class SeatsChart extends Component
             for ($i = 0; $i < $rowsCount; $i++) {
                 $rows[$i]['seatsOnRow'] -= $div;
             }
-            // $rows = $rows->map(function (array $row) use ($div) {
-            //     $row['seatsOnRow'] -= $div;
-
-            //     return $row;
-            // });
 
             $seatsLeft += $div * $rowsCount;
         }
@@ -101,16 +99,6 @@ class SeatsChart extends Component
 
                 $seatsLeft++;
             }
-
-            // $rows = $rows->reverse()->map(function (array $row) use (&$seatsLeft) {
-            //     if ($seatsLeft < 0) {
-            //         $row['seatsOnRow']--;
-
-            //         $seatsLeft++;
-            //     }
-
-            //     return $row;
-            // });
         }
 
         $dots = collect();
@@ -129,38 +117,44 @@ class SeatsChart extends Component
                 $dots->push([
                     'cx' => 100 - $R * cos($alpha),
                     'cy' => 100 - $R * sin($alpha),
-                    // 'alpha' => $offset + $stride * $j,
+                    'alpha' => $offset + $stride * $j,
                     // 'R' => $R,
-                    'candidate' => null,
+                    'fill' => \sprintf('rgb(%s)', Color::Gray[200]),
                 ]);
             }
         }
 
         // Sort the dots radially left to right
-        $dots = $dots->sortBy('alpha');
+        $dots = $dots
+            ->sortBy('alpha')
+            ->values()
+            ->all();
 
         // Assign candidates to each dot
         $start = 0;
-        $end = $dots->count() - 1;
+        $end = \count($dots) - 1;
         $fromStart = false; // Alternate each candidate left/right
 
-        $this->votables->each(function ($votable, int $index) use (&$dots, &$start, &$end, &$fromStart) {
-            $seats = $votable->seats;
+        debug($this->votables);
+        $this->votables->each(function ($votable) use (&$dots, &$start, &$end, &$fromStart) {
+            $mandates = data_get($votable, 'mandates');
 
-            if (blank($seats) || $seats <= 0) {
+            if (blank($mandates) || $mandates <= 0) {
                 return;
             }
 
             $fromStart = ! $fromStart;
 
-            while ($seats > 0 && $start <= $end) {
-                $dots[$fromStart ? $start : $end]['candidate'] = $index;
+            while ($mandates > 0 && $start <= $end) {
+                $dots[$fromStart ? $start : $end]['fill'] = \sprintf('rgb(%s)', data_get($votable, 'color'));
 
                 if ($fromStart) {
                     $start++;
                 } else {
                     $end--;
                 }
+
+                $mandates--;
             }
         });
 

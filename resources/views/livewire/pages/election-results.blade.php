@@ -41,11 +41,9 @@
             <x-stats.records :stats="$this->recordStats" />
         @endif
 
-        <x-seats-chart :election="$election" :level="$level" />
+        <x-seats-chart :election="$election" :level="$level" :votables="$this->aggregate" />
 
-        @if (filled($this->aggregate))
-            <x-candidates.results-table :items="$this->aggregate" />
-        @endif
+        <x-results-table :election="$election" :level="$level" :votables="$this->aggregate" />
 
         <livewire:news-feed :election="$election" />
 

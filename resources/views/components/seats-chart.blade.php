@@ -5,9 +5,7 @@
             r="{{ $r }}"
             cx={{ $dot['cx'] }}
             cy={{ $dot['cy'] }}
-            fill="{{ data_get($dot, 'fill', '#CCC') }}"
-            stroke-width="{{ data_get($dot, 'strokeWidth', 0) }}"
-            stroke="{{ data_get($dot, 'stroke', '#000') }}" />
+            fill="{{ $dot['fill'] }}" />
     @endforeach
 
     <path transform="translate(100 78.75) scale(0.33 0.33) translate(-64.5 -64.5)"

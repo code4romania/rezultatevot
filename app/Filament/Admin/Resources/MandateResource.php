@@ -95,13 +95,10 @@ class MandateResource extends Resource
                     ->label(__('app.field.candidate'))
                     ->searchable(),
 
-                TextColumn::make('initial')
+                TextColumn::make('mandates')
                     ->numeric()
                     ->sortable(),
 
-                TextColumn::make('redistributed')
-                    ->numeric()
-                    ->sortable(),
             ])
             ->filters([
                 LocationFilter::make()
