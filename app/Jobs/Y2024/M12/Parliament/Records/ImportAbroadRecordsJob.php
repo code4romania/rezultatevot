@@ -14,19 +14,22 @@ use App\Models\Vote;
 use App\Services\RecordService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use League\Csv\Reader;
 
-class ImportAbroadRecordsJob implements ShouldQueue
+class ImportAbroadRecordsJob implements ShouldQueue, ShouldBeUnique
 {
     use Batchable;
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
+
+    public $tries = 1;
 
     public ScheduledJob $scheduledJob;
 
@@ -74,11 +77,11 @@ class ImportAbroadRecordsJob implements ShouldQueue
                     'present_voters_supliment' => $row['b3'],
                     'present_voters_mail' => 0, //$row['b4'],
 
-                    'votes_valid' => $row['c'],
-                    'votes_null' => $row['d'],
+                    'votes_valid' => $row['e'],
+                    'votes_null' => $row['f'],
 
-                    'papers_received' => $row['e'],
-                    'papers_unused' => $row['f'],
+                    'papers_received' => $row['c'],
+                    'papers_unused' => $row['d'],
 
                     'has_issues' => false,
                 ]);
@@ -116,6 +119,11 @@ class ImportAbroadRecordsJob implements ShouldQueue
         }
 
         return $country->id;
+    }
+
+    public function uniqueId(): string
+    {
+        return "{$this->scheduledJob->election_id}";
     }
 
     /**

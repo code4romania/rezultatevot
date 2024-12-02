@@ -22,6 +22,10 @@ abstract class SchedulableJob implements ShouldQueue, ShouldBeUnique
 
     public ScheduledJob $scheduledJob;
 
+    public $tries = 1;
+
+    public $failOnTimeout = true;
+
     /**
      * Create a new job instance.
      */
@@ -29,13 +33,6 @@ abstract class SchedulableJob implements ShouldQueue, ShouldBeUnique
     {
         $this->scheduledJob = $scheduledJob;
     }
-
-    /**
-     * The number of seconds after which the job's unique lock will be released.
-     *
-     * @var int
-     */
-    public $uniqueFor = 45;
 
     abstract public function execute(): void;
 

@@ -10,7 +10,7 @@
 
     <section class="contents">
         <x-election.title
-            :title="__('app.navigation.results')"
+            :title="__('app.navigation.results') . ' / Parțiale'"
             :embed-url="$this->getEmbedUrl()"
             :level="$level"
             :country="$country"

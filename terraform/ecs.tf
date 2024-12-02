@@ -10,7 +10,7 @@ module "ecs_cluster" {
     "c6a.xlarge" = ""
   }
 
-  min_size                  = 4
+  min_size                  = 3
   max_size                  = 24
   minimum_scaling_step_size = 1
   maximum_scaling_step_size = 1

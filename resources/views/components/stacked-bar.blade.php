@@ -29,7 +29,11 @@
             <x-legend
                 :image="data_get($item, 'image')"
                 :label="$item['name']"
-                :description="sprintf('%s (%s)', Number::percentage($item['percent'], 2), Number::format($item['votes']))"
+                :description="sprintf(
+                    '%s (%s)',
+                    Number::percentage(data_get($item, 'percent', 0), 2),
+                    Number::format(data_get($item, 'votes', 0)),
+                )"
                 :color="$item['color']" />
         @endforeach
     </ul>
