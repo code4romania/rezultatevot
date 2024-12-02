@@ -19,6 +19,10 @@ class DeleteTemporaryTableData implements ShouldQueue, ShouldBeUnique
 
     public int $electionId;
 
+    public $tries = 1;
+
+    public $failOnTimeout = true;
+
     /**
      * Create a new job instance.
      */

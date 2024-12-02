@@ -31,15 +31,7 @@ class ImportCountyRecordsJob implements ShouldQueue
 
     public County $county;
 
-    public function tries(): int
-    {
-        return 5;
-    }
-
-    public function backoff(): array
-    {
-        return [1, 5, 10, 20, 30];
-    }
+    public $tries = 1;
 
     public function __construct(ScheduledJob $scheduledJob, County $county)
     {

@@ -22,6 +22,10 @@ abstract class SchedulableJob implements ShouldQueue, ShouldBeUnique
 
     public ScheduledJob $scheduledJob;
 
+    public $tries = 1;
+
+    public $failOnTimeout = true;
+
     /**
      * Create a new job instance.
      */
