@@ -23,9 +23,9 @@
         :data="$this->data->toArray()"
         embed />
 
-    @if (filled($this->aggregate))
-        <x-candidates.results-table :items="$this->aggregate" />
-    @endif
+    <x-seats-chart :election="$election" :level="$level" :votables="$this->aggregate" />
+
+    <x-results-table :election="$election" :level="$level" :votables="$this->aggregate" />
 
     <x-stats.records :stats="$this->recordStats" />
 </div>
