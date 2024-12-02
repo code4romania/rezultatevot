@@ -21,13 +21,6 @@ class PersistTemporaryTableData implements ShouldQueue, ShouldBeUnique
     public ?int $electionId;
 
     /**
-     * The number of seconds after which the job's unique lock will be released.
-     *
-     * @var int
-     */
-    public $uniqueFor = 45;
-
-    /**
      * Create a new job instance.
      */
     public function __construct(string $model, ?int $electionId = null)
@@ -83,6 +76,6 @@ class PersistTemporaryTableData implements ShouldQueue, ShouldBeUnique
 
     public function uniqueId(): string
     {
-        return "persist-temporary-table-data:{$this->model}";
+        return $this->model;
     }
 }

@@ -12,13 +12,14 @@ use App\Models\Vote;
 use App\Services\RecordService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use League\Csv\Reader;
 
-class ImportCountyRecordsJob implements ShouldQueue
+class ImportCountyRecordsJob implements ShouldQueue, ShouldBeUnique
 {
     use Batchable;
     use Dispatchable;
@@ -109,6 +110,11 @@ class ImportCountyRecordsJob implements ShouldQueue
         }
 
         Record::saveToTemporaryTable($records->all());
+    }
+
+    public function uniqueId(): string
+    {
+        return "{$this->scheduledJob->election_id}-{$this->county->code}";
     }
 
     /**
