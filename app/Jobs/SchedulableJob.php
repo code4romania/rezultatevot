@@ -30,13 +30,6 @@ abstract class SchedulableJob implements ShouldQueue, ShouldBeUnique
         $this->scheduledJob = $scheduledJob;
     }
 
-    /**
-     * The number of seconds after which the job's unique lock will be released.
-     *
-     * @var int
-     */
-    public $uniqueFor = 45;
-
     abstract public function execute(): void;
 
     abstract public static function name(): string;
