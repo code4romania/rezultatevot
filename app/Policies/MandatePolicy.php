@@ -30,7 +30,7 @@ class MandatePolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -38,7 +38,7 @@ class MandatePolicy
      */
     public function update(User $user, Mandate $mandate): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -46,7 +46,7 @@ class MandatePolicy
      */
     public function delete(User $user, Mandate $mandate): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -54,7 +54,7 @@ class MandatePolicy
      */
     public function restore(User $user, Mandate $mandate): bool
     {
-        return false;
+        return $this->delete($user, $mandate);
     }
 
     /**
@@ -62,6 +62,6 @@ class MandatePolicy
      */
     public function forceDelete(User $user, Mandate $mandate): bool
     {
-        return false;
+        return $this->delete($user, $mandate);
     }
 }

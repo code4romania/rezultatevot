@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\RecordResource\Pages;
+use App\Filament\Filters\LocationFilter;
 use App\Models\Record;
 use App\Tables\Columns\LocationColumn;
 use Filament\Resources\Resource;
@@ -39,6 +40,9 @@ class RecordResource extends Resource
             ->modifyQueryUsing(fn (Builder $query) => $query->with('country', 'county', 'locality'))
             ->columns([
                 LocationColumn::make('location'),
+
+                TextColumn::make('section')
+                    ->label(__('app.field.section')),
 
                 TextColumn::make('part'),
 
@@ -109,7 +113,7 @@ class RecordResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                LocationFilter::make(),
             ])
             ->paginated([10, 25, 50, 100])
             ->deferLoading()

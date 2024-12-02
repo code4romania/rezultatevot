@@ -67,6 +67,12 @@ class ImportCountyRecordsJob implements ShouldQueue, ShouldBeUnique
         foreach ($reader->getRecords() as $row) {
             $part = RecordService::getPart($row['report_stage_code']);
 
+            // TODO: check if needed for new data
+            $row['uat_siruta'] = match ($row['uat_siruta']) {
+                '63171' => '61069',
+                default => $row['uat_siruta'],
+            };
+
             $records->push([
                 'election_id' => $this->scheduledJob->election_id,
                 'county_id' => $this->county->id,

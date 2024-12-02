@@ -25,6 +25,8 @@ class FetchRecordsJob extends SchedulableJob
 
     public function execute(): void
     {
+        // TODO: uncomment
+        /*
         $temporaryDirectory = TemporaryDirectory::make()
             ->deleteWhenDestroyed();
 
@@ -35,7 +37,7 @@ class FetchRecordsJob extends SchedulableJob
             'root' => $cwd,
         ]);
 
-        $tmpDisk->put('turnout.csv', $this->scheduledJob->fetchSource()->resource());
+        $tmpDisk->put('records.csv', $this->scheduledJob->fetchSource()->resource());
 
         // Split the CSV by county
         Process::path($cwd)
@@ -43,10 +45,10 @@ class FetchRecordsJob extends SchedulableJob
                 config('import.awk_path'),
                 '-F,',
                 'FNR==1 {header = $0; next} !seen[$1]++ {print header > $1".csv"} {print > $1".csv"}',
-                'turnout.csv',
+                'records.csv',
             ]);
 
-        $tmpDisk->delete('turnout.csv');
+        $tmpDisk->delete('records.csv');
 
         collect($tmpDisk->allFiles())
             ->each(function (string $file) use ($tmpDisk) {
@@ -56,6 +58,7 @@ class FetchRecordsJob extends SchedulableJob
                         $tmpDisk->readStream($file)
                     );
             });
+        */
 
         $electionName = $this->scheduledJob->election->getFilamentName();
         $electionId = $this->scheduledJob->election_id;

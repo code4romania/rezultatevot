@@ -22,23 +22,28 @@ class LocationColumn extends TextColumn
         );
 
         $this->state(function (Model $record) {
-            if ($record->country) {
+            if (data_get($record, 'country', false)) {
                 return $record->country->name;
             }
 
-            return \sprintf('%s, %s', $record->locality->name, $record->county->name);
+            return collect([
+                $record->locality?->name,
+                $record->county?->name,
+            ])
+                ->filter()
+                ->join(', ');
         });
 
         $this->description(function (Model $record) {
-            if ($record->country) {
+            if (data_get($record, 'country', false)) {
                 return $record->country->id;
             }
 
-            return $record->locality->id;
+            return $record->locality?->id;
         });
 
         $this->icon(function (Model $record) {
-            if ($record->has_issues) {
+            if (data_get($record, 'has_issues', false)) {
                 return 'heroicon-s-exclamation-triangle';
             }
 
@@ -46,7 +51,7 @@ class LocationColumn extends TextColumn
         });
 
         $this->iconColor(function (Model $record) {
-            if ($record->has_issues) {
+            if (data_get($record, 'has_issues', false)) {
                 return 'warning';
             }
 

@@ -15,6 +15,7 @@ use App\Models\Election;
 use App\Models\Locality;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -28,7 +29,6 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -66,98 +66,99 @@ class ElectionResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(2)
             ->schema([
-                Forms\Components\Section::make()
-                    ->maxWidth(MaxWidth::ThreeExtraLarge)
+                Select::make('type')
+                    ->label(__('app.field.type'))
+                    ->options(ElectionType::options())
+                    ->enum(ElectionType::class)
+                    ->required(),
+
+                DatePicker::make('date')
+                    ->label(__('app.field.date'))
+                    ->default(today())
+                    ->required(),
+
+                TextInput::make('title')
+                    ->label(__('app.field.title'))
+                    ->required(),
+
+                TextInput::make('subtitle')
+                    ->label(__('app.field.subtitle'))
+                    ->nullable(),
+
+                TextInput::make('slug')
+                    ->label(__('app.field.slug'))
+                    ->unique(ignoreRecord: true)
+                    ->required()
+                    ->columnSpanFull(),
+
+                Toggle::make('is_live')
+                    ->label(__('app.field.is_live'))
+                    ->default(false),
+
+                Toggle::make('is_visible')
+                    ->label(__('app.field.is_visible'))
+                    ->default(false),
+
+                Toggle::make('has_lists')
+                    ->label(__('app.field.has_lists'))
+                    ->default(false),
+
+                Select::make('properties.default_tab')
+                    ->label(__('app.field.default_tab'))
+                    ->options(DefaultElectionPage::options())
+                    ->enum(DefaultElectionPage::class)
+                    ->selectablePlaceholder(false)
+                    ->nullable(),
+
+                Fieldset::make(__('app.field.default_place'))
+                    ->columnSpanFull()
+                    ->statePath('properties.default_place')
                     ->columns(2)
                     ->schema([
-                        Select::make('type')
-                            ->label(__('app.field.type'))
-                            ->options(ElectionType::options())
-                            ->enum(ElectionType::class)
-                            ->required(),
-
-                        DatePicker::make('date')
-                            ->label(__('app.field.date'))
-                            ->default(today())
-                            ->required(),
-
-                        TextInput::make('title')
-                            ->label(__('app.field.title'))
-                            ->required(),
-
-                        TextInput::make('subtitle')
-                            ->label(__('app.field.subtitle'))
+                        Select::make('level')
+                            ->label(__('app.field.level'))
+                            ->options(DataLevel::options())
+                            ->afterStateUpdated(fn (Set $set) => $set('country', null))
+                            ->enum(DataLevel::class)
+                            ->live()
+                            ->nullable(),
+                        Select::make('country')
+                            ->label(__('app.field.country'))
+                            ->options(Country::pluck('name', 'id'))
+                            ->hidden(fn (Get $get) => ! DataLevel::isValue($get('level'), DataLevel::DIASPORA))
                             ->nullable(),
 
-                        TextInput::make('slug')
-                            ->label(__('app.field.slug'))
-                            ->unique(ignoreRecord: true)
-                            ->required()
-                            ->columnSpanFull(),
-
-                        Toggle::make('is_live')
-                            ->label(__('app.field.is_live'))
-                            ->default(false),
-
-                        Toggle::make('is_visible')
-                            ->label(__('app.field.is_visible'))
-                            ->default(false),
-
-                        Toggle::make('has_lists')
-                            ->label(__('app.field.has_lists'))
-                            ->default(false),
-
-                        Select::make('properties.default_tab')
-                            ->label(__('app.field.default_tab'))
-                            ->options(DefaultElectionPage::options())
-                            ->enum(DefaultElectionPage::class)
-                            ->selectablePlaceholder(false)
-                            ->nullable(),
-
-                        Forms\Components\Section::make(__('app.field.default_place'))
-                            ->columnSpanFull()
-                            ->statePath('properties.default_place')
-                            ->columns(2)
-                            ->schema([
-                                Select::make('level')
-                                    ->label(__('app.field.level'))
-                                    ->options(DataLevel::options())
-                                    ->afterStateUpdated(fn (Set $set) => $set('country', null))
-                                    ->enum(DataLevel::class)
-                                    ->live()
-                                    ->nullable(),
-                                Select::make('country')
-                                    ->label(__('app.field.country'))
-                                    ->options(Country::pluck('name', 'id'))
-                                    ->hidden(fn (Get $get) => ! DataLevel::isValue($get('level'), DataLevel::DIASPORA))
-                                    ->nullable(),
-
-                                Forms\Components\Group::make([
-                                    Select::make('county')
-                                        ->label(__('app.field.county'))
-                                        ->options(County::pluck('name', 'id'))
-                                        ->hidden(fn (Get $get) => ! DataLevel::isValue($get('level'), DataLevel::NATIONAL))
-                                        ->afterStateUpdated(fn (Set $set) => $set('locality', null))
-                                        ->live()
-                                        ->nullable(),
-                                    Select::make('locality')
-                                        ->label(__('app.field.locality'))
-                                        ->options(fn (Get $get) => $get('county') ? Locality::where('county_id', $get('county'))->pluck('name', 'id') : [])
-                                        ->hidden(fn (Get $get) => ! $get('county'))
-                                        ->nullable(),
-                                ]),
-                            ]),
-
-                        KeyValue::make('properties.tabs')
-                            ->label(__('app.field.tabs'))
-                            ->columnSpanFull()
-                            ->nullable(),
-
-                        Toggle::make('properties.show_threshold')
-                            ->label(__('app.field.show_threshold'))
-                            ->default(false),
+                        Forms\Components\Group::make([
+                            Select::make('county')
+                                ->label(__('app.field.county'))
+                                ->options(County::pluck('name', 'id'))
+                                ->hidden(fn (Get $get) => ! DataLevel::isValue($get('level'), DataLevel::NATIONAL))
+                                ->afterStateUpdated(fn (Set $set) => $set('locality', null))
+                                ->live()
+                                ->nullable(),
+                            Select::make('locality')
+                                ->label(__('app.field.locality'))
+                                ->options(fn (Get $get) => $get('county') ? Locality::where('county_id', $get('county'))->pluck('name', 'id') : [])
+                                ->hidden(fn (Get $get) => ! $get('county'))
+                                ->nullable(),
+                        ]),
                     ]),
+
+                KeyValue::make('properties.tabs')
+                    ->label(__('app.field.tabs'))
+                    ->columnSpanFull()
+                    ->nullable(),
+
+                Toggle::make('properties.show_threshold')
+                    ->label(__('app.field.show_threshold'))
+                    ->default(false),
+
+                TextInput::make('properties.total_seats')
+                    ->label(__('app.field.total_seats'))
+                    ->nullable()
+                    ->numeric(),
             ]);
     }
 
