@@ -29,6 +29,8 @@ class ImportAbroadRecordsJob implements ShouldQueue, ShouldBeUnique
     use Queueable;
     use SerializesModels;
 
+    public $tries = 1;
+
     public ScheduledJob $scheduledJob;
 
     public function __construct(ScheduledJob $scheduledJob)

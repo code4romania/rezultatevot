@@ -24,6 +24,8 @@ class ImportCountyTurnoutsJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    public $tries = 1;
+
     public ScheduledJob $scheduledJob;
 
     public County $county;
