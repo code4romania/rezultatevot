@@ -6,7 +6,9 @@ namespace App\Services;
 
 use App\Enums\Part;
 use App\Enums\Time;
+use App\Exceptions\CountryCodeNotFoundException;
 use App\Models\Candidate;
+use App\Models\Country;
 use App\Models\Party;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -59,6 +61,17 @@ class RecordService
             'part' => Part::PART,
             'prov' => Part::PROV,
         };
+    }
+
+    public static function getCountryId(string $name): string
+    {
+        $country = Country::search($name)->first();
+
+        if (! $country) {
+            throw new CountryCodeNotFoundException($name);
+        }
+
+        return $country->id;
     }
 
     public static function isIndependentCandidate(string $name): bool

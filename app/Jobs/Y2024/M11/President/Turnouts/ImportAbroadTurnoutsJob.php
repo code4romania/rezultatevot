@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Jobs\Y2024\M11\President\Turnouts;
 
-use App\Events\CountryCodeNotFound;
-use App\Exceptions\CountryCodeNotFoundException;
 use App\Exceptions\MissingSourceFileException;
-use App\Models\Country;
 use App\Models\ScheduledJob;
 use App\Models\Turnout;
+use App\Services\RecordService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -50,27 +48,23 @@ class ImportAbroadTurnoutsJob implements ShouldQueue
         $segments = Turnout::segmentsMap();
 
         foreach ($reader->getRecords() as $record) {
-            try {
-                $values->push([
-                    'election_id' => $this->scheduledJob->election_id,
-                    'country_id' => $this->getCountryId($record['UAT']),
-                    'section' => $record['Nr sectie de votare'],
+            $values->push([
+                'election_id' => $this->scheduledJob->election_id,
+                'country_id' => RecordService::getCountryId($record['UAT']),
+                'section' => $record['Nr sectie de votare'],
 
-                    'initial_permanent' => $record['Înscriși pe liste permanente'],
-                    'initial_complement' => 0,
-                    'permanent' => $record['LP'],
-                    'complement' => $record['LSC'],
-                    'supplement' => $record['LS'],
-                    'mobile' => $record['UM'],
+                'initial_permanent' => $record['Înscriși pe liste permanente'],
+                'initial_complement' => 0,
+                'permanent' => $record['LP'],
+                'complement' => $record['LSC'],
+                'supplement' => $record['LS'],
+                'mobile' => $record['UM'],
 
-                    'area' => $record['Mediu'],
-                    'has_issues' => $this->determineIfHasIssues($record),
+                'area' => $record['Mediu'],
+                'has_issues' => $this->determineIfHasIssues($record),
 
-                    ...$segments->map(fn (string $segment) => $record[$segment]),
-                ]);
-            } catch (CountryCodeNotFoundException $th) {
-                CountryCodeNotFound::dispatch($record['UAT'], $this->scheduledJob->election);
-            }
+                ...$segments->map(fn (string $segment) => $record[$segment]),
+            ]);
         }
 
         Turnout::saveToTemporaryTable($values->all());
@@ -87,17 +81,6 @@ class ImportAbroadTurnoutsJob implements ShouldQueue
         }
 
         return false;
-    }
-
-    protected function getCountryId(string $name): string
-    {
-        $country = Country::search($name)->first();
-
-        if (! $country) {
-            throw new CountryCodeNotFoundException($name);
-        }
-
-        return $country->id;
     }
 
     /**
