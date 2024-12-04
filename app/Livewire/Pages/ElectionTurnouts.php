@@ -34,7 +34,7 @@ class ElectionTurnouts extends ElectionPage
             ->get()
             ->map(fn (Candidate $candidate) => [
                 'name' => $candidate->name,
-                'image' => $candidate->getFirstMediaUrl(),
+                'image' => $candidate->getFirstMediaUrl('default', 'thumb'),
                 'party' => $candidate->party?->name,
             ]);
     }
