@@ -1,3 +1,7 @@
+import forms from '@tailwindcss/forms';
+import typography from '@tailwindcss/typography';
+import container from '@tailwindcss/container-queries';
+
 export default {
     darkMode: 'selector',
     content: [
@@ -37,9 +41,5 @@ export default {
             },
         },
     },
-    plugins: [
-        require('@tailwindcss/forms'),
-        require('@tailwindcss/typography'),
-        require('@tailwindcss/container-queries'),
-    ],
+    plugins: [forms, typography, container],
 };
