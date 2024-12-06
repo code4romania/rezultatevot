@@ -6,7 +6,9 @@
         :county="$county"
         :locality="$locality" />
 
-    <x-last-updated-at :$election page="turnout" class="-mt-8" />
+    <x-election.alert :$election class="-mt-4" />
+
+    <x-last-updated-at :$election page="turnout" class="-mt-4" />
 
     <livewire:charts.turnout-area-chart
         :parameters="$this->getQueryParameters()"

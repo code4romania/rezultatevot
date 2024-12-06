@@ -105,6 +105,15 @@ class ElectionResource extends Resource
                     ->label(__('app.field.has_lists'))
                     ->default(false),
 
+                Toggle::make('properties.show_threshold')
+                    ->label(__('app.field.show_threshold'))
+                    ->default(false),
+
+                TextInput::make('properties.total_seats')
+                    ->label(__('app.field.total_seats'))
+                    ->nullable()
+                    ->numeric(),
+
                 Select::make('properties.default_tab')
                     ->label(__('app.field.default_tab'))
                     ->options(DefaultElectionPage::options())
@@ -151,14 +160,10 @@ class ElectionResource extends Resource
                     ->columnSpanFull()
                     ->nullable(),
 
-                Toggle::make('properties.show_threshold')
-                    ->label(__('app.field.show_threshold'))
-                    ->default(false),
-
-                TextInput::make('properties.total_seats')
-                    ->label(__('app.field.total_seats'))
-                    ->nullable()
-                    ->numeric(),
+                TextInput::make('properties.alert')
+                    ->label(__('app.field.alert'))
+                    ->columnSpanFull()
+                    ->nullable(),
             ]);
     }
 
@@ -216,6 +221,10 @@ class ElectionResource extends Resource
                                 TextEntry::make('locality')
                                     ->label(__('app.field.locality')),
                             ]),
+
+                        TextEntry::make('properties.alert')
+                            ->label(__('app.field.alert'))
+                            ->columnSpanFull(),
                     ]),
 
                 Infolists\Components\Section::make()

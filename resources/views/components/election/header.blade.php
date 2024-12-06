@@ -12,5 +12,7 @@
         @endif
     </span>
 
+    <x-election.alert :$election class="my-2" />
+
     <x-last-updated-at :$election :$page />
 </header>
