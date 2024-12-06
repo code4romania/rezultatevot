@@ -18,7 +18,7 @@
             :locality="$locality" />
 
         @if ($this->recordStats->isEmpty())
-            <x-alert>
+            <x-alert class="bg-yellow-50">
                 Aici vor fi afișate rezultatele alegerilor pe măsură ce ele sunt publicate.
             </x-alert>
         @endif

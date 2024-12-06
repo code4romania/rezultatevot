@@ -12,6 +12,7 @@ return [
 
     'field' => [
         'acronym' => 'Acronim',
+        'alert' => 'Alertă',
         'aliases' => 'Aliasuri',
         'color' => 'Culoare',
         'candidate' => 'Partid / Alianță / Candidat independent',

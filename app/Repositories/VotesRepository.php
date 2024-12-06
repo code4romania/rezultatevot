@@ -79,7 +79,7 @@ class VotesRepository
 
                     $data = [
                         'name' => $votable->acronym ?? $votable->name,
-                        'image' => $votable->getFirstMegetFirstMediaUrl('default', 'thumb'),
+                        'image' => $votable->getFirstMediaUrl('default', 'thumb'),
                         'votes' => (int) ensureNumeric($vote->votes),
                         'percent' => percent($vote->votes, $total),
                         'color' => hex2rgb($votable->color),

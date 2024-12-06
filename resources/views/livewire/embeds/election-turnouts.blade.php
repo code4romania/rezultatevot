@@ -8,7 +8,9 @@
         :county="$county"
         :locality="$locality" />
 
-    <x-last-updated-at :$election page="turnout" class="-mt-8" />
+    <x-election.alert :$election class="-mt-4" />
+
+    <x-last-updated-at :$election page="turnout" class="-mt-4" />
 
     @if (filled($this->aggregate))
         @if ($this->aggregate->max)

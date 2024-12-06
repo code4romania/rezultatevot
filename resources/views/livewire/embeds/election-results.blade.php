@@ -6,7 +6,9 @@
         :county="$county"
         :locality="$locality" />
 
-    <x-last-updated-at :$election page="results" class="-mt-8" />
+    <x-election.alert :$election class="-mt-4" />
+
+    <x-last-updated-at :$election page="results" class="-mt-4" />
 
     @if (filled($this->aggregate))
         <x-stacked-bar
