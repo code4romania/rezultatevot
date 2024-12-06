@@ -17,6 +17,7 @@ use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -160,7 +161,7 @@ class ElectionResource extends Resource
                     ->columnSpanFull()
                     ->nullable(),
 
-                TextInput::make('properties.alert')
+                RichEditor::make('properties.alert')
                     ->label(__('app.field.alert'))
                     ->columnSpanFull()
                     ->nullable(),
@@ -224,7 +225,8 @@ class ElectionResource extends Resource
 
                         TextEntry::make('properties.alert')
                             ->label(__('app.field.alert'))
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->html(),
                     ]),
 
                 Infolists\Components\Section::make()
