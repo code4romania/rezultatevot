@@ -16,7 +16,7 @@
         "laravel-vite-plugin": "^1.1.1",
         "leaflet": "^1.9.4",
         "mapshaper": "^0.6.102",
-        "postcss": "^8.4.49",
+        "postcss": "^8.5.1",
         "postcss-nesting": "^13.0.1",
         "prettier": "^3.4.2",
         "prettier-plugin-tailwindcss": "^0.6.9",
