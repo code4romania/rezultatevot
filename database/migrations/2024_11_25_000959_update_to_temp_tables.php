@@ -31,15 +31,6 @@ return new class extends Migration
                 ->cascadeOnDelete();
         });
 
-        Schema::table('_temp_mandates', function (Blueprint $table) {
-            $table->id();
-
-            $table->foreign('election_id')
-                ->references('id')
-                ->on('elections')
-                ->cascadeOnDelete();
-        });
-
         Schema::table('_temp_votes', function (Blueprint $table) {
             $table->id();
 
