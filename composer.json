@@ -41,7 +41,7 @@
         "barryvdh/laravel-ide-helper": "^3.5",
         "fakerphp/faker": "^1.24",
         "friendsofphp/php-cs-fixer": "^3.73",
-        "larastan/larastan": "^3.2",
+        "larastan/larastan": "^3.4",
         "laravel/pint": "^1.21",
         "laravel/sail": "^1.41",
         "laravel/telescope": "^5.6",
