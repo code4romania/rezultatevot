@@ -67,13 +67,6 @@ class CacheService
         return $static;
     }
 
-    public function setTTL(int $ttl): static
-    {
-        $this->ttl = $ttl;
-
-        return $this;
-    }
-
     public function remember(Closure $callback): mixed
     {
         return Cache::tags($this->tags)->flexible($this->key, $this->ttl, $callback);
