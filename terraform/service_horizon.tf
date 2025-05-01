@@ -7,8 +7,8 @@ module "ecs_horizon" {
 
   name         = "${local.namespace}-horizon"
   cluster_name = module.ecs_cluster.cluster_name
-  min_capacity = 0
-  max_capacity = 0
+  min_capacity = 1
+  max_capacity = 1
 
   deployment_minimum_healthy_percent = 0
   deployment_maximum_percent         = 100
