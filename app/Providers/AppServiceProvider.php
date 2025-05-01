@@ -9,6 +9,7 @@ use Dedoc\Scramble\Scramble;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Resources\Pages\CreateRecord;
+use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -43,6 +44,10 @@ class AppServiceProvider extends ServiceProvider
 
         SpatieMediaLibraryFileUpload::configureUsing(function (SpatieMediaLibraryFileUpload $fileUpload) {
             $fileUpload->disk(config('filament.default_filesystem_disk'));
+        });
+
+        TiptapEditor::configureUsing(function (TiptapEditor $editor) {
+            $editor->disk(config('filament.default_filesystem_disk'));
         });
     }
 
