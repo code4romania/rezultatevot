@@ -5,4 +5,5 @@
         datetime="{{ $timestamp->toIso8601String() }}">
         {{ $timestamp->toDateTimeString() }}
     </time>
+    <span>ora României</span>
 </div>
