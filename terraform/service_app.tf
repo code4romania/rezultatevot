@@ -8,7 +8,7 @@ module "ecs_app" {
   name         = "${local.namespace}-app"
   cluster_name = module.ecs_cluster.cluster_name
   min_capacity = 11
-  max_capacity = 12
+  max_capacity = 24
 
   deployment_minimum_healthy_percent = 50
   deployment_maximum_percent         = 200
@@ -43,10 +43,6 @@ module "ecs_app" {
   target_value           = 70
 
   ordered_placement_strategy = [
-    {
-      type  = "spread"
-      field = "attribute:ecs.availability-zone"
-    },
     {
       type  = "spread"
       field = "instanceId"
