@@ -8,7 +8,7 @@
 
     @if ($this->showOverlay)
         <div @class([
-            'absolute inset-0 z-10 flex flex-col items-center justify-center leading-0',
+            'absolute left-0 right-0 top-1/2 -translate-y-1/2 z-10 flex flex-col items-center justify-center leading-0',
             '@container',
             'text-purple-950' => filled($legend) && $this->totalValue < 50,
             'text-purple-50' => filled($legend) && $this->totalValue >= 50,
