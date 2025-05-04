@@ -105,12 +105,7 @@ class FetchRecordsJob extends SchedulableJob
             '40' => 'VL',
             '41' => 'VN',
 
-            '44' => 'B',
-            '45' => 'B',
-            '46' => 'B',
-            '47' => 'B',
-            '48' => 'B',
-            '49' => 'B',
+            '42' => 'B',
         ]);
 
         $jobs = $sourceFiles
