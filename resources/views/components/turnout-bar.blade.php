@@ -21,7 +21,7 @@
         <x-legend
             :value="$max"
             :max="$max"
-            label="Cetățeni cu drept de vot"
+            label="Cetățeni înscriși pe liste permanente"
             :description="sprintf('%s (%s)', percent($max, $max, formatted: true), Number::format($max))"
             :color="Color::Indigo[500]" />
 
