@@ -38,13 +38,14 @@ class ImportCorrespondenceRecordsJob extends SchedulableJob
 
         foreach ($reader->getRecords() as $row) {
             $countryId = RecordService::getCountryId($row['uat_name']);
+            $section = "C-{$row['precinct_nr']}";
 
             $part = RecordService::getPart($row['report_stage_code']);
 
             $records->push([
                 'election_id' => $this->scheduledJob->election_id,
                 'country_id' => $countryId,
-                'section' => "C-{$row['precinct_nr']}",
+                'section' => $section,
                 'part' => $part,
 
                 'eligible_voters_permanent' => $row['a'],
@@ -69,7 +70,7 @@ class ImportCorrespondenceRecordsJob extends SchedulableJob
                 $votes->push([
                     'election_id' => $this->scheduledJob->election_id,
                     'country_id' => $countryId,
-                    'section' => $row['precinct_nr'],
+                    'section' => $section,
                     'part' => $part,
 
                     'votable_type' => $votable['votable_type'],
