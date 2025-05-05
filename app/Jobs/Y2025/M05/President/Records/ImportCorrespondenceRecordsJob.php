@@ -44,7 +44,7 @@ class ImportCorrespondenceRecordsJob extends SchedulableJob
             $records->push([
                 'election_id' => $this->scheduledJob->election_id,
                 'country_id' => $countryId,
-                'section' => $row['precinct_nr'],
+                'section' => "C-{$row['precinct_nr']}",
                 'part' => $part,
 
                 'eligible_voters_permanent' => $row['a'],
