@@ -7,7 +7,7 @@ module "ecs_app" {
 
   name         = "${local.namespace}-app"
   cluster_name = module.ecs_cluster.cluster_name
-  min_capacity = 24
+  min_capacity = 23
   max_capacity = 24
 
   deployment_minimum_healthy_percent = 50
