@@ -122,6 +122,10 @@ module "ecs_app" {
       name  = "PHP_PM_MAX_CHILDREN",
       value = 128
     },
+    {
+      name  = "DB_HOST",
+      value = aws_db_proxy.main.endpoint
+    }
   ]
 
   secrets = [
@@ -133,10 +137,10 @@ module "ecs_app" {
       name      = "DB_CONNECTION"
       valueFrom = "${aws_secretsmanager_secret.rds.arn}:engine::"
     },
-    {
-      name      = "DB_HOST"
-      valueFrom = "${aws_secretsmanager_secret.rds.arn}:host::"
-    },
+    # {
+    #   name      = "DB_HOST"
+    #   valueFrom = "${aws_secretsmanager_secret.rds.arn}:host::"
+    # },
     {
       name      = "DB_PORT"
       valueFrom = "${aws_secretsmanager_secret.rds.arn}:port::"
