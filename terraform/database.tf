@@ -5,7 +5,7 @@ resource "aws_db_instance" "main" {
   publicly_accessible = false
   multi_az            = true
   deletion_protection = true
-  monitoring_interval = 60
+  #   monitoring_interval = 60
 
   #   availability_zone = local.availability_zone
 
