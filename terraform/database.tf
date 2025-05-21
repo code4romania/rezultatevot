@@ -1,11 +1,11 @@
 resource "aws_db_instance" "main" {
   identifier          = local.namespace
   db_name             = "rezultatevot"
-  instance_class      = "db.m8g.xlarge"
+  instance_class      = "db.t4g.micro"
   publicly_accessible = false
   multi_az            = true
   deletion_protection = true
-  monitoring_interval = 60
+  #   monitoring_interval = 60
 
   #   availability_zone = local.availability_zone
 
@@ -35,8 +35,8 @@ resource "aws_db_instance" "main" {
 
   maintenance_window = "Tue:04:45-Tue:06:00"
 
-  performance_insights_enabled          = true
-  performance_insights_retention_period = 7
+  #   performance_insights_enabled          = true
+  #   performance_insights_retention_period = 7
 
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids = [aws_security_group.database.id]
