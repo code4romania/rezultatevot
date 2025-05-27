@@ -4,7 +4,6 @@ resource "aws_cloudfront_distribution" "main" {
   is_ipv6_enabled = true
   http_version    = "http2and3"
   aliases         = local.domains
-  web_acl_id      = "arn:aws:wafv2:us-east-1:172019762325:global/webacl/rezultatevot-v2-production/99d07f5f-8a55-43aa-9e6c-01b82543c3ff"
 
   origin {
     domain_name = aws_lb.main.dns_name
