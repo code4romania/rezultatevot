@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02cc772eead755f22c8f7c3c615fcd90",
+    "content-hash": "0f59d681ad889201c59554d3157b8407",
     "packages": [
         {
             "name": "andreiio/blade-remix-icon",
@@ -3551,16 +3551,16 @@
         },
         {
             "name": "laravel/horizon",
-            "version": "v5.31.2",
+            "version": "v5.32.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/horizon.git",
-                "reference": "e6068c65be6c02a01e34531abf3143fab91f0de0"
+                "reference": "e78d9689d85b3d4769dc64def5eb6d94e5776beb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/horizon/zipball/e6068c65be6c02a01e34531abf3143fab91f0de0",
-                "reference": "e6068c65be6c02a01e34531abf3143fab91f0de0",
+                "url": "https://api.github.com/repos/laravel/horizon/zipball/e78d9689d85b3d4769dc64def5eb6d94e5776beb",
+                "reference": "e78d9689d85b3d4769dc64def5eb6d94e5776beb",
                 "shasum": ""
             },
             "require": {
@@ -3600,7 +3600,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-master": "5.x-dev"
+                    "dev-master": "6.x-dev"
                 }
             },
             "autoload": {
@@ -3625,9 +3625,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/horizon/issues",
-                "source": "https://github.com/laravel/horizon/tree/v5.31.2"
+                "source": "https://github.com/laravel/horizon/tree/v5.32.1"
             },
-            "time": "2025-04-18T12:57:39+00:00"
+            "time": "2025-05-19T13:13:30+00:00"
         },
         {
             "name": "laravel/prompts",
