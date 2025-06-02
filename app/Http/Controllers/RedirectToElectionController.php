@@ -12,7 +12,9 @@ class RedirectToElectionController extends Controller
     public function __invoke(?Election $election = null): RedirectResponse
     {
         $election ??= Election::query()
+            ->withoutGlobalScopes()
             ->where('is_visible', true)
+            ->latest('date')
             ->first();
 
         abort_unless($election, 404);
