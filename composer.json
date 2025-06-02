@@ -14,7 +14,7 @@
         "awcodes/filament-tiptap-editor": "^3.5",
         "blade-ui-kit/blade-icons": "^1.8",
         "codeat3/blade-google-material-design-icons": "^1.20",
-        "datlechin/filament-menu-builder": "^0.6",
+        "datlechin/filament-menu-builder": "^0.7",
         "dedoc/scramble": "^0.12",
         "filament/filament": "^3.3",
         "filament/spatie-laravel-media-library-plugin": "^3.3",
