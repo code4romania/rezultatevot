@@ -15,7 +15,7 @@
         "axios": "^1.9.0",
         "laravel-vite-plugin": "^1.2.0",
         "leaflet": "^1.9.4",
-        "mapshaper": "^0.6.102",
+        "mapshaper": "^0.6.106",
         "postcss": "^8.5.4",
         "postcss-nesting": "^13.0.1",
         "prettier": "^3.5.3",
