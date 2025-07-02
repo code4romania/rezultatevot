@@ -7,7 +7,7 @@ module "ecs_cluster" {
   security_groups       = [aws_security_group.ecs.id]
   default_instance_type = "t3a.micro"
   instance_types = {
-    "t3a.micro" = ""
+    "m5a.large" = ""
   }
 
   min_size                  = 1
