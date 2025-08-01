@@ -20,7 +20,7 @@
         "filament/spatie-laravel-media-library-plugin": "^3.3",
         "haydenpierce/class-finder": "^0.5",
         "jeffgreco13/filament-breezy": "^2.6",
-        "laravel/framework": "^12.8",
+        "laravel/framework": "^12.21",
         "laravel/horizon": "^5.32",
         "laravel/sanctum": "^4.1",
         "laravel/scout": "^10.15",
