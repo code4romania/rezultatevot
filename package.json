@@ -12,7 +12,7 @@
         "@tailwindcss/forms": "^0.5.10",
         "@tailwindcss/typography": "^0.5.16",
         "autoprefixer": "^10.4.21",
-        "axios": "^1.9.0",
+        "axios": "^1.13.1",
         "laravel-vite-plugin": "^1.2.0",
         "leaflet": "^1.9.4",
         "mapshaper": "^0.6.102",
