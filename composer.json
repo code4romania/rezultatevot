@@ -34,7 +34,7 @@
         "spatie/temporary-directory": "^2.3",
         "staudenmeir/belongs-to-through": "^2.16",
         "tpetry/laravel-query-expressions": "^1.5",
-        "typesense/typesense-php": "^5.1"
+        "typesense/typesense-php": "^5.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",
