@@ -1,13 +1,17 @@
-FROM code4romania/php:8.2 AS vendor
+FROM code4romania/php:8.4 AS vendor
 
-WORKDIR /var/www
+# Switch to root so we can do root things
+USER root
 
-COPY --chown=www-data:www-data . /var/www
-
-# install extensions
+# Install additional PHP extensions
 RUN set -ex; \
     install-php-extensions \
     redis
+
+# Drop back to our unprivileged user
+USER www-data
+
+COPY --chown=www-data:www-data . /var/www/html
 
 RUN set -ex; \
     composer install \
@@ -31,7 +35,7 @@ COPY \
 RUN set -ex; \
     npm ci --no-audit --ignore-scripts
 
-COPY --from=vendor /var/www /build
+COPY --from=vendor /var/www/html /build
 
 RUN set -ex; \
     npm run build
@@ -48,9 +52,4 @@ RUN set -ex; \
     apk add --no-cache \
     gawk;
 
-COPY docker/s6-rc.d /etc/s6-overlay/s6-rc.d
-COPY --from=assets --chown=www-data:www-data /build/public/build /var/www/public/build
-
-ENV SENTRY_SAMPLE_RATE=1.0
-
-EXPOSE 80
+COPY --from=assets --chown=www-data:www-data /build/public/build /var/www/html/public/build
