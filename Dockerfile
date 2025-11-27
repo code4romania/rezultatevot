@@ -8,6 +8,11 @@ RUN set -ex; \
     install-php-extensions \
     redis
 
+# Needed for splitting CSVs
+RUN set -ex; \
+    apk add --no-cache \
+    gawk
+
 # Drop back to our unprivileged user
 USER www-data
 
@@ -46,10 +51,5 @@ ARG VERSION
 ARG REVISION
 
 RUN echo "$VERSION (${REVISION:0:7})" > /var/www/.version
-
-# Needed for splitting CSVs
-RUN set -ex; \
-    apk add --no-cache \
-    gawk;
 
 COPY --from=assets --chown=www-data:www-data /build/public/build /var/www/html/public/build
