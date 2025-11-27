@@ -25,7 +25,7 @@
         "laravel/sanctum": "^4.1",
         "laravel/scout": "^10.15",
         "laravel/tinker": "^2.10",
-        "league/csv": "^9.23",
+        "league/csv": "^9.27",
         "league/flysystem-aws-s3-v3": "^3.29",
         "league/flysystem-read-only": "^3.28",
         "livewire/livewire": "^3.7",
