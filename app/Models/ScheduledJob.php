@@ -61,8 +61,6 @@ class ScheduledJob extends Model
         return [
             'cron' => Cron::class,
             'is_enabled' => 'boolean',
-            'source_username' => 'encrypted',
-            'source_password' => 'encrypted',
             'last_run_at' => 'datetime',
         ];
     }
