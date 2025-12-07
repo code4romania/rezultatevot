@@ -2,24 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Y2025\M12\Local_Special\Turnouts;
+namespace App\Jobs\Y2025\M12\Local_Special\Records;
 
 use App\Jobs\DeleteTemporaryTableData;
 use App\Jobs\PersistTemporaryTableData;
 use App\Jobs\SchedulableJob;
-use App\Jobs\UpdateElectionTurnoutsTimestamp;
+use App\Jobs\UpdateElectionRecordsTimestamp;
 use App\Models\County;
-use App\Models\Turnout;
+use App\Models\Record;
+use App\Models\Vote;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
 
-class FetchTurnoutsJob extends SchedulableJob
+class FetchRecordsJob extends SchedulableJob
 {
     public static function name(): string
     {
-        return '2025-12-07 / LOCALE SPECIALE / Prezență';
+        return '2025-12-07 / Locale speciale / Procese Verbale';
     }
 
     public function execute(): void
@@ -56,54 +57,43 @@ class FetchTurnoutsJob extends SchedulableJob
                     );
             });
 
-        $counties = County::query()->whereIn('id',
-           [
-               //București
-               403,
-               //BZ
-               109,
-               //BT
-               74,
-               //BH
-               56,
-               //CS
-               118,
-               //CT
-               136,
-               //DB
-               154,
-               //DJ
-               163,
-               //IL
-               216,
-                //IS
-               225,
-               //MM
-               243,
-               //SB
-               323
-
-
-           ])->get();
-
         $electionName = $this->scheduledJob->election->getFilamentName();
         $electionId = $this->scheduledJob->election_id;
 
         $time = now()->toDateTimeString();
 
-        $jobs = $counties
-            ->map(fn (County $county) => new ImportCountyTurnoutsJob($this->scheduledJob, $county));
+        $sourceFiles = collect([
+            '5' => 'BH',
+            '7' => 'BT',
+            '10' => 'BZ',
+            '11' => 'CS',
+            '14' => 'CT',
+            '15' => 'CV',
+            '16' => 'DB',
+            '17' => 'DJ',
+            '23' => 'IL',
+            '24' => 'IS',
+            '26' => 'MM',
+            '34' => 'SB',
+            '42' => 'B',
+        ]);
+
+        $jobs = $sourceFiles
+            ->map(fn (string $countyCode, string $filename) => new ImportCountyRecordsJob($this->scheduledJob, $countyCode, $filename));
 
         $persistAndClean = fn () => Bus::chain([
-            new PersistTemporaryTableData(Turnout::class, $electionId),
-            new DeleteTemporaryTableData(Turnout::class, $electionId),
+            new PersistTemporaryTableData(Record::class, $electionId),
+            new DeleteTemporaryTableData(Record::class, $electionId),
+
+            new PersistTemporaryTableData(Vote::class, $electionId),
+            new DeleteTemporaryTableData(Vote::class, $electionId),
         ])->dispatch();
 
         Bus::batch($jobs)
             ->catch($persistAndClean)
             ->then($persistAndClean)
-            ->then(fn () => UpdateElectionTurnoutsTimestamp::dispatch($electionId))
-            ->name("$electionName / Prezență / $time")
+            ->then(fn () => UpdateElectionRecordsTimestamp::dispatch($electionId))
+            ->name("$electionName / Rezultate / $time")
             ->allowFailures()
             ->dispatch();
     }
@@ -117,7 +107,7 @@ class FetchTurnoutsJob extends SchedulableJob
     {
         return [
             'import',
-            'turnout',
+            'records',
             'scheduled_job:' . $this->scheduledJob->id,
             'election:' . $this->scheduledJob->election_id,
             static::name(),
