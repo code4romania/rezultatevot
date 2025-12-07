@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Y2025\M05\President\Turnouts;
+namespace App\Jobs\Y2025\M12\Local_Special\Turnouts;
 
 use App\Jobs\DeleteTemporaryTableData;
 use App\Jobs\PersistTemporaryTableData;
@@ -73,7 +73,7 @@ class FetchTurnoutsJob extends SchedulableJob
                //DJ
                163,
                //IL
-               261,
+               216,
                 //IS
                225,
                //MM

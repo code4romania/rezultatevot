@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Y2025\M05\President\Turnouts;
+namespace App\Jobs\Y2025\M12\Local_Special\Turnouts;
 
 use App\Exceptions\MissingSourceFileException;
 use App\Models\County;
