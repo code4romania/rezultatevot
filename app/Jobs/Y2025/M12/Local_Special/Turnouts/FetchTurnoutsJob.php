@@ -19,7 +19,7 @@ class FetchTurnoutsJob extends SchedulableJob
 {
     public static function name(): string
     {
-        return '2025-05-04 / LOCALE SPECIALE / Prezență';
+        return '2025-12-07 / LOCALE SPECIALE / Prezență';
     }
 
     public function execute(): void
@@ -62,6 +62,8 @@ class FetchTurnoutsJob extends SchedulableJob
                403,
                //BZ
                109,
+               //BT
+               74,
                //BH
                56,
                //CS
