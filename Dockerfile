@@ -50,6 +50,6 @@ FROM vendor
 ARG VERSION
 ARG REVISION
 
-RUN echo "$VERSION (${REVISION:0:7})" > /var/www/.version
+RUN echo "$VERSION (${REVISION:0:7})" > /var/www/html/.version
 
 COPY --from=assets --chown=www-data:www-data /build/public/build /var/www/html/public/build
