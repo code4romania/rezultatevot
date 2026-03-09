@@ -1,19 +1,9 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@source '../../../../vendor/commitglobal/app-version/resources/views';
+@source '../../../../vendor/jeffgreco13/filament-breezy/resources';
+@source '../../../../resources/views/filament/**/*';
 @source '../../../../app/Filament/**/*';
-@source '../../../../app/Livewire/**/*';
-@source '../../../../app/View/Components/**/*';
-@source '../../../../resources/views/**/*';
-@source '../../../../resources/js/**/*.js';
-
-@utility container {
-    @apply mx-auto px-4;
-
-    @variant sm {
-        @apply px-6;
-    }
-
-    @variant lg {
-        @apply px-8;
-    }
-}

@@ -143,7 +143,7 @@ export default () => ({
         });
 
         legend.onAdd = function (map) {
-            const div = L.DomUtil.create('ol', 'bg-white py-2 px-2 rounded drop-shadow leading-4 pointer-events-none');
+            const div = L.DomUtil.create('ol', 'bg-white py-2 px-2 rounded-sm drop-shadow-sm leading-4 pointer-events-none');
 
             for (const step of scale) {
                 div.innerHTML += `<li class="flex gap-1 items-center">

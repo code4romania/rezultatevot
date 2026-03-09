@@ -3,7 +3,7 @@
 <article
     wire:key="news-feed-item-{{ $article->id }}"
     x-data="{ more: @js($expanded) }"
-    {{ $attributes->class('overflow-hidden bg-white rounded-lg shadow') }}>
+    {{ $attributes->class('overflow-hidden bg-white rounded-lg shadow-sm') }}>
     <div class="flex flex-col gap-4 px-4 py-5 sm:p-6">
         <header class="relative flex items-center gap-x-4">
             <img src="{{ $article->author->getFilamentAvatarUrl() }}" alt="" class="w-10 h-10 shrink-0">
@@ -41,8 +41,8 @@
                         @class([
                             'flex gap-2 ',
                             $media->type === 'image'
-                                ? 'shadow-sm hover:shadow-lg'
-                                : 'p-2 text-sm border rounded-md drop-shadow-sm bg-gray-50 hover:bg-purple-100 max-w-48',
+                                ? 'shadow-xs hover:shadow-lg'
+                                : 'p-2 text-sm border rounded-md drop-shadow-xs bg-gray-50 hover:bg-purple-100 max-w-48',
                         ])
                         title="{{ $media->file_name }}"
                         target="_blank"
@@ -91,10 +91,10 @@
                     rel="noopener noreferer"
 
                     @class([
-                        'rounded-md p-1.5 text-white drop-shadow-sm text-sm',
+                        'rounded-md p-1.5 text-white drop-shadow-xs text-sm',
                         'border border-transparent',
                         'flex items-center justify-center',
-                        'hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+                        'hover:bg-indigo-500 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
                         $platform['color'],
                     ])>
                     <x-dynamic-component :component="$platform['icon']" class="size-5" />
@@ -109,7 +109,7 @@
             x-show="!more"
             type="button"
             @click.prevent="more = !more"
-            class="px-2.5 py-1.5 text-sm gap-x-1.5 inline-flex items-center font-semibold rounded shadow-sm text-purple-50 bg-purple-500 hover:bg-purple-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600">
+            class="px-2.5 py-1.5 text-sm gap-x-1.5 inline-flex items-center font-semibold rounded-sm shadow-xs text-purple-50 bg-purple-500 hover:bg-purple-400 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600">
             <span>{{ __('app.newsfeed.more') }}</span>
 
             <x-ri-arrow-down-s-line class="-me-0.5 h-5 w-5" />
