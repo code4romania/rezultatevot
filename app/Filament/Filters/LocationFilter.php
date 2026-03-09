@@ -6,7 +6,7 @@ namespace App\Filament\Filters;
 
 use App\Models\Locality;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Get;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables\Filters\BaseFilter;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -25,7 +25,7 @@ class LocationFilter extends BaseFilter
 
     public function setUp(): void
     {
-        $this->form(function () {
+        $this->schema(function () {
             $form = [];
 
             if ($this->withCountry) {
@@ -46,7 +46,7 @@ class LocationFilter extends BaseFilter
                 if ($this->withLocality) {
                     $form[] = Select::make('locality')
                         ->label(__('app.field.locality'))
-                        ->relationship('locality', 'name', function (Builder $query, Get $get) {
+                        ->relationship('locality', 'name', function (Builder $query) {
                             return $query->orderBy('name');
                         })
                         ->getSearchResultsUsing(function (string $search, Get $get) {

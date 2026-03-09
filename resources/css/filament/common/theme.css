@@ -1,3 +1,9 @@
-@import '/vendor/filament/filament/resources/css/theme.css';
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
 
-@config 'tailwind.config.js';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@source '../../../../vendor/commitglobal/app-version/resources/views';
+@source '../../../../vendor/jeffgreco13/filament-breezy/resources';
+@source '../../../../resources/views/filament/**/*';
+@source '../../../../app/Filament/**/*';

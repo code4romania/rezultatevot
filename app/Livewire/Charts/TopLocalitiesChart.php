@@ -20,9 +20,9 @@ class TopLocalitiesChart extends ChartWidget
 
     public ?Collection $topLocalities = null;
 
-    protected static ?string $maxHeight = '1200px';
+    protected ?string $maxHeight = '1200px';
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     public function getHeading(): Htmlable
     {
