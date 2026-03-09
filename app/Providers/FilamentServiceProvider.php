@@ -11,6 +11,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Schemas\Schema;
+use Filament\Support\Facades\FilamentColor;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Table;
 use Illuminate\Support\ServiceProvider;
@@ -33,6 +34,7 @@ class FilamentServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->setDefaultDateTimeDisplayFormats();
+        $this->registerColors();
 
         $this->configureActions();
         $this->configureForms();
@@ -48,6 +50,26 @@ class FilamentServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+    }
+
+    protected function registerColors(): void
+    {
+        FilamentColor::register([
+            'custom' => 'rgb(var(--color-custom))',
+            'purple' => [
+                50 => '#F5F1F8',
+                100 => '#E9E0F0',
+                200 => '#D3C1E1',
+                300 => '#BCA3D2',
+                400 => '#A987C4',
+                500 => '#9369B5',
+                600 => '#7C4FA1',
+                700 => '#644082',
+                800 => '#4C3163',
+                900 => '#352245',
+                950 => '#1A1122',
+            ],
+        ]);
     }
 
     protected function configureActions(): void
