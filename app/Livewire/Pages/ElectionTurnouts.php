@@ -22,7 +22,7 @@ class ElectionTurnouts extends ElectionPage implements HasActions
 {
     use InteractsWithActions;
 
-    #[Layout('components.layouts.election')]
+    #[Layout('layouts::election')]
     public function render(): View
     {
         $this->seo(__('app.navigation.turnout'));

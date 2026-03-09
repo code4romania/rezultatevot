@@ -8,7 +8,6 @@
     "devDependencies": {
         "@iframe-resizer/child": "^5.5.9",
         "@ryangjchandler/alpine-clipboard": "^2.3.0",
-        "@tailwindcss/container-queries": "^0.1.1",
         "@tailwindcss/forms": "^0.5.11",
         "@tailwindcss/postcss": "^4.2.1",
         "@tailwindcss/typography": "^0.5.19",

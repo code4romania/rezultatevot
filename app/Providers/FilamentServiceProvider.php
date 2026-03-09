@@ -6,7 +6,6 @@ namespace App\Providers;
 
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\CreateRecord;
@@ -61,11 +60,6 @@ class FilamentServiceProvider extends ServiceProvider
     {
         SpatieMediaLibraryFileUpload::configureUsing(function (SpatieMediaLibraryFileUpload $fileUpload) {
             $fileUpload->disk(config('filament.default_filesystem_disk'));
-        });
-
-        // TODO: remove when the fix is released
-        RichEditor::configureUsing(function (RichEditor $editor) {
-            $editor->disk(config('filament.default_filesystem_disk'));
         });
     }
 

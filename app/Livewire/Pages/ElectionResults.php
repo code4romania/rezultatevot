@@ -20,7 +20,7 @@ class ElectionResults extends ElectionPage implements HasActions
 
     protected string $fallbackColor = '#DDD';
 
-    #[Layout('components.layouts.election')]
+    #[Layout('layouts::election')]
     public function render(): View
     {
         $this->seo(__('app.navigation.results'));

@@ -1,10 +1,14 @@
+@import '../../vendor/filament/filament/resources/css/theme.css';
 @import './leaflet.css' layer(base);
-
-@import 'tailwindcss';
 
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
-@plugin '@tailwindcss/container-queries';
+
+@source '../../app/Livewire/**/*';
+@source '../../app/Filament/**/*';
+@source '../../app/View/Components/**/*';
+@source '../../resources/views/**/*';
+@source '../../resources/js/**/*';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
