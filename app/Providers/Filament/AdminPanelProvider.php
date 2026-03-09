@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Filament\Admin\Pages\Auth\Login;
-use App\Filament\Admin\Resources\ElectionResource;
-use App\Filament\Admin\Resources\MenuResource;
+use App\Filament\Admin\Resources\Elections\ElectionResource;
+use App\Filament\Admin\Resources\Menus\MenuResource;
 use App\Models\Election;
 use App\Models\Menu;
 use App\Models\MenuItem;
