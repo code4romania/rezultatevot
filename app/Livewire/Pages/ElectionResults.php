@@ -6,14 +6,18 @@ namespace App\Livewire\Pages;
 
 use App\Repositories\RecordsRepository;
 use App\Repositories\VotesRepository;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Number;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 
-class ElectionResults extends ElectionPage
+class ElectionResults extends ElectionPage implements HasActions
 {
+    use InteractsWithActions;
+
     protected string $fallbackColor = '#DDD';
 
     #[Layout('components.layouts.election')]

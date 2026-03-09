@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\PartyResource\Pages;
+use App\Filament\Admin\Resources\PartyResource\Pages\ManageParties;
 use App\Filament\Imports\SimpleCandidateImporter;
 use App\Models\Party;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ImportAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Actions\ImportAction;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -24,7 +26,7 @@ class PartyResource extends Resource
 {
     protected static ?string $model = Party::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?int $navigationSort = 20;
 
@@ -43,10 +45,10 @@ class PartyResource extends Resource
         return __('app.party.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->label(__('app.field.name'))
                     ->required()
@@ -95,13 +97,13 @@ class PartyResource extends Resource
                         'election_id' => Filament::getTenant()->id,
                     ]),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
 
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -116,7 +118,7 @@ class PartyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageParties::route('/'),
+            'index' => ManageParties::route('/'),
         ];
     }
 }

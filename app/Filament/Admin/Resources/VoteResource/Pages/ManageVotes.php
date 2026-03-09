@@ -21,7 +21,7 @@ class ManageVotes extends ManageRecords
         return [
             Action::make('mandates')
                 ->label(__('app.mandate.action.generate'))
-                ->form([
+                ->schema([
                     Select::make('type')
                         ->options([
                             's' => 'Senat',

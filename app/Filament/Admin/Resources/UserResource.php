@@ -5,34 +5,33 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\User\Role;
-use App\Filament\Admin\Resources\UserResource\Pages;
+use App\Filament\Admin\Resources\UserResource\Pages\ManageUsers;
 use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Group;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Infolists;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Support\Str;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
     protected static bool $isScopedToTenant = false;
 
@@ -53,12 +52,12 @@ class UserResource extends Resource
         return __('app.user.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns(1)
-            ->schema([
-                Forms\Components\Split::make([
+            ->components([
+                Flex::make([
                     SpatieMediaLibraryFileUpload::make('avatar')
                         ->collection('avatar')
                         ->avatar()
@@ -108,7 +107,8 @@ class UserResource extends Resource
                                 ->hidden(fn (Get $get) => filled($get('role')) ? Role::from($get('role')) !== Role::CONTRIBUTOR : true)
                                 ->multiple()
                                 ->preload(),
-                            TiptapEditor::make('description')
+
+                            RichEditor::make('description')
                                 ->label(__('app.field.description'))
                                 ->nullable(),
 
@@ -117,18 +117,18 @@ class UserResource extends Resource
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
+        return $schema
             ->columns(1)
-            ->schema([
-                Infolists\Components\Split::make([
+            ->components([
+                Flex::make([
                     SpatieMediaLibraryImageEntry::make('avatar')
                         ->collection('avatar')
                         ->circular()
                         ->grow(false),
 
-                    Infolists\Components\Group::make()
+                    Group::make()
                         ->schema([
                             TextEntry::make('name')
                                 ->label(__('app.field.name')),
@@ -186,11 +186,11 @@ class UserResource extends Resource
             ->filters([
 
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()
+            ->recordActions([
+                ViewAction::make()
                     ->iconButton(),
 
-                Tables\Actions\EditAction::make()
+                EditAction::make()
                     ->iconButton(),
             ]);
     }
@@ -205,7 +205,7 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageUsers::route('/'),
+            'index' => ManageUsers::route('/'),
 
         ];
     }

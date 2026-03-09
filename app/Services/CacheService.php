@@ -125,7 +125,7 @@ class CacheService
             $tags[] = "{$prefix}:{$this->getName()}:{$this->level->value}";
         }
 
-        if (DataLevel::isValue($this->level, DataLevel::NATIONAL) && filled($this->county)) {
+        if (DataLevel::NATIONAL->is($this->level) && filled($this->county)) {
             $tags[] = "{$prefix}:{$this->getName()}:{$this->level->value}:{$this->county}";
         }
 

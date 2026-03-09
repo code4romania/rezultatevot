@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use Datlechin\FilamentMenuBuilder\Resources\MenuResource as BaseMenuResource;
+use Filament\Resources\Resource;
 
-class MenuResource extends BaseMenuResource
+// use Datlechin\FilamentMenuBuilder\Resources\MenuResource as BaseMenuResource;
+
+class MenuResource extends Resource
 {
     protected static bool $isScopedToTenant = false;
 

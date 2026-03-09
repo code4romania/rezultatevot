@@ -18,7 +18,7 @@ class RateLimitSchedulableJobMiddleware
     /**
      * Process the queued job.
      *
-     * @param \Closure(object): void $next
+     * @param Closure(object):void $next
      */
     public function handle(object $job, Closure $next): void
     {

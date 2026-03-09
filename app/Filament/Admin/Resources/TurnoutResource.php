@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\TurnoutResource\Pages;
+use App\Filament\Admin\Resources\TurnoutResource\Pages\ManageTurnouts;
 use App\Filament\Filters\LocationFilter;
 use App\Models\Turnout;
 use App\Tables\Columns\LocationColumn;
@@ -17,7 +17,7 @@ class TurnoutResource extends Resource
 {
     protected static ?string $model = Turnout::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getNavigationGroup(): ?string
     {
@@ -101,7 +101,7 @@ class TurnoutResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageTurnouts::route('/'),
+            'index' => ManageTurnouts::route('/'),
         ];
     }
 }

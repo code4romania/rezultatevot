@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\CountyResource\Pages;
+use App\Filament\Admin\Resources\CountyResource\Pages\ManageCounties;
 use App\Models\County;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -17,7 +17,7 @@ class CountyResource extends Resource
 {
     protected static ?string $model = County::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-map';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map';
 
     protected static bool $isScopedToTenant = false;
 
@@ -38,10 +38,10 @@ class CountyResource extends Resource
         return __('app.county.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('id')
                     ->label(__('app.field.siruta'))
                     ->unique(ignoreRecord: true)
@@ -67,15 +67,15 @@ class CountyResource extends Resource
                     ->searchable()
                     ->sortable(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageCounties::route('/'),
+            'index' => ManageCounties::route('/'),
         ];
     }
 }

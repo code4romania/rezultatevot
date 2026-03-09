@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\RecordResource\Pages;
+use App\Filament\Admin\Resources\RecordResource\Pages\ManageRecords;
 use App\Filament\Filters\LocationFilter;
 use App\Models\Record;
 use App\Tables\Columns\LocationColumn;
@@ -17,7 +17,7 @@ class RecordResource extends Resource
 {
     protected static ?string $model = Record::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getNavigationGroup(): ?string
     {
@@ -130,7 +130,7 @@ class RecordResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageRecords::route('/'),
+            'index' => ManageRecords::route('/'),
         ];
     }
 }

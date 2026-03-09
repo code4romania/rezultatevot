@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources\CountyResource\Pages;
 
 use App\Filament\Admin\Resources\CountyResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageCounties extends ManageRecords
@@ -15,7 +15,7 @@ class ManageCounties extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

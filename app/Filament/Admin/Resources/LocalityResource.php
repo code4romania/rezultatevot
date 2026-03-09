@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\LocalityResource\Pages;
+use App\Filament\Admin\Resources\LocalityResource\Pages\ManageLocalities;
 use App\Models\Locality;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -19,7 +19,7 @@ class LocalityResource extends Resource
 {
     protected static ?string $model = Locality::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map-pin';
 
     protected static bool $isScopedToTenant = false;
 
@@ -40,10 +40,10 @@ class LocalityResource extends Resource
         return __('app.locality.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('county_id')
                     ->relationship('county', 'name')
                     ->required(),
@@ -100,15 +100,15 @@ class LocalityResource extends Resource
                     ->relationship('county', 'name')
                     ->label(__('app.field.county')),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageLocalities::route('/'),
+            'index' => ManageLocalities::route('/'),
         ];
     }
 }

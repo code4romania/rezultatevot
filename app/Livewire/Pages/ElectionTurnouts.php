@@ -9,6 +9,8 @@ use App\Enums\Area;
 use App\Enums\DataLevel;
 use App\Models\Candidate;
 use App\Repositories\TurnoutRepository;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Number;
 use Illuminate\View\View;
@@ -16,8 +18,10 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use stdClass;
 
-class ElectionTurnouts extends ElectionPage
+class ElectionTurnouts extends ElectionPage implements HasActions
 {
+    use InteractsWithActions;
+
     #[Layout('components.layouts.election')]
     public function render(): View
     {

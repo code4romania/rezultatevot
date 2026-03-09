@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\VoteMonitorStatKey;
-use App\Filament\Admin\Resources\VoteMonitorStatResource\Pages;
+use App\Filament\Admin\Resources\VoteMonitorStatResource\Pages\ManageVoteMonitorStats;
 use App\Models\VoteMonitorStat;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -21,16 +21,16 @@ class VoteMonitorStatResource extends Resource
 {
     protected static ?string $model = VoteMonitorStat::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chart-bar';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('key')
                     ->options(VoteMonitorStatKey::options())
                     ->enum(VoteMonitorStatKey::class)
-                    ->unique('vote_monitor_stats', 'key', null, true, function($rule){
+                    ->unique('vote_monitor_stats', 'key', null, true, function ($rule) {
                         return $rule->where('election_id', filament()->getTenant()->id);
                     })
                     ->required(),
@@ -76,8 +76,8 @@ class VoteMonitorStatResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
             ->defaultSort('order', 'asc')
             ->reorderable('order');
@@ -86,7 +86,7 @@ class VoteMonitorStatResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageVoteMonitorStats::route('/'),
+            'index' => ManageVoteMonitorStats::route('/'),
         ];
     }
 }

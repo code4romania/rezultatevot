@@ -4,25 +4,28 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\PageResource\Pages;
+use App\Filament\Admin\Resources\PageResource\Pages\CreatePage;
+use App\Filament\Admin\Resources\PageResource\Pages\EditPage;
+use App\Filament\Admin\Resources\PageResource\Pages\ListPages;
 use App\Models\Page;
-use Filament\Forms\Components\Section;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Support\Str;
 
 class PageResource extends Resource
 {
     protected static ?string $model = Page::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
     protected static bool $isScopedToTenant = false;
 
@@ -43,10 +46,10 @@ class PageResource extends Resource
         return __('app.page.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->columns(2)
                     ->schema([
@@ -67,7 +70,7 @@ class PageResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
 
-                        TiptapEditor::make('content')
+                        RichEditor::make('content')
                             ->required()
                             ->columnSpanFull(),
                     ]),
@@ -85,21 +88,21 @@ class PageResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()
+            ->recordActions([
+                ViewAction::make()
                     ->url(fn (Page $record) => $record->url)
                     ->openUrlInNewTab(),
 
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPages::route('/'),
-            'create' => Pages\CreatePage::route('/create'),
-            'edit' => Pages\EditPage::route('/{record}/edit'),
+            'index' => ListPages::route('/'),
+            'create' => CreatePage::route('/create'),
+            'edit' => EditPage::route('/{record}/edit'),
         ];
     }
 }
