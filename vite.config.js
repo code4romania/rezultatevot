@@ -10,7 +10,12 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/iframe.js',
             ],
-            assets: ['resources/images/**'],
+            assets: [
+                'resources/images/**',
+                'resources/geojson/**/*.geojson',
+                // Exclude source files
+                '!../geojson/ro_*_poligon.geojson',
+            ],
             refresh: [...refreshPaths, 'app/Livewire/**'],
         }),
     ],

@@ -1,16 +1,5 @@
 import L from 'leaflet';
 
-import.meta.glob(
-    [
-        '../geojson/**/*.geojson',
-        // Exclude source files
-        '!../geojson/ro_*_poligon.geojson',
-    ],
-    {
-        query: '?url',
-    }
-);
-
 const hasValue = (value) => {
     if (typeof value === 'undefined') {
         return false;
