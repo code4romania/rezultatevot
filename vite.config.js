@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/iframe.js',
             ],
+            assets: ['resources/images/**'],
             refresh: [...refreshPaths, 'app/Livewire/**'],
         }),
     ],
