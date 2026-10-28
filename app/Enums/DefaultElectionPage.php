@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-use App\Concerns\Enums\Arrayable;
-use App\Concerns\Enums\Comparable;
+use CommitGlobal\Enums\Concerns\Arrayable;
+use CommitGlobal\Enums\Concerns\Comparable;
 use Filament\Support\Contracts\HasLabel;
 
 enum DefaultElectionPage: string implements HasLabel

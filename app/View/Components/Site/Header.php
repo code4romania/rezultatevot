@@ -7,7 +7,6 @@ namespace App\View\Components\Site;
 use App\Models\Menu;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Component;
 
 class Header extends Component
@@ -20,13 +19,7 @@ class Header extends Component
     {
         $this->timeline = $timeline;
 
-        $this->menuItems = $this->getMenuItems();
-    }
-
-    protected function getMenuItems(): Collection
-    {
-        return Cache::tags('menus')
-            ->rememberForever('header-menu', fn () => Menu::location('header')?->menuItems);
+        $this->menuItems = Menu::getItems('header');
     }
 
     public function render(): View

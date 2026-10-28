@@ -11,14 +11,16 @@ use App\Models\Election;
 use App\Models\Locality;
 use App\Services\CacheService;
 use ArchTech\SEO\SEOManager;
-use Filament\Forms\Components\Grid;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Computed;
@@ -26,8 +28,9 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
-abstract class ElectionPage extends Component implements HasForms
+abstract class ElectionPage extends Component implements HasForms, HasActions
 {
+    use InteractsWithActions;
     use InteractsWithForms;
 
     public Election $election;
@@ -61,18 +64,18 @@ abstract class ElectionPage extends Component implements HasForms
         abort_if($validation->fails(), 404);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
         $whereHasKey = match (static::class) {
             ElectionResults::class => 'records',
             ElectionTurnouts::class => 'turnouts',
         };
 
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Grid::make()
                     ->columns(3)
-                    ->maxWidth(MaxWidth::ThreeExtraLarge)
+                    ->maxWidth(Width::ThreeExtraLarge)
                     ->schema([
                         Select::make('level')
                             ->label(__('app.field.level'))
@@ -108,7 +111,7 @@ abstract class ElectionPage extends Component implements HasForms
                                 $set('county', null);
                                 $set('locality', null);
                             })
-                            ->visible(fn (Get $get) => DataLevel::isValue($get('level'), DataLevel::DIASPORA))
+                            ->visible(fn (Get $get) => DataLevel::DIASPORA->is($get('level')))
                             ->searchable()
                             ->lazy(),
 
@@ -130,7 +133,7 @@ abstract class ElectionPage extends Component implements HasForms
                             ->afterStateUpdated(function (Set $set) {
                                 $set('locality', null);
                             })
-                            ->visible(fn (Get $get) => DataLevel::isValue($get('level'), DataLevel::NATIONAL))
+                            ->visible(fn (Get $get) => DataLevel::NATIONAL->is($get('level')))
                             ->searchable()
                             ->lazy(),
 
@@ -156,7 +159,7 @@ abstract class ElectionPage extends Component implements HasForms
                                             ->pluck('name', 'id')
                                     );
                             })
-                            ->visible(fn (Get $get) => DataLevel::isValue($get('level'), DataLevel::NATIONAL) &&
+                            ->visible(fn (Get $get) => DataLevel::NATIONAL->is($get('level')) &&
                             ! \is_null($get('county')))
                             ->searchable()
                             ->lazy(),

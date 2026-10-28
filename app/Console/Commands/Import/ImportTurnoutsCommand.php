@@ -6,7 +6,6 @@ namespace App\Console\Commands\Import;
 
 use App\Concerns\Import\HasPlace;
 use App\Enums\Part;
-use App\Models\Country;
 use App\Models\Election;
 use App\Models\Locality;
 use App\Models\Record;

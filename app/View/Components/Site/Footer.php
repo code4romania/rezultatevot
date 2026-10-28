@@ -7,7 +7,6 @@ namespace App\View\Components\Site;
 use App\Models\Menu;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Component;
 
 class Footer extends Component
@@ -18,15 +17,9 @@ class Footer extends Component
 
     public function __construct()
     {
-        $this->menuItems = $this->getMenuItems();
+        $this->menuItems = Menu::getItems('footer');
 
         $this->socialItems = $this->getSocialItems();
-    }
-
-    protected function getMenuItems(): Collection
-    {
-        return Cache::tags('menus')
-            ->rememberForever('footer-menu', fn () => Menu::location('footer')?->menuItems);
     }
 
     protected function getSocialItems(): Collection

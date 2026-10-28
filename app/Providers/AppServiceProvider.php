@@ -6,10 +6,6 @@ namespace App\Providers;
 
 use App\Models\ScheduledJob;
 use Dedoc\Scramble\Scramble;
-use Filament\Actions\CreateAction;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Resources\Pages\CreateRecord;
-use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -37,17 +33,8 @@ class AppServiceProvider extends ServiceProvider
 
         JsonResource::withoutWrapping();
 
-        tap($this->getAppVersion(), function (string $version) {
+        tap($this->app->make('version'), function (string $version) {
             Config::set('scramble.info.version', $version);
-            Config::set('sentry.release', $version);
-        });
-
-        SpatieMediaLibraryFileUpload::configureUsing(function (SpatieMediaLibraryFileUpload $fileUpload) {
-            $fileUpload->disk(config('filament.default_filesystem_disk'));
-        });
-
-        TiptapEditor::configureUsing(function (TiptapEditor $editor) {
-            $editor->disk(config('filament.default_filesystem_disk'));
         });
     }
 
@@ -63,9 +50,6 @@ class AppServiceProvider extends ServiceProvider
 
         Number::useLocale($this->app->getLocale());
 
-        CreateRecord::disableCreateAnother();
-        CreateAction::configureUsing(fn (CreateAction $action) => $action->createAnother(false));
-
         $this->enforceMorphMap();
 
         $this->resolveSchedule();
@@ -73,22 +57,6 @@ class AppServiceProvider extends ServiceProvider
         Scramble::registerApi('v1', [
             'api_path' => 'api/v1',
         ]);
-    }
-
-    /**
-     * Read the application version.
-     *
-     * @return string
-     */
-    public function getAppVersion(): string
-    {
-        $version = base_path('.version');
-
-        if (! file_exists($version)) {
-            return 'develop';
-        }
-
-        return trim(file_get_contents($version));
     }
 
     protected function registerStrMacros(): void

@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Concerns\ClearsCache;
 use Datlechin\FilamentMenuBuilder\Models\Menu as BaseMenu;
+use Illuminate\Support\Collection;
 
 class Menu extends BaseMenu
 {
-    use ClearsCache;
-
-    public function getCacheTags(): array
+    public static function getItems(string $location): Collection
     {
-        return ['menus'];
+        return self::location($location)?->menuItems ?? collect();
     }
 }

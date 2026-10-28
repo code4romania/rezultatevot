@@ -19,9 +19,9 @@ class TurnoutAreaChart extends ChartWidget
 
     public array $parameters = [];
 
-    protected static ?string $maxHeight = '300px';
+    protected ?string $maxHeight = '300px';
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     public function getHeading(): Htmlable
     {

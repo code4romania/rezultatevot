@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import laravel, { refreshPaths } from 'laravel-vite-plugin';
+import laravel from 'laravel-vite-plugin';
 
 export default defineConfig({
     plugins: [
@@ -16,7 +16,7 @@ export default defineConfig({
                 // Exclude source files
                 '!../geojson/ro_*_poligon.geojson',
             ],
-            refresh: [...refreshPaths, 'app/Livewire/**'],
+            refresh: true,
         }),
     ],
 });
