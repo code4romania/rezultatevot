@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72da11fe4f2c9ed9dce630970821c575",
+    "content-hash": "180b4224eda25aaf74c4f087a56c07b4",
     "packages": [
         {
             "name": "andreiio/blade-remix-icon",
@@ -4438,16 +4438,16 @@
         },
         {
             "name": "league/flysystem-read-only",
-            "version": "3.28.0",
+            "version": "3.31.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-read-only.git",
-                "reference": "94f3f6d80c12ade1274996e665f4b963f53d6a11"
+                "reference": "46ac89575200417154712a4bd0d58ce481e6b191"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-read-only/zipball/94f3f6d80c12ade1274996e665f4b963f53d6a11",
-                "reference": "94f3f6d80c12ade1274996e665f4b963f53d6a11",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-read-only/zipball/46ac89575200417154712a4bd0d58ce481e6b191",
+                "reference": "46ac89575200417154712a4bd0d58ce481e6b191",
                 "shasum": ""
             },
             "require": {
@@ -4479,9 +4479,9 @@
                 "read"
             ],
             "support": {
-                "source": "https://github.com/thephpleague/flysystem-read-only/tree/3.28.0"
+                "source": "https://github.com/thephpleague/flysystem-read-only/tree/3.31.0"
             },
-            "time": "2024-05-06T20:05:52+00:00"
+            "time": "2026-01-23T15:30:45+00:00"
         },
         {
             "name": "league/mime-type-detection",
