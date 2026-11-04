@@ -42,7 +42,7 @@
         "fakerphp/faker": "^1.24",
         "friendsofphp/php-cs-fixer": "^3.90",
         "larastan/larastan": "^3.8",
-        "laravel/pint": "^1.26",
+        "laravel/pint": "^1.32",
         "laravel/sail": "^1.48",
         "laravel/telescope": "^5.15",
         "mockery/mockery": "^1.6",
