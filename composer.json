@@ -33,7 +33,7 @@
         "sentry/sentry-laravel": "^4.29",
         "spatie/temporary-directory": "^2.4",
         "staudenmeir/belongs-to-through": "^2.16",
-        "tpetry/laravel-query-expressions": "^1.5",
+        "tpetry/laravel-query-expressions": "^1.6",
         "typesense/typesense-php": "^5.1"
     },
     "require-dev": {
