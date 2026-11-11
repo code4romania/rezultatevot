@@ -23,7 +23,7 @@
         "laravel/framework": "^12.40",
         "laravel/horizon": "^5.51",
         "laravel/sanctum": "^4.4",
-        "laravel/scout": "^10.22",
+        "laravel/scout": "^11.9",
         "laravel/tinker": "^2.10",
         "league/csv": "^9.29",
         "league/flysystem-aws-s3-v3": "^3.35",
