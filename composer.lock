@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad50bfc08c91c226a784eb659cad7c94",
+    "content-hash": "c842f6dc516d2702b83a2a48e8ea37ad",
     "packages": [
         {
             "name": "andreiio/blade-remix-icon",
@@ -6137,16 +6137,16 @@
         },
         {
             "name": "php-http/client-common",
-            "version": "2.7.2",
+            "version": "2.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/client-common.git",
-                "reference": "0cfe9858ab9d3b213041b947c881d5b19ceeca46"
+                "reference": "dcc6de29c90dd74faab55f71b79d89409c4bf0c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/client-common/zipball/0cfe9858ab9d3b213041b947c881d5b19ceeca46",
-                "reference": "0cfe9858ab9d3b213041b947c881d5b19ceeca46",
+                "url": "https://api.github.com/repos/php-http/client-common/zipball/dcc6de29c90dd74faab55f71b79d89409c4bf0c1",
+                "reference": "dcc6de29c90dd74faab55f71b79d89409c4bf0c1",
                 "shasum": ""
             },
             "require": {
@@ -6156,15 +6156,13 @@
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0 || ^2.0",
-                "symfony/options-resolver": "~4.0.15 || ~4.1.9 || ^4.2.1 || ^5.0 || ^6.0 || ^7.0",
+                "symfony/options-resolver": "~4.0.15 || ~4.1.9 || ^4.2.1 || ^5.0 || ^6.0 || ^7.0 || ^8.0",
                 "symfony/polyfill-php80": "^1.17"
             },
             "require-dev": {
                 "doctrine/instantiator": "^1.1",
                 "guzzlehttp/psr7": "^1.4",
                 "nyholm/psr7": "^1.2",
-                "phpspec/phpspec": "^5.1 || ^6.3 || ^7.1",
-                "phpspec/prophecy": "^1.10.2",
                 "phpunit/phpunit": "^7.5.20 || ^8.5.33 || ^9.6.7"
             },
             "suggest": {
@@ -6200,9 +6198,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/client-common/issues",
-                "source": "https://github.com/php-http/client-common/tree/2.7.2"
+                "source": "https://github.com/php-http/client-common/tree/2.7.3"
             },
-            "time": "2024-09-24T06:21:48+00:00"
+            "time": "2025-11-29T19:12:34+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -11432,16 +11430,16 @@
         },
         {
             "name": "typesense/typesense-php",
-            "version": "v5.2.0",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/typesense/typesense-php.git",
-                "reference": "1fbf79e1c10a8fd4cc3df9c3cddbe158e93542f7"
+                "reference": "e113f90449e159316a433a5509205939f271c5e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/typesense/typesense-php/zipball/1fbf79e1c10a8fd4cc3df9c3cddbe158e93542f7",
-                "reference": "1fbf79e1c10a8fd4cc3df9c3cddbe158e93542f7",
+                "url": "https://api.github.com/repos/typesense/typesense-php/zipball/e113f90449e159316a433a5509205939f271c5e2",
+                "reference": "e113f90449e159316a433a5509205939f271c5e2",
                 "shasum": ""
             },
             "require": {
@@ -11499,7 +11497,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-15T15:21:26+00:00"
+            "time": "2025-12-22T20:51:44+00:00"
         },
         {
             "name": "ueberdosis/tiptap-php",
