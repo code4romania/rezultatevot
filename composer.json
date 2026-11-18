@@ -43,7 +43,7 @@
         "friendsofphp/php-cs-fixer": "^3.95",
         "larastan/larastan": "^3.14",
         "laravel/pint": "^1.32",
-        "laravel/sail": "^1.70",
+        "laravel/sail": "^1.71",
         "laravel/telescope": "^5.29",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.8",
