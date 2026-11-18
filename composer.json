@@ -30,7 +30,7 @@
         "league/flysystem-read-only": "^3.31",
         "livewire/livewire": "^3.7",
         "maatwebsite/excel": "^3.1",
-        "sentry/sentry-laravel": "^4.29",
+        "sentry/sentry-laravel": "^4.30",
         "spatie/temporary-directory": "^2.4",
         "staudenmeir/belongs-to-through": "^2.16",
         "tpetry/laravel-query-expressions": "^1.6",
