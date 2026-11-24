@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Embeds;
 
+use Filament\Actions\Concerns\InteractsWithActions;
 use App\Livewire\Pages\ElectionTurnouts;
 use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 
 class AreaEmbed extends ElectionTurnouts
 {
+    use InteractsWithActions;
     #[Layout('components.layouts.embed')]
     public function render(): View
     {

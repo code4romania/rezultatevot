@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
+use App\Filament\Admin\Resources\VoteResource\Pages\ManageVotes;
 use App\Filament\Admin\Resources\VoteResource\Pages;
 use App\Filament\Filters\LocationFilter;
 use App\Models\Vote;
@@ -17,7 +18,7 @@ class VoteResource extends Resource
 {
     protected static ?string $model = Vote::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getNavigationGroup(): ?string
     {
@@ -72,7 +73,7 @@ class VoteResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageVotes::route('/'),
+            'index' => ManageVotes::route('/'),
 
         ];
     }

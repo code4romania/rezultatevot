@@ -4,6 +4,17 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
+use Filament\Pages\Enums\SubNavigationPosition;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use App\Filament\Admin\Resources\ElectionResource\Pages\ListElections;
+use App\Filament\Admin\Resources\ElectionResource\Pages\ViewElection;
 use App\Enums\DataLevel;
 use App\Enums\DefaultElectionPage;
 use App\Enums\ElectionType;
@@ -15,20 +26,14 @@ use App\Models\Election;
 use App\Models\Locality;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Infolists;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
-use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -41,11 +46,11 @@ class ElectionResource extends Resource
 {
     protected static ?string $model = Election::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = 30;
 
-    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+    protected static ?\Filament\Pages\Enums\SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     protected static bool $isScopedToTenant = false;
 
@@ -64,11 +69,11 @@ class ElectionResource extends Resource
         return __('app.election.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns(2)
-            ->schema([
+            ->components([
                 Select::make('type')
                     ->label(__('app.field.type'))
                     ->options(ElectionType::options())
@@ -140,7 +145,7 @@ class ElectionResource extends Resource
                             ->hidden(fn (Get $get) => ! DataLevel::isValue($get('level'), DataLevel::DIASPORA))
                             ->nullable(),
 
-                        Forms\Components\Group::make([
+                        Group::make([
                             Select::make('county')
                                 ->label(__('app.field.county'))
                                 ->options(County::pluck('name', 'id'))
@@ -168,12 +173,12 @@ class ElectionResource extends Resource
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
+        return $schema
             ->columns(3)
-            ->schema([
-                Infolists\Components\Section::make()
+            ->components([
+                Section::make()
                     ->columnSpan(2)
                     ->columns(2)
                     ->schema([
@@ -205,7 +210,7 @@ class ElectionResource extends Resource
                             ->label(__('app.field.is_visible'))
                             ->boolean(),
 
-                        Infolists\Components\Section::make(__('app.field.default_place'))
+                        Section::make(__('app.field.default_place'))
                             ->columnSpanFull()
                             ->statePath('properties.default_place')
                             ->columns(2)
@@ -229,7 +234,7 @@ class ElectionResource extends Resource
                             ->html(),
                     ]),
 
-                Infolists\Components\Section::make()
+                Section::make()
                     ->columnSpan(1)
                     ->schema([
                         TextEntry::make('created_at')
@@ -281,11 +286,11 @@ class ElectionResource extends Resource
                     ->label(__('app.field.type')),
             ])
             ->filtersLayout(FiltersLayout::AboveContent)
-            ->actions([
-                Tables\Actions\ViewAction::make()
+            ->recordActions([
+                ViewAction::make()
                     ->iconButton(),
 
-                Tables\Actions\EditAction::make()
+                EditAction::make()
                     ->iconButton(),
             ])
             ->defaultSort('id', 'desc');
@@ -301,8 +306,8 @@ class ElectionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListElections::route('/'),
-            'view' => Pages\ViewElection::route('/{record}'),
+            'index' => ListElections::route('/'),
+            'view' => ViewElection::route('/{record}'),
         ];
     }
 }

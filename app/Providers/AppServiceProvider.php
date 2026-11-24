@@ -4,12 +4,26 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\Article;
+use App\Models\Candidate;
+use App\Models\Country;
+use App\Models\County;
+use App\Models\Election;
+use App\Models\Locality;
+use App\Models\MenuItem;
+use App\Models\MenuLocation;
+use App\Models\Menu;
+use App\Models\Page;
+use App\Models\Party;
+use App\Models\Record;
+use App\Models\Turnout;
+use App\Models\User;
+use App\Models\Vote;
 use App\Models\ScheduledJob;
 use Dedoc\Scramble\Scramble;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Resources\Pages\CreateRecord;
-use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -44,10 +58,6 @@ class AppServiceProvider extends ServiceProvider
 
         SpatieMediaLibraryFileUpload::configureUsing(function (SpatieMediaLibraryFileUpload $fileUpload) {
             $fileUpload->disk(config('filament.default_filesystem_disk'));
-        });
-
-        TiptapEditor::configureUsing(function (TiptapEditor $editor) {
-            $editor->disk(config('filament.default_filesystem_disk'));
         });
     }
 
@@ -101,21 +111,21 @@ class AppServiceProvider extends ServiceProvider
     protected function enforceMorphMap(): void
     {
         Relation::enforceMorphMap([
-            'article' => \App\Models\Article::class,
-            'candidate' => \App\Models\Candidate::class,
-            'country' => \App\Models\Country::class,
-            'county' => \App\Models\County::class,
-            'election' => \App\Models\Election::class,
-            'locality' => \App\Models\Locality::class,
-            'menu_item' => \App\Models\MenuItem::class,
-            'menu_location' => \App\Models\MenuLocation::class,
-            'menu' => \App\Models\Menu::class,
-            'page' => \App\Models\Page::class,
-            'party' => \App\Models\Party::class,
-            'record' => \App\Models\Record::class,
-            'turnout' => \App\Models\Turnout::class,
-            'user' => \App\Models\User::class,
-            'vote' => \App\Models\Vote::class,
+            'article' => Article::class,
+            'candidate' => Candidate::class,
+            'country' => Country::class,
+            'county' => County::class,
+            'election' => Election::class,
+            'locality' => Locality::class,
+            'menu_item' => MenuItem::class,
+            'menu_location' => MenuLocation::class,
+            'menu' => Menu::class,
+            'page' => Page::class,
+            'party' => Party::class,
+            'record' => Record::class,
+            'turnout' => Turnout::class,
+            'user' => User::class,
+            'vote' => Vote::class,
         ]);
     }
 

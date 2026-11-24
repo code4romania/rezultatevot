@@ -6,19 +6,19 @@ namespace App\Models;
 
 use App\Concerns\HasSlug;
 use Database\Factories\PageFactory;
-use Datlechin\FilamentMenuBuilder\Concerns\HasMenuPanel;
-use Datlechin\FilamentMenuBuilder\Contracts\MenuPanelable;
+use Datlechin\FilamentMenuBuilder\Concerns\HasMenuItems;
+use Datlechin\FilamentMenuBuilder\Contracts\MenuLinkable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Page extends Model implements HasMedia, MenuPanelable
+class Page extends Model implements HasMedia, MenuLinkable
 {
     /** @use HasFactory<PageFactory> */
     use HasFactory;
     use HasSlug;
-    use HasMenuPanel;
+    use HasMenuItems;
     use InteractsWithMedia;
 
     protected static string $factory = PageFactory::class;
@@ -28,6 +28,16 @@ class Page extends Model implements HasMedia, MenuPanelable
         'slug',
         'content',
     ];
+
+    public function getMenuTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getMenuUrl(): string
+    {
+        return '';
+    }
 
     public function getMenuPanelTitleColumn(): string
     {

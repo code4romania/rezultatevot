@@ -25,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Fix for `Route [login] not defined` exception
         // @see https://github.com/filamentphp/filament/discussions/5226#discussioncomment-10555366
-        $middleware->redirectGuestsTo(fn () => Filament::getCurrentPanel()?->getLoginUrl() ?? route('front.index'));
+        $middleware->redirectGuestsTo(fn () => Filament::getCurrentOrDefaultPanel()?->getLoginUrl() ?? route('front.index'));
     })
     ->withExceptions(function (Exceptions $exceptions) {
         Integration::handles($exceptions);

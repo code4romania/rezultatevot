@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Import;
 
+use Exception;
 use App\Enums\User\Role;
 use App\Models\Article;
 use App\Models\Election;
@@ -118,7 +119,7 @@ class ImportNewsFeedCommand extends Command
                     try {
                         $article->addMediaFromUrl(Str::replace(' ', '%20', $pics->Url))
                             ->toMediaCollection();
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         logger()->error("Failed to import media for article {$row->Id}: {$e->getMessage()}");
                     }
                 }

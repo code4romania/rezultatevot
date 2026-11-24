@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\ElectionTypeResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Admin\Resources\ElectionTypeResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
@@ -15,7 +16,7 @@ class ManageElectionTypes extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

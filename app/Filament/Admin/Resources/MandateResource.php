@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Forms\Components\MorphToSelect\Type;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Admin\Resources\MandateResource\Pages\ManageMandates;
 use App\Filament\Admin\Resources\MandateResource\Pages;
 use App\Filament\Filters\LocationFilter;
 use App\Models\Candidate;
@@ -13,8 +19,6 @@ use App\Tables\Columns\LocationColumn;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -25,7 +29,7 @@ class MandateResource extends Resource
 {
     protected static ?string $model = Mandate::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getNavigationGroup(): ?string
     {
@@ -42,10 +46,10 @@ class MandateResource extends Resource
         return __('app.mandate.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('county_id')
                     ->relationship('county', 'name')
                     ->label(__('app.field.county'))
@@ -65,9 +69,9 @@ class MandateResource extends Resource
 
                 MorphToSelect::make('votable')
                     ->types([
-                        MorphToSelect\Type::make(Party::class)
+                        Type::make(Party::class)
                             ->titleAttribute('name'),
-                        MorphToSelect\Type::make(Candidate::class)
+                        Type::make(Candidate::class)
                             ->titleAttribute('name'),
                     ])
                     ->searchable()
@@ -104,9 +108,9 @@ class MandateResource extends Resource
                 LocationFilter::make()
                     ->withoutCountry(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->paginated([10, 25, 50, 100])
             ->deferLoading();
@@ -115,7 +119,7 @@ class MandateResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageMandates::route('/'),
+            'index' => ManageMandates::route('/'),
         ];
     }
 }

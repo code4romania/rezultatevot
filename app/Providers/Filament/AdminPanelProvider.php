@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use Datlechin\FilamentMenuBuilder\ItemTypes\ModelItemType;
+use Filament\Pages\Dashboard;
+use Filament\Widgets\AccountWidget;
+use Filament\Schemas\Schema;
 use App\Filament\Admin\Pages\Auth\Login;
 use App\Filament\Admin\Resources\ElectionResource;
 use App\Filament\Admin\Resources\MenuResource;
@@ -20,7 +24,6 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
@@ -70,28 +73,23 @@ class AdminPanelProvider extends PanelProvider
 
                 FilamentMenuBuilderPlugin::make()
                     ->usingResource(MenuResource::class)
-                    ->usingMenuModel(Menu::class)
-                    ->usingMenuItemModel(MenuItem::class)
-                    ->usingMenuLocationModel(MenuLocation::class)
                     ->addLocations([
                         'header' => 'Header',
                         'footer' => 'Footer',
                     ])
-                    ->addMenuPanels([
-                        ModelMenuPanel::make()
-                            ->model(Page::class),
-
+                    ->itemTypes([
+                        ModelItemType::make(Page::class)
                     ]),
             ])
             ->viteTheme('resources/css/filament/common/theme.css')
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+                AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
@@ -142,18 +140,18 @@ class AdminPanelProvider extends PanelProvider
 
     protected function setDefaultDateTimeDisplayFormats(): void
     {
-        Table::$defaultDateDisplayFormat = static::$defaultDateDisplayFormat;
-        Table::$defaultDateTimeDisplayFormat = static::$defaultDateTimeDisplayFormat;
-        Table::$defaultTimeDisplayFormat = static::$defaultTimeDisplayFormat;
+        Table::configureUsing((static fn($value) => static fn(Table $component) => $component->defaultDateDisplayFormat($value))(static::$defaultDateDisplayFormat));
+        Table::configureUsing((static fn($value) => static fn(Table $component) => $component->defaultDateTimeDisplayFormat($value))(static::$defaultDateTimeDisplayFormat));
+        Table::configureUsing((static fn($value) => static fn(Table $component) => $component->defaultTimeDisplayFormat($value))(static::$defaultTimeDisplayFormat));
 
-        Infolist::$defaultDateDisplayFormat = static::$defaultDateDisplayFormat;
-        Infolist::$defaultDateTimeDisplayFormat = static::$defaultDateTimeDisplayFormat;
-        Infolist::$defaultTimeDisplayFormat = static::$defaultTimeDisplayFormat;
+        Schema::configureUsing((static fn($value) => static fn(Schema $schema) => $schema->defaultDateDisplayFormat($value))(static::$defaultDateDisplayFormat));
+        Schema::configureUsing((static fn($value) => static fn(Schema $schema) => $schema->defaultDateTimeDisplayFormat($value))(static::$defaultDateTimeDisplayFormat));
+        Schema::configureUsing((static fn($value) => static fn(Schema $schema) => $schema->defaultTimeDisplayFormat($value))(static::$defaultTimeDisplayFormat));
 
-        DateTimePicker::$defaultDateDisplayFormat = static::$defaultDateDisplayFormat;
-        DateTimePicker::$defaultDateTimeDisplayFormat = static::$defaultDateTimeDisplayFormat;
-        DateTimePicker::$defaultDateTimeWithSecondsDisplayFormat = static::$defaultDateTimeWithSecondsDisplayFormat;
-        DateTimePicker::$defaultTimeDisplayFormat = static::$defaultTimeDisplayFormat;
-        DateTimePicker::$defaultTimeWithSecondsDisplayFormat = static::$defaultTimeWithSecondsDisplayFormat;
+        DateTimePicker::configureUsing((static fn($value) => static fn(DateTimePicker $component) => $component->defaultDateDisplayFormat($value))(static::$defaultDateDisplayFormat));
+        DateTimePicker::configureUsing((static fn($value) => static fn(DateTimePicker $component) => $component->defaultDateTimeDisplayFormat($value))(static::$defaultDateTimeDisplayFormat));
+        DateTimePicker::configureUsing((static fn($value) => static fn(DateTimePicker $component) => $component->defaultDateTimeWithSecondsDisplayFormat($value))(static::$defaultDateTimeWithSecondsDisplayFormat));
+        DateTimePicker::configureUsing((static fn($value) => static fn(DateTimePicker $component) => $component->defaultTimeDisplayFormat($value))(static::$defaultTimeDisplayFormat));
+        DateTimePicker::configureUsing((static fn($value) => static fn(DateTimePicker $component) => $component->defaultTimeWithSecondsDisplayFormat($value))(static::$defaultTimeWithSecondsDisplayFormat));
     }
 }

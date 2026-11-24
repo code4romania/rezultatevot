@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Exception;
 use App\Enums\Part;
 use App\Enums\Time;
 use App\Exceptions\CountryCodeNotFoundException;
@@ -109,7 +110,7 @@ class RecordService
                         );
 
                     if (blank($votable)) {
-                        throw new \Exception("Votable not found for column: {$name}");
+                        throw new Exception("Votable not found for column: {$name}");
                     }
 
                     return [

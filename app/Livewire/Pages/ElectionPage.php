@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Pages;
 
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Support\Enums\Width;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
 use App\Enums\DataLevel;
 use App\Models\Country;
 use App\Models\County;
@@ -11,14 +17,9 @@ use App\Models\Election;
 use App\Models\Locality;
 use App\Services\CacheService;
 use ArchTech\SEO\SEOManager;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-use Filament\Support\Enums\MaxWidth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Computed;
@@ -28,6 +29,7 @@ use Livewire\Component;
 
 abstract class ElectionPage extends Component implements HasForms
 {
+    use InteractsWithActions;
     use InteractsWithForms;
 
     public Election $election;
@@ -61,18 +63,18 @@ abstract class ElectionPage extends Component implements HasForms
         abort_if($validation->fails(), 404);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
         $whereHasKey = match (static::class) {
             ElectionResults::class => 'records',
             ElectionTurnouts::class => 'turnouts',
         };
 
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Grid::make()
                     ->columns(3)
-                    ->maxWidth(MaxWidth::ThreeExtraLarge)
+                    ->maxWidth(Width::ThreeExtraLarge)
                     ->schema([
                         Select::make('level')
                             ->label(__('app.field.level'))

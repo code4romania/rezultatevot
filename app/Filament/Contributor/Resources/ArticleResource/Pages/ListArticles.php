@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Contributor\Resources\ArticleResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Contributor\Resources\ArticleResource;
 use App\Models\Election;
 use Filament\Actions;
@@ -19,7 +20,7 @@ class ListArticles extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

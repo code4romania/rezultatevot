@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Pages;
 
+use Filament\Schemas\Schema;
 use App\Filament\Admin\Resources\ElectionResource;
-use Filament\Forms\Form;
 use Filament\Pages\Tenancy\EditTenantProfile;
 
 class ElectionSettings extends EditTenantProfile
@@ -17,8 +17,8 @@ class ElectionSettings extends EditTenantProfile
         return __('app.election.settings');
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return ElectionResource::form($form);
+        return ElectionResource::form($schema);
     }
 }

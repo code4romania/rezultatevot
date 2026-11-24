@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use App\Filament\Admin\Resources\CountryResource\Pages\ManageCountries;
 use App\Filament\Admin\Resources\CountryResource\Pages;
 use App\Models\Country;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -18,7 +20,7 @@ class CountryResource extends Resource
 {
     protected static ?string $model = Country::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-globe-europe-africa';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-globe-europe-africa';
 
     protected static bool $isScopedToTenant = false;
 
@@ -39,10 +41,10 @@ class CountryResource extends Resource
         return __('app.country.label.plural');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('id')
                     ->label(__('app.field.id'))
                     ->unique(ignoreRecord: true)
@@ -78,15 +80,15 @@ class CountryResource extends Resource
                     ->searchable()
                     ->sortable(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageCountries::route('/'),
+            'index' => ManageCountries::route('/'),
         ];
     }
 }
