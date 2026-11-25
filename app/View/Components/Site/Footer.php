@@ -26,7 +26,7 @@ class Footer extends Component
     protected function getMenuItems(): Collection
     {
         return Cache::tags('menus')
-            ->rememberForever('footer-menu', fn () => Menu::location('footer')?->menuItems);
+            ->rememberForever('footer-menu', fn () => Menu::location('footer')?->menuItems ?? collect());
     }
 
     protected function getSocialItems(): Collection

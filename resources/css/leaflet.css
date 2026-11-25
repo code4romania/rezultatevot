@@ -5,5 +5,5 @@
 }
 
 .leaflet-interactive {
-    @apply outline-none focus:stroke-blue-500 focus:z-50 focus:relative;
+    @apply outline-hidden focus:stroke-blue-500 focus:z-50 focus:relative;
 }

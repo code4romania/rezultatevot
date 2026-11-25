@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6b7120a4cfe04782be138e62a3fd5bf",
+    "content-hash": "342df8f0ff221febe99857d4a2764b14",
     "packages": [
         {
             "name": "andreiio/blade-remix-icon",
@@ -13397,54 +13397,6 @@
             "time": "2026-09-29T22:11:39+00:00"
         },
         {
-            "name": "filament/upgrade",
-            "version": "v4.17.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/filamentphp/upgrade.git",
-                "reference": "6002b81316defa710c4c7c53a0a948cda8f74fe6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/upgrade/zipball/6002b81316defa710c4c7c53a0a948cda8f74fe6",
-                "reference": "6002b81316defa710c4c7c53a0a948cda8f74fe6",
-                "shasum": ""
-            },
-            "require": {
-                "composer-runtime-api": "^2.1",
-                "nunomaduro/termwind": "^2.0",
-                "php": "^8.2",
-                "rector/rector": "^2.0"
-            },
-            "bin": [
-                "bin/filament-v4"
-            ],
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Filament\\Upgrade\\UpgradeServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Filament\\Upgrade\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Upgrade Filament v3 code to Filament v4.",
-            "homepage": "https://github.com/filamentphp/filament",
-            "support": {
-                "issues": "https://github.com/filamentphp/filament/issues",
-                "source": "https://github.com/filamentphp/filament"
-            },
-            "time": "2026-11-07T20:52:08+00:00"
-        },
-        {
             "name": "filp/whoops",
             "version": "2.19.3",
             "source": {
@@ -15411,63 +15363,6 @@
                 }
             ],
             "time": "2024-06-11T12:45:25+00:00"
-        },
-        {
-            "name": "rector/rector",
-            "version": "2.8.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rectorphp/rector.git",
-                "reference": "bf2982e3e2b8dfbcb43e5589fa301431cb1e479e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/bf2982e3e2b8dfbcb43e5589fa301431cb1e479e",
-                "reference": "bf2982e3e2b8dfbcb43e5589fa301431cb1e479e",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.4|^8.0",
-                "phpstan/phpstan": "^2.3.5"
-            },
-            "conflict": {
-                "rector/rector-doctrine": "*",
-                "rector/rector-downgrade-php": "*",
-                "rector/rector-phpunit": "*",
-                "rector/rector-symfony": "*"
-            },
-            "bin": [
-                "bin/rector"
-            ],
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Instant Upgrade and Automated Refactoring of any PHP code",
-            "homepage": "https://getrector.com/",
-            "keywords": [
-                "automation",
-                "dev",
-                "migration",
-                "refactoring"
-            ],
-            "support": {
-                "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.8.5"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/tomasvotruba",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-11-14T23:24:35+00:00"
         },
         {
             "name": "sebastian/cli-parser",

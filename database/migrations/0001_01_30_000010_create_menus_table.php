@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Datlechin\FilamentMenuBuilder\Enums\LinkTarget;
 use Datlechin\FilamentMenuBuilder\Models\Menu;
 use Datlechin\FilamentMenuBuilder\Models\MenuItem;
 use Illuminate\Database\Migrations\Migration;
@@ -35,7 +34,7 @@ return new class extends Migration
             $table->nullableMorphs('linkable');
             $table->string('title');
             $table->string('url')->nullable();
-            $table->string('target', 10)->default(LinkTarget::Self);
+            $table->string('target', 10)->default(null);
             $table->integer('order')->default(0);
             $table->timestamps();
         });
