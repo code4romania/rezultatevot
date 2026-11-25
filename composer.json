@@ -19,7 +19,7 @@
         "filament/spatie-laravel-media-library-plugin": "^4.0",
         "haydenpierce/class-finder": "^0.6",
         "jeffgreco13/filament-breezy": "^3.0",
-        "laravel/framework": "^12.40",
+        "laravel/framework": "^13.0",
         "laravel/horizon": "^5.51",
         "laravel/sanctum": "^4.5",
         "laravel/scout": "^10.22",
@@ -31,12 +31,11 @@
         "maatwebsite/excel": "^3.1",
         "sentry/sentry-laravel": "^4.29",
         "spatie/temporary-directory": "^2.4",
-        "staudenmeir/belongs-to-through": "^2.16",
+        "staudenmeir/belongs-to-through": "^2.18",
         "tpetry/laravel-query-expressions": "^1.6",
         "typesense/typesense-php": "^5.1"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.16",
         "barryvdh/laravel-ide-helper": "^3.8",
         "fakerphp/faker": "^1.24",
         "friendsofphp/php-cs-fixer": "^3.95",
