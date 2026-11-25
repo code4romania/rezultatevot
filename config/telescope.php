@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Laravel\Telescope\Http\Middleware\Authorize;
+use Laravel\Telescope\Watchers;
 use Laravel\Telescope\Watchers\BatchWatcher;
 use Laravel\Telescope\Watchers\CacheWatcher;
 use Laravel\Telescope\Watchers\ClientRequestWatcher;
@@ -20,8 +22,6 @@ use Laravel\Telescope\Watchers\RedisWatcher;
 use Laravel\Telescope\Watchers\RequestWatcher;
 use Laravel\Telescope\Watchers\ScheduleWatcher;
 use Laravel\Telescope\Watchers\ViewWatcher;
-use Laravel\Telescope\Http\Middleware\Authorize;
-use Laravel\Telescope\Watchers;
 
 return [
 

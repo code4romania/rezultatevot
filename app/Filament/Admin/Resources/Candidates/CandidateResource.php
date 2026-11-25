@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\Candidates;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\ImportAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Admin\Resources\Candidates\Pages\ManageCandidates;
-use App\Filament\Admin\Resources\CandidateResource\Pages;
 use App\Filament\Imports\SimpleCandidateImporter;
 use App\Models\Candidate;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ImportAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;

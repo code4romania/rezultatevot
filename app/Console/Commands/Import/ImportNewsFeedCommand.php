@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Import;
 
-use Exception;
 use App\Enums\User\Role;
 use App\Models\Article;
 use App\Models\Election;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;

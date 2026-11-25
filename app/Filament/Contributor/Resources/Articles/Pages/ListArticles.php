@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Contributor\Resources\Articles\Pages;
 
-use Filament\Actions\CreateAction;
 use App\Filament\Contributor\Resources\Articles\ArticleResource;
 use App\Models\Election;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Laravel\Sanctum\Http\Middleware\AuthenticateSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Laravel\Sanctum\Http\Middleware\AuthenticateSession;
 use Laravel\Sanctum\Sanctum;
 
 return [

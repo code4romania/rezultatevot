@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\Parties;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\ImportAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Admin\Resources\Parties\Pages\ManageParties;
-use App\Filament\Admin\Resources\PartyResource\Pages;
 use App\Filament\Imports\SimpleCandidateImporter;
 use App\Models\Party;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ImportAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;

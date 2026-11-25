@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources\Votes;
 
 use App\Filament\Admin\Resources\Votes\Pages\ManageVotes;
-use App\Filament\Admin\Resources\VoteResource\Pages;
 use App\Filament\Filters\LocationFilter;
 use App\Models\Vote;
 use App\Tables\Columns\LocationColumn;

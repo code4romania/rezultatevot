@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\Mandates;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Forms\Components\MorphToSelect\Type;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use App\Filament\Admin\Resources\Mandates\Pages\ManageMandates;
-use App\Filament\Admin\Resources\MandateResource\Pages;
 use App\Filament\Filters\LocationFilter;
 use App\Models\Candidate;
 use App\Models\Mandate;
 use App\Models\Party;
 use App\Tables\Columns\LocationColumn;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Components\MorphToSelect\Type;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;

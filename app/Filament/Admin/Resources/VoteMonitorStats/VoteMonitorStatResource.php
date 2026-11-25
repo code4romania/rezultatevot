@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\VoteMonitorStats;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use App\Filament\Admin\Resources\VoteMonitorStats\Pages\ManageVoteMonitorStats;
 use App\Enums\VoteMonitorStatKey;
-use App\Filament\Admin\Resources\VoteMonitorStatResource\Pages;
+use App\Filament\Admin\Resources\VoteMonitorStats\Pages\ManageVoteMonitorStats;
 use App\Models\VoteMonitorStat;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -32,7 +30,7 @@ class VoteMonitorStatResource extends Resource
                 Select::make('key')
                     ->options(VoteMonitorStatKey::options())
                     ->enum(VoteMonitorStatKey::class)
-                    ->unique('vote_monitor_stats', 'key', null, true, function($rule){
+                    ->unique('vote_monitor_stats', 'key', null, true, function ($rule) {
                         return $rule->where('election_id', filament()->getTenant()->id);
                     })
                     ->required(),

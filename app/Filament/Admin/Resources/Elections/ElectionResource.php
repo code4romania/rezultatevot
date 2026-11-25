@@ -4,38 +4,34 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\Elections;
 
-use Filament\Pages\Enums\SubNavigationPosition;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Group;
-use Filament\Schemas\Components\Section;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use App\Filament\Admin\Resources\Elections\Pages\ListElections;
-use App\Filament\Admin\Resources\Elections\Pages\ViewElection;
 use App\Enums\DataLevel;
 use App\Enums\DefaultElectionPage;
 use App\Enums\ElectionType;
-use App\Filament\Admin\Resources\ElectionResource\Pages;
+use App\Filament\Admin\Resources\Elections\Pages\ListElections;
+use App\Filament\Admin\Resources\Elections\Pages\ViewElection;
 use App\Filament\Admin\Resources\Elections\RelationManagers\ScheduledJobRelationManager;
 use App\Models\Country;
 use App\Models\County;
 use App\Models\Election;
 use App\Models\Locality;
-use Filament\Forms;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Infolists;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -50,7 +46,7 @@ class ElectionResource extends Resource
 
     protected static ?int $navigationSort = 30;
 
-    protected static ?\Filament\Pages\Enums\SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     protected static bool $isScopedToTenant = false;
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources\Turnouts;
 
 use App\Filament\Admin\Resources\Turnouts\Pages\ManageTurnouts;
-use App\Filament\Admin\Resources\TurnoutResource\Pages;
 use App\Filament\Filters\LocationFilter;
 use App\Models\Turnout;
 use App\Tables\Columns\LocationColumn;

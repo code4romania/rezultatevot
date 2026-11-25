@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Resources\Records;
 
 use App\Filament\Admin\Resources\Records\Pages\ManageRecords;
-use App\Filament\Admin\Resources\RecordResource\Pages;
 use App\Filament\Filters\LocationFilter;
 use App\Models\Record;
 use App\Tables\Columns\LocationColumn;

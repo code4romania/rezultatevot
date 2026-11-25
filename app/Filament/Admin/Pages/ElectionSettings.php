@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Pages;
 
-use Filament\Schemas\Schema;
 use App\Filament\Admin\Resources\Elections\ElectionResource;
 use Filament\Pages\Tenancy\EditTenantProfile;
+use Filament\Schemas\Schema;
 
 class ElectionSettings extends EditTenantProfile
 {

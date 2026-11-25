@@ -56,35 +56,36 @@ class FetchTurnoutsJob extends SchedulableJob
                     );
             });
 
-        $counties = County::query()->whereIn('id',
-           [
-               //București
-               403,
-               //BZ
-               109,
-               //BT
-               74,
-               //BH
-               56,
-               //CS
-               118,
-               //CT
-               136,
-               //DB
-               154,
-               //DJ
-               163,
-               //IL
-               216,
+        $counties = County::query()->whereIn(
+            'id',
+            [
+                //București
+                403,
+                //BZ
+                109,
+                //BT
+                74,
+                //BH
+                56,
+                //CS
+                118,
+                //CT
+                136,
+                //DB
+                154,
+                //DJ
+                163,
+                //IL
+                216,
                 //IS
-               225,
-               //MM
-               243,
-               //SB
-               323
+                225,
+                //MM
+                243,
+                //SB
+                323,
 
-
-           ])->get();
+            ]
+        )->get();
 
         $electionName = $this->scheduledJob->election->getFilamentName();
         $electionId = $this->scheduledJob->election_id;

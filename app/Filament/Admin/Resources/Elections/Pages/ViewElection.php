@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\Elections\Pages;
 
-use Filament\Actions\EditAction;
 use App\Filament\Admin\Resources\Elections\ElectionResource;
-use Filament\Actions;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewElection extends ViewRecord

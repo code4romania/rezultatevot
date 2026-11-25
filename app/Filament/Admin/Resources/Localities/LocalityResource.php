@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\Localities;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
 use App\Filament\Admin\Resources\Localities\Pages\ManageLocalities;
-use App\Filament\Admin\Resources\LocalityResource\Pages;
 use App\Models\Locality;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;

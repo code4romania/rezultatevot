@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\Articles\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Filament\Admin\Resources\Articles\ArticleResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditArticle extends EditRecord
