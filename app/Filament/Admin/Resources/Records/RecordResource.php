@@ -116,7 +116,7 @@ class RecordResource extends Resource
                 LocationFilter::make(),
             ])
             ->paginated([10, 25, 50, 100])
-            ->deferLoading()
+            ->lazyLoaded()
             ->recordClasses(fn (Record $record) => $record->has_issues ? 'bg-warning-50 dark:bg-warning-400/10' : null);
     }
 

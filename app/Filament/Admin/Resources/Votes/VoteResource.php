@@ -59,7 +59,7 @@ class VoteResource extends Resource
                 LocationFilter::make(),
             ])
             ->paginated([10, 25, 50, 100])
-            ->deferLoading();
+            ->lazyLoaded();
     }
 
     public static function getRelations(): array

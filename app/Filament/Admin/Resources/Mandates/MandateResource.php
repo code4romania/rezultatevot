@@ -111,7 +111,7 @@ class MandateResource extends Resource
                 DeleteAction::make(),
             ])
             ->paginated([10, 25, 50, 100])
-            ->deferLoading();
+            ->lazyLoaded();
     }
 
     public static function getPages(): array
