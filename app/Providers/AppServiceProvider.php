@@ -24,6 +24,8 @@ use Dedoc\Scramble\Scramble;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentColor;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -75,6 +77,10 @@ class AppServiceProvider extends ServiceProvider
 
         CreateRecord::disableCreateAnother();
         CreateAction::configureUsing(fn (CreateAction $action) => $action->createAnother(false));
+
+        FilamentColor::register([
+            'primary' => Color::Indigo,
+        ]);
 
         $this->enforceMorphMap();
 
