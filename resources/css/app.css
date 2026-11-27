@@ -2,11 +2,14 @@
 
 @import 'tailwindcss';
 
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
-@plugin '@tailwindcss/container-queries';
+@import '../../vendor/filament/support/resources/css/index.css';
+@import '../../vendor/filament/forms/resources/css/components/field.css' layer(components);
+@import '../../vendor/filament/forms/resources/css/components/select.css' layer(components);
+@import '../../vendor/filament/schemas/resources/css/index.css';
+@import '../../vendor/filament/widgets/resources/css/index.css';
 
-@source '../../vendor/filament/**/*.blade.php';
+@plugin '@tailwindcss/typography';
+
 @source '../../vendor/livewire/**/*.blade.php';
 
 @custom-variant dark (&:where(.dark, .dark *));
