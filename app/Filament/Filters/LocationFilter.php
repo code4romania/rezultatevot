@@ -6,7 +6,7 @@ namespace App\Filament\Filters;
 
 use App\Models\Locality;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Get;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables\Filters\BaseFilter;
 use Illuminate\Database\Eloquent\Builder;
 

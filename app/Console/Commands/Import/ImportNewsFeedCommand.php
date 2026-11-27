@@ -8,6 +8,7 @@ use App\Enums\User\Role;
 use App\Models\Article;
 use App\Models\Election;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
@@ -118,7 +119,7 @@ class ImportNewsFeedCommand extends Command
                     try {
                         $article->addMediaFromUrl(Str::replace(' ', '%20', $pics->Url))
                             ->toMediaCollection();
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         logger()->error("Failed to import media for article {$row->Id}: {$e->getMessage()}");
                     }
                 }

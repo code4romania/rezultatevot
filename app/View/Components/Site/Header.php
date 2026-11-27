@@ -26,7 +26,7 @@ class Header extends Component
     protected function getMenuItems(): Collection
     {
         return Cache::tags('menus')
-            ->rememberForever('header-menu', fn () => Menu::location('header')?->menuItems);
+            ->rememberForever('header-menu', fn () => Menu::location('header')?->menuItems ?? collect());
     }
 
     public function render(): View

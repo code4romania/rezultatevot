@@ -10,6 +10,7 @@ use App\Exceptions\CountryCodeNotFoundException;
 use App\Models\Candidate;
 use App\Models\Country;
 use App\Models\Party;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -109,7 +110,7 @@ class RecordService
                         );
 
                     if (blank($votable)) {
-                        throw new \Exception("Votable not found for column: {$name}");
+                        throw new Exception("Votable not found for column: {$name}");
                     }
 
                     return [
